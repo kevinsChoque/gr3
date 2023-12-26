@@ -9,7 +9,6 @@
                 </button>
             </div>
             <div class="modal-body">
-            	<!-- <form id="mSuspension"> -->
 				<div class="row datosProveedor">
                     <div class="col-lg-12 my-2">
                         <h4 class="text-center font-weight-bold">Datos de Proveedor</h4>
@@ -49,7 +48,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
                             </div>
-                            <textarea name="motivo" id="motivo" cols="30" rows="5" class="form-control"></textarea>
+                            <textarea name="motivo" id="motivo" cols="30" rows="5" class="form-control input"></textarea>
                         </div>
                     </div>
                     <div class="form-group col-lg-6">
@@ -58,7 +57,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
                             </div>
-                            <textarea name="obs" id="obs" cols="30" rows="5" class="form-control"></textarea>
+                            <textarea name="obs" id="obs" cols="30" rows="5" class="form-control input"></textarea>
                         </div>
                     </div>
                     <div class="form-group col-lg-12">
@@ -67,7 +66,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
                             </div>
-                            <input type="file" id="file" name="file" class="form-control">
+                            <input type="file" id="file" name="file" class="form-control input">
                         </div>
                     </div>
                     <div class="form-group col-lg-6">
@@ -76,7 +75,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
                             </div>
-                            <input type="date" id="fechaInicio" name="fechaInicio" class="form-control">
+                            <input type="date" id="fechaInicio" name="fechaInicio" class="form-control input">
                         </div>
                     </div>
                     <div class="form-group col-lg-6">
@@ -85,7 +84,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
                             </div>
-                            <input type="date" id="fechaFinalizacion" name="fechaFinalizacion" class="form-control">
+                            <input type="date" id="fechaFinalizacion" name="fechaFinalizacion" class="form-control input">
                         </div>
                     </div>
                 </div>
@@ -107,6 +106,7 @@ $(document).ready( function () {
 });
 function addSuspension(id)
 {
+    cleanFormSuspension();
     jQuery.ajax(
     { 
         url: "{{ url('proveedor/editar') }}",
@@ -114,7 +114,6 @@ function addSuspension(id)
         method: 'post',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function(r){
-            console.log(r.data.tipoPersona);
             idPro = r.data.idPro;
             $('.datosProveedor .tipoPersona').html(r.data.tipoPersona);
             $('.datosProveedor .numeroDocumento').html(r.data.numeroDocumento);
@@ -153,8 +152,7 @@ function guardarSuspension()
     {return;}
     var formData = new FormData($("#fvsuspension")[0]);
     formData.append('idPro',idPro);
-    // $('.guardarItem').prop('disabled',true); 
-    // alert('paso la vali '+idPro);
+    $('.guardarSuspension').prop('disabled',true); 
     jQuery.ajax({
         url: "{{ url('suspension/guardar') }}",
         method: 'POST', 
@@ -165,7 +163,9 @@ function guardarSuspension()
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
             if (r.estado) {
-                // $('.guardarItem').prop('disabled',false); 
+                $('.guardarSuspension').prop('disabled',false); 
+                construirTabla();
+                fillRegistros();
                 $('#mSuspension').modal('hide');
                 msjRee(r);
             } 
@@ -173,14 +173,14 @@ function guardarSuspension()
                 msjRee(r);
         },
         error: function (xhr, status, error) {
-            alert('salio un error');
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
         }
     });
 }
-// function limpiarFormItem()
-// {
-// 	cleanFv('fvitem');
-//     $('.inpItem').val('');
-//     $('#estado').val('1');
-// }
+function cleanFormSuspension()
+{
+	cleanFv('fvsuspension');
+    $('#fvsuspension .input').val('');
+    // $('#estado').val('1');
+}
 </script>

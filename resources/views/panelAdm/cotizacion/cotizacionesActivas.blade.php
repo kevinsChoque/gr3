@@ -114,9 +114,6 @@
         				</div>
                     </div>
                 </div>
-                <!-- <div class="col-lg-6">
-                    <button class="btn btn-success w-75 searchCot"><i class="fa fa-search"></i> Buscar Cotizacion</button>
-                </div> -->
     		</div>
             </form>
     	</div>
@@ -154,140 +151,130 @@
 </div>
 
 <script>
-
-    localStorage.setItem("sba",5);
-    var tablaDeRegistros;
-    var flip=0;
-    $(document).ready( function () {
-        tablaDeRegistros=$('.contenedorRegistros').html();
-        initFv('fvbuscot',rules());
-    	fillRegistros();
-        $('.overlayPagina').css("display","none");
-        // $('.overlayRegistros').css("display","none");
-    });
-    $('.searchCot').on('click',function(){
-        searchCot();
-    });
-    $('.clean').on('click',function(){
-        clean();
-    });
-    
-    function fillRegistros()
-    {
-        $('.contenedorRegistros').css('display','block');
-        jQuery.ajax(
-        { 
-            url: "{{ url('panelAdm/paCotizacion/listar') }}",
-            method: 'get',
-            success: function(r)
-            {
-                console.log('r.data');
-                console.log(r.data);
-                console.log('r.data');
-                var html = '';
-                for (var i = 0; i < r.data.length; i++) 
-                {
-                    console.log(r.data[i].idPro);
-                    console.log({{Session::get('proveedor')->idPro}});
-                    if(r.data[i].idPro!={{Session::get('proveedor')->idPro}})
-                    {
-                        html += '<tr>' +
-                            '<td class="text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
-                            '<td class="text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
-                            '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
-                            '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].descripcion) + '</p></td>' +
-                            '<td class="text-center">' + novDato(r.data[i].fechaFinalizacion) + '</td>' +
-                            '<td class="text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '</td>' +
-                            '<td class="text-center">' + 
-                                '<a href="{{ route('ver-archivo') }}/'+r.data[i].archivo+'" target="_blank" class="btn text-info pr-0"><i class="far fa-file-pdf" ></i></a>'+
-                                '<button type="button" class="btn text-info" title="Editar registro" onclick="cotizar('+r.data[i].idCot+');"><i class="far fa-file-alt" ></i></button>'+
-                            '</td>' +
-                        '</tr>';
-                    }
-                }
-                $('#data').html(html);
-                initDatatable('registros');
-                $('.overlayRegistros').css('display','none');
-            }
-        });
-        
-    }
-    function changeRegistros(r)
-    {
-        var html = '';
-        for (var i = 0; i < r.data.length; i++) 
+localStorage.setItem("sba",5);
+var tablaDeRegistros;
+var flip=0;
+$(document).ready( function () {
+    tablaDeRegistros=$('.contenedorRegistros').html();
+    initFv('fvbuscot',rules());
+	fillRegistros();
+    $('.overlayPagina').css("display","none");
+});
+$('.searchCot').on('click',function(){searchCot();});
+$('.clean').on('click',function(){clean();});
+function fillRegistros()
+{
+    $('.contenedorRegistros').css('display','block');
+    jQuery.ajax(
+    { 
+        url: "{{ url('panelAdm/paCotizacion/listar') }}",
+        method: 'get',
+        success: function(r)
         {
-            html += '<tr>' +
-                '<td class="text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
-                '<td class="text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
-                '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
-                '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].descripcion) + '</p></td>' +
-                '<td class="text-center">' + novDato(r.data[i].fechaFinalizacion) + '</td>' +
-                '<td class="text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '</td>' +
-                '<td class="text-center">' + 
-                    '<div class="btn-group btn-group-sm" role="group">'+
-                        '<button type="button" class="btn text-info" title="Editar registro" onclick="cotizar('+r.data[i].idCot+');"><i class="far fa-file-alt" ></i></button>'+
-                    '</div>'+
-                '</td>' +
-            '</tr>';
-        }
-        $('#data').html(html);
-        initDatatable('registros');
-        $('.overlayRegistros').css('display','none');
-    }
-    function searchCot()
-    {
-        
-        if($('#fvbuscot').valid()==false)
-        {return;}
-        if($('#fechaInicial').val()>$('#fechaFinal').val())
-        {msjSimple(false,"La fecha inicial debe ser menor a la fecha final."); return;}
-        // alert('enviar');
-        var formData = new FormData($("#fvbuscot")[0]);
-        // $('.searchCot').prop('disabled',true); 
-        $( ".overlayRegistros" ).toggle( flip++ % 2 === 0 );
-        jQuery.ajax(
-        { 
-            url: "{{ url('panelAdm/paCotizacion/search') }}",
-            method: 'post',
-            data: formData,
-            dataType: 'json',
-            processData: false, 
-            contentType: false, 
-            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-            success: function(r)
+            // console.log('r.data');
+            // console.log(r.data);
+            // console.log('r.data');
+            var html = '';
+            for (var i = 0; i < r.data.length; i++) 
             {
-                console.log(r);
-                construirTabla();
-                changeRegistros(r);
-                // $('.searchCot').prop('disabled',false); 
-                // msjRee(r);
+                console.log(r.data[i].idPro);
+                console.log("{{Session::get('proveedor')->idPro}}");
+                if(r.data[i].idPro!="{{Session::get('proveedor')->idPro}}")
+                {
+                    html += '<tr>' +
+                        '<td class="text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
+                        '<td class="text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
+                        '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
+                        '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].descripcion) + '</p></td>' +
+                        '<td class="text-center">' + novDato(r.data[i].fechaFinalizacion) + '</td>' +
+                        '<td class="text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '</td>' +
+                        '<td class="text-center">' + 
+                            '<a href="{{ route('ver-archivo') }}/'+r.data[i].archivo+'" target="_blank" class="btn text-info pr-0"><i class="far fa-file-pdf" ></i></a>'+
+                            '<button type="button" class="btn text-info" title="Editar registro" onclick="cotizar(\''+r.data[i].idCot+'\');"><i class="far fa-file-alt" ></i></button>'+
+                        '</td>' +
+                    '</tr>';
+                }
             }
-        });
-    }
-    function cotizar(id)
+            $('#data').html(html);
+            initDatatable('registros');
+            $('.overlayRegistros').css('display','none');
+        }
+    });
+}
+function changeRegistros(r)
+{
+    var html = '';
+    for (var i = 0; i < r.data.length; i++) 
     {
-    	localStorage.setItem("idCot",id);
-        window.location.href = "{{url('panelAdm/paCotizacion/cotizar')}}";
+        html += '<tr>' +
+            '<td class="text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
+            '<td class="text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
+            '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
+            '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].descripcion) + '</p></td>' +
+            '<td class="text-center">' + novDato(r.data[i].fechaFinalizacion) + '</td>' +
+            '<td class="text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '</td>' +
+            '<td class="text-center">' + 
+                '<div class="btn-group btn-group-sm" role="group">'+
+                    '<button type="button" class="btn text-info" title="Editar registro" onclick="cotizar(\''+r.data[i].idCot+'\');"><i class="far fa-file-alt" ></i></button>'+
+                '</div>'+
+            '</td>' +
+        '</tr>';
     }
-    function rules()
-    {
-        return {
-            numeroCotizacion: {digits: true,},
-            tipo: {required: true,},
-        };
-    }
-    function construirTabla()
-    {
-        $('.contenedorRegistros>div').remove();
-        $('.contenedorRegistros').html(tablaDeRegistros);
-    }
-    function clean()
-    {
-        $('.input').val('');
-        $('#tipo').val('Bienes');
-        cleanFv('fvbuscot');
-    }
+    $('#data').html(html);
+    initDatatable('registros');
+    $('.overlayRegistros').css('display','none');
+}
+function searchCot()
+{
+    if($('#fvbuscot').valid()==false)
+    {return;}
+    if($('#fechaInicial').val()>$('#fechaFinal').val())
+    {msjSimple(false,"La fecha inicial debe ser menor a la fecha final."); return;}
+    var formData = new FormData($("#fvbuscot")[0]);
+    $('.searchCot').prop('disabled',true); 
+    $( ".overlayRegistros" ).toggle( flip++ % 2 === 0 );
+    jQuery.ajax(
+    { 
+        url: "{{ url('panelAdm/paCotizacion/search') }}",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+        processData: false, 
+        contentType: false, 
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function(r)
+        {
+            console.log(r);
+            construirTabla();
+            changeRegistros(r);
+            $('.searchCot').prop('disabled',false); 
+            // msjRee(r);
+        }
+    });
+}
+function cotizar(id)
+{
+	localStorage.setItem("idCot",id);
+    window.location.href = "{{url('panelAdm/paCotizacion/cotizar')}}";
+}
+function rules()
+{
+    return {
+        numeroCotizacion: {digits: true,},
+        tipo: {required: true,},
+    };
+}
+function construirTabla()
+{
+    $('.contenedorRegistros>div').remove();
+    $('.contenedorRegistros').html(tablaDeRegistros);
+}
+function clean()
+{
+    $('.input').val('');
+    $('#tipo').val('Bienes');
+    cleanFv('fvbuscot');
+}
 </script>
 @endif
 @endsection

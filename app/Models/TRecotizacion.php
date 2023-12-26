@@ -9,7 +9,7 @@ class TRecotizacion extends Model
 {
     protected $table='recotizacion';
 	protected $primaryKey='idRec';
-	public $incrementing=true;
+	public $incrementing=false;
 	public $timestamps=false;
 
     protected $fillable = [

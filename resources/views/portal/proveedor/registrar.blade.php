@@ -166,159 +166,86 @@
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte3/dist/js/adminlte.min.js')}}"></script>
 <script>
-    
-    $(document).ready( function () {
-        initFv('fvregpro',rules());
-        $('.overlayPagina').css("display","none");
-        // $('.toastsDefaultAutohide').click(function() {
-        //   $(document).Toasts('create', {
-        //     title: 'Toast Title',
-        //     autohide: true,
-        //     delay: 750,
-        //     body: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-        //   })
-        // });
-    } );
-    $('.tipoPersona').on('change',function(){
-        changeTipoPersona($(this).val());
-    });
-    function changeTipoPersona()
+$(document).ready( function () {
+    initFv('fvregpro',rules());
+    $('.overlayPagina').css("display","none");
+} );
+$('.tipoPersona').on('change',function(){
+    changeTipoPersona($(this).val());
+});
+function changeTipoPersona()
+{
+    if($('.tipoPersona').val()=='PERSONA NATURAL')
     {
-
-        if($('.tipoPersona').val()=='PERSONA NATURAL')
-        {
-            $('.pj').parent().parent().css('display','none');
-            $('.pn').parent().parent().css('display','flex');
-            $('.pj').val('');
+        $('.pj').parent().parent().css('display','none');
+        $('.pn').parent().parent().css('display','flex');
+        $('.pj').val('');
+    }
+    else
+    {
+        $('.pn').parent().parent().css('display','none');
+        $('.pj').parent().parent().css('display','flex');
+        $('.pn').val('');
+    }
+}
+$('.regPro').on('click',function(){regPro()});
+function regPro()
+{
+    if($('#fvregpro').valid()==false)
+    {return;}
+    var formData = new FormData($("#fvregpro")[0]);
+    // formData.append('file', $('#archivo')[0].files.length>0?'true':'false');
+    $('.regPro').prop('disabled',true); 
+    $('.overlayPagina').css("display","flex");
+    jQuery.ajax({
+        url: "{{ url('portal/proveedor/guardar') }}",
+        method: 'POST', 
+        data: formData,
+        dataType: 'json',
+        processData: false, 
+        contentType: false, 
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function (r) {
+            if (r.estado) 
+                Swal.fire({
+                    title: "COTIZACION",
+                    text: r.message,
+                    icon: "success",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "OK",
+                    allowOutsideClick: false, 
+                    allowEscapeKey: false, 
+                    showCancelButton: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('.overlayPagina').css("display","none");
+                        window.location.href = "{{url('loginProveedor/loginProveedor')}}";
+                    }
+                });
+            else 
+                msjRee(r); 
+            $('.overlayPagina').css("display","none");
+            $('.regPro').prop('disabled',false); 
+        },
+        error: function (xhr, status, error) {
+            msjSimple(false,"Ocurrio un error porfavor contactese con el Administrador.")
         }
-        else
-        {
-            $('.pn').parent().parent().css('display','none');
-            $('.pj').parent().parent().css('display','flex');
-            $('.pn').val('');
-        }
-// pn
-        // {
-        //     $('.nombre').rules('add', {required: true});
-        //     $('.apellidoPaterno').rules('add', {required: true});
-        //     $('.apellidoMaterno').rules('add', {required: true});
-        //     $('.razonSocial').rules('remove', 'required');
-        //     $('.pj').val('');
-        //     cleanFv('fvproveedor');
-        //     $('.dataRepresentante').css('display','none');
-        // }
-        // else
-        // {
-        //     $('.razonSocial').rules('add', {required: true});
-        //     $('.nombre').rules('remove', 'required');
-        //     $('.apellidoPaterno').rules('remove', 'required');
-        //     $('.apellidoMaterno').rules('remove', 'required');
-        //     $('.pn').val('');
-        //     cleanFv('fvproveedor');
-        //     $('.dataRepresentante').css('display','block');
-        // }
-
-    }
-    // function ingresar()
-    // {
-    //  window.location.href = "{{url('home/home')}}";
-    // }
-    
-    // $('.entrar').on('click',function(){
-    //  alert('enviar data desde entrar')
-    // });
-    // $('.sig-in').on('click',function(){
-    //     if($('#fvlogin').valid()==false)
-    //     {return;}
-    //     var formData = new FormData($("#fvlogin")[0]);
-    //     $('.sig-in').prop('disabled',true); 
-    //     $('.overlayPagina').css("display","flex");
-    //     jQuery.ajax({
-    //         url: "{{ url('login/sigin') }}",
-    //         method: 'POST', 
-    //         data: formData,
-    //         dataType: 'json',
-    //         processData: false, 
-    //         contentType: false, 
-    //         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-    //         success: function (r) {
-    //             if (r.estado) 
-    //                 window.location.href = "{{url('home/home')}}";
-    //             else 
-    //             {
-    //              $('.overlayPagina').css("display","none");
-    //              $('.sig-in').prop('disabled',false);
-    //                 msjRee(r); 
-    //             }
-    //         },
-    //         error: function (xhr, status, error) {
-    //             $('.overlayPagina').css("display","none");
-    //             $('.sig-in').prop('disabled',false);
-    //             msjSimple(false,'Ocurrio un problema, porfavor contactese con el administrador');
-    //         }
-    //     });
-    // });
-    $('.regPro').on('click',function(){
-        regPro()
     });
-    function regPro()
-    {
-        if($('#fvregpro').valid()==false)
-        {return;}
-        var formData = new FormData($("#fvregpro")[0]);
-        // formData.append('id', idDocumento); 
-        // formData.append('file', $('#archivo')[0].files.length>0?'true':'false');
-        $('.regPro').prop('disabled',true); 
-        $('.overlayPagina').css("display","flex");
-        jQuery.ajax({
-            url: "{{ url('portal/proveedor/guardar') }}",
-            method: 'POST', 
-            data: formData,
-            dataType: 'json',
-            processData: false, 
-            contentType: false, 
-            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-            success: function (r) {
-                if (r.estado) 
-                    Swal.fire({
-                        title: "COTIZACION",
-                        text: r.message,
-                        icon: "success",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "OK",
-                        allowOutsideClick: false, 
-                        allowEscapeKey: false, 
-                        showCancelButton: false,
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $('.overlayPagina').css("display","none");
-                            window.location.href = "{{url('loginProveedor/loginProveedor')}}";
-                        }
-                    });
-                else 
-                    msjRee(r); 
-                $('.overlayPagina').css("display","none");
-                $('.regPro').prop('disabled',false); 
-            },
-            error: function (xhr, status, error) {
-                msjSimple(false,"Ocurrio un error porfavor contactese con el Administrador.")
-            }
-        });
-    }
-    function rules()
-    {
-        return {
-            tipoPersona: {required: true,},
-            ruc: {required: true,},
-            nombre: {required: true,},
-            apellidoPaterno: {required: true,},
-            apellidoMaterno: {required: true,},
-            razonSocial: {required: true,},
-            correo: {required: true,},
-            celular: {required: true,},
-        };
-    }
+}
+function rules()
+{
+    return {
+        tipoPersona: {required: true,},
+        ruc: {required: true,},
+        nombre: {required: true,},
+        apellidoPaterno: {required: true,},
+        apellidoMaterno: {required: true,},
+        razonSocial: {required: true,},
+        correo: {required: true,},
+        celular: {required: true,},
+    };
+}
 </script>
 </body>
 </html>

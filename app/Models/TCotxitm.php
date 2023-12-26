@@ -9,7 +9,7 @@ class TCotxitm extends Model
 {
     protected $table='cotxitm';
 	protected $primaryKey='idCi';
-	public $incrementing=true;
+	public $incrementing=false;
 	public $timestamps=false;
 
     protected $fillable = [

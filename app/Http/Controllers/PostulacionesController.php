@@ -15,6 +15,7 @@ class PostulacionesController extends Controller
 {
     public function actListar()
     {
+    	// dd('esteeeeeeeeeee');
 		$registros = TCotizacion::select('cotizacion.idCot',
 				'cotizacion.numeroCotizacion',
 				'cotizacion.tipo',
@@ -22,6 +23,7 @@ class PostulacionesController extends Controller
 				'cotizacion.estadoCotizacion',
 				'cotizacion.fechaCotizacion',
 				'cotizacion.fechaFinalizacion',
+				'cotizacion.horaFinalizacion',
 				DB::raw('count(crp.idCot) as cantidad')
 			)
             ->join('cotrecpro as crp', 'crp.idCot', '=', 'cotizacion.idCot')
@@ -32,6 +34,7 @@ class PostulacionesController extends Controller
 				'cotizacion.estadoCotizacion',
 				'cotizacion.fechaCotizacion',
 				'cotizacion.fechaFinalizacion',
+				'cotizacion.horaFinalizacion',
             	'cotizacion.numeroCotizacion'
             )
             ->where('cotizacion.estadoCotizacion','3')

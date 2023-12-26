@@ -243,7 +243,8 @@ $(document).ready( function () {
     $.validator.addMethod("lettersOnly", function(value, element) {
       return this.optional(element) || /^[A-Za-z]+$/.test(value);
     }, "Este campo debe contener solo letras.");
-    initValidate();
+    initFv('fvusuario',rules());
+    // initValidate();
 });
 $('.guardar').on('click',function(){
     guardar();
@@ -286,11 +287,14 @@ function guardar()
                 fillRegistros();
             }
             cleanFv('fvusuario');
-            console.log(r);
-            
+            // console.log(r);
             $('.guardar').prop('disabled',false);
             $('#modalRegistrar').modal('hide');
             msjRee(r);
+        },
+        error: function (xhr, status, error) {
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
+            $('.guardar').prop('disabled',false);
         }
     });
 }
@@ -303,55 +307,15 @@ function limpiarForm()
 function rules()
 {
     return {
-        dni: {
-            required: true,
-            digits: true,
-            minlength: 8
-        },
-        nombre: {
-            required: true,
-            lettersOnly: true
-        },
-        apellidoPaterno: {
-            required: true,
-            lettersOnly: true
-        },
-        apellidoMaterno: {
-            required: true,
-            lettersOnly: true
-        },
-        usuario: {
-            required: true,
-        },
-        password: {
-            required: true,
-        },
-        tipo: {
-            required: true,
-        },
-        celular: {
-            required: true,
-            minlength: 9
-        }
+        dni: {required: true,digits: true,minlength: 8},
+        nombre: {required: true,lettersOnly: true},
+        apellidoPaterno: {required: true,lettersOnly: true},
+        apellidoMaterno: {required: true,lettersOnly: true},
+        usuario: {required: true,},
+        password: {required: true,},
+        tipo: {required: true,},
+        celular: {required: true,minlength: 9}
     };
-}
-function initValidate()
-{
-    $('#fvusuario').validate({
-        rules: rules(),
-        errorElement: 'span',
-        errorPlacement: function (error, element) {
-            error.addClass('invalid-feedback');
-            element.closest('.form-group').append(error);
-        },
-        highlight: function (element, errorClass, validClass) {
-            $(element).addClass('is-invalid');
-        },
-        unhighlight: function (element, errorClass, validClass) {
-            $(element).removeClass('is-invalid');
-            $(element).addClass('is-valid');
-        }
-    });
 }
 function editar(id)
 {

@@ -334,3 +334,28 @@ function formatoHour(hora)
     let formatted_hours = '<span class="badge badge-light"><i class="fa fa-clock"></i> '+hora+'</span>';
     return formatted_hours;
 }
+function redirectUrlMsj(url,msj)
+{
+    Swal.fire({
+        title: "COTIZACION",
+        text: msj,
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        confirmButtonText: "OK",
+        allowOutsideClick: false, 
+        allowEscapeKey: false, 
+        showCancelButton: false,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url;
+        }
+    });
+}
+function fechaCotizacionFormat(fechaCotizacion)
+{
+    var fecha = new Date(fechaCotizacion);
+    var fechaCorregida = new Date(fecha);
+    fechaCorregida.setDate(fecha.getDate() + 1);
+    return formatoDate(fechaCorregida);
+}

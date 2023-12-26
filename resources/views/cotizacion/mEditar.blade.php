@@ -145,13 +145,6 @@
                             </select>
                         </div>
                     </div>
-<!-- ------------------------------------------------------------------------------------- -->
-                    <!-- <div class="col-md-12 mb-3">
-                        <button class="btn btn-sm btn-success float-right btnPmsRegistrar" data-toggle="modal" data-target="#modalRegistrar">
-                            <i class="fa fa-list"></i> Cotizaciones
-                        </button>
-                    </div> -->
-                    
                 </div>
                 </form>
             </div>
@@ -164,22 +157,14 @@
 </div>
 <script>
     $(document).ready( function () {
-        // loadCotizacion();
-        // initValidate();
-        // $('.overlayPagina').css("display","none");
-        
         $('#ifechaCotizacion').datetimepicker({format: 'YYYY-MM-DD'});
         $('#ifechaFinalizacion').datetimepicker({format: 'YYYY-MM-DD'});
         $('#ihoraCotizacion').datetimepicker({format: 'LT'});
         $('#ihoraFinalizacion').datetimepicker({format: 'LT'});
         initFv('efvcotizacion',rules());
     });
-    $('.guardarCambios').on('click',function(){
-        guardarCambios();
-    });
-    $('.inputDate').on('click',function(){
-        $(this).parent().find('.input-group-prepend').click();
-    });
+    $('.guardarCambios').on('click',function(){guardarCambios();});
+    $('.inputDate').on('click',function(){$(this).parent().find('.input-group-prepend').click();});
     function rules()
     {
         return {
@@ -190,7 +175,6 @@
             fechaCotizacion: {required: true,},
             fechaFinalizacion: {required: true,},
             concepto: {required: true,},
-            // estado: {required: true,},
         };
     }
     function loadCotizacion(id)
@@ -202,19 +186,15 @@
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
-                // limpiarForm();
-
                 $('#idCot').val(r.data.idCot);
                 $('#numeroCotizacion').val(r.data.numeroCotizacion);
                 $('#tipo').val(r.data.tipo);
-                // $('#unidadEjecutora').val(r.data.unidadEjecutora);
                 $('#documento').val(r.data.documento);
                 $('#fechaCotizacion').val(r.data.fechaCotizacion);
                 $('#horaCotizacion').val(r.data.horaCotizacion);
                 console.log(r.data.fechaFinalizacion);
                 $('#fechaFinalizacion').val(r.data.fechaFinalizacion);
                 $('#horaFinalizacion').val(r.data.horaFinalizacion);
-                
                 $('#concepto').val(r.data.concepto);
                 $('#descripcion').val(r.data.descripcion);
                 $('#file').val(r.data.file);
@@ -222,7 +202,6 @@
                 var dir = $('.fileCotizacion').attr('href');
                 $('.fileCotizacion').attr('href',dir+'/'+r.data.archivo);
                 $('.overlayRegistros').css("display","none");
-                
                 $('#mEditar').modal('show');
             },
             error: function (xhr, status, error) {

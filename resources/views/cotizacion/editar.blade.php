@@ -212,165 +212,141 @@
     </div>
 </div>
 <script>
-// localStorage.setItem("sbd",1);
-// localStorage.setItem("sba",4);
-    // var tablaDeRegistros;
-    // var flip=0;
+$(document).ready( function () {
+    loadCotizacion();
+    initValidate();
+    $('.overlayPagina').css("display","none");
     
-    $(document).ready( function () {
-        loadCotizacion();
-        initValidate();
-        $('.overlayPagina').css("display","none");
-        
-        // var Toast = Swal.mixin({
-        //     toast: true,
-        //     position: 'top-end',
-        //     showConfirmButton: false,
-        //     timer: 3000
-        // });
-        // Toast.fire({
-        //     icon: 'error',
-        //     title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
-        // });
-        $('#ifechaCotizacion').datetimepicker({format: 'YYYY-MM-DD'});
-        $('#ifechaFinalizacion').datetimepicker({format: 'YYYY-MM-DD'});
-        $('#ihoraCotizacion').datetimepicker({format: 'LT'});
-        $('#ihoraFinalizacion').datetimepicker({format: 'LT'});
+    // var Toast = Swal.mixin({
+    //     toast: true,
+    //     position: 'top-end',
+    //     showConfirmButton: false,
+    //     timer: 3000
+    // });
+    // Toast.fire({
+    //     icon: 'error',
+    //     title: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr.'
+    // });
+    $('#ifechaCotizacion').datetimepicker({format: 'YYYY-MM-DD'});
+    $('#ifechaFinalizacion').datetimepicker({format: 'YYYY-MM-DD'});
+    $('#ihoraCotizacion').datetimepicker({format: 'LT'});
+    $('#ihoraFinalizacion').datetimepicker({format: 'LT'});
+});
+$('.guardarCambios').on('click',function(){
+    guardarCambios();
+});
+$('.inputDate').on('click',function(){
+    $(this).parent().find('.input-group-prepend').click();
+});
+function rules()
+{
+    return {
+        numeroCotizacion: {required: true,},
+        tipo: {required: true,},
+        unidadEjecutora: {required: true,},
+        documento: {required: true,},
+        fechaCotizacion: {required: true,},
+        fechaFinalizacion: {required: true,},
+        concepto: {required: true,},
+        estado: {required: true,},
+    };
+}
+function loadCotizacion()
+{
+    jQuery.ajax({
+        url: "{{ url('cotizacion/show') }}",
+        method: 'POST', 
+        data: {id:localStorage.getItem("idCot")},
+        dataType: 'json',
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function (r) {
+            $('#numeroCotizacion').val(r.data.numeroCotizacion);
+            $('#tipo').val(r.data.tipo);
+            // $('#unidadEjecutora').val(r.data.unidadEjecutora);
+            $('#documento').val(r.data.documento);
+            $('#fechaCotizacion').val(r.data.fechaCotizacion);
+            $('#horaCotizacion').val(r.data.horaCotizacion);
+            console.log(r.data.fechaFinalizacion);
+            $('#fechaFinalizacion').val(r.data.fechaFinalizacion);
+            $('#horaFinalizacion').val(r.data.horaFinalizacion);
+            
+            $('#concepto').val(r.data.concepto);
+            $('#descripcion').val(r.data.descripcion);
+            $('#file').val(r.data.file);
+            $('#estadoCotizacion').val(r.data.estadoCotizacion);
+            var dir = $('.fileCotizacion').attr('href');
+            $('.fileCotizacion').attr('href',dir+'/'+r.data.archivo);
+            $('.overlayRegistros').css("display","none");
+        },
+        error: function (xhr, status, error) {
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
+        }
     });
-    $('.guardarCambios').on('click',function(){
-        guardarCambios();
+}
+function initValidate()
+{
+    $('#efvcotizacion').validate({
+        rules: rules(),
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+            $(element).addClass('is-valid');
+        }
     });
-    $('.inputDate').on('click',function(){
-        $(this).parent().find('.input-group-prepend').click();
-    });
-    function rules()
-    {
-        return {
-            numeroCotizacion: {
-                required: true,
-            },
-            tipo: {
-                required: true,
-            },
-            unidadEjecutora: {
-                required: true,
-            },
-            documento: {
-                required: true,
-            },
-            fechaCotizacion: {
-                required: true,
-            },
-            fechaFinalizacion: {
-                required: true,
-            },
-            concepto: {
-                required: true,
-            },
-            estado: {
-                required: true,
-            },
-        };
-    }
-    function loadCotizacion()
-    {
-        jQuery.ajax({
-            url: "{{ url('cotizacion/show') }}",
-            method: 'POST', 
-            data: {id:localStorage.getItem("idCot")},
-            dataType: 'json',
-            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-            success: function (r) {
-                // limpiarForm();
-                $('#numeroCotizacion').val(r.data.numeroCotizacion);
-                $('#tipo').val(r.data.tipo);
-                // $('#unidadEjecutora').val(r.data.unidadEjecutora);
-                $('#documento').val(r.data.documento);
-                $('#fechaCotizacion').val(r.data.fechaCotizacion);
-                $('#horaCotizacion').val(r.data.horaCotizacion);
-                console.log(r.data.fechaFinalizacion);
-                $('#fechaFinalizacion').val(r.data.fechaFinalizacion);
-                $('#horaFinalizacion').val(r.data.horaFinalizacion);
-                
-                $('#concepto').val(r.data.concepto);
-                $('#descripcion').val(r.data.descripcion);
-                $('#file').val(r.data.file);
-                $('#estadoCotizacion').val(r.data.estadoCotizacion);
-                var dir = $('.fileCotizacion').attr('href');
-                $('.fileCotizacion').attr('href',dir+'/'+r.data.archivo);
+}
+function guardarCambios()
+{
+    if($('#efvcotizacion').valid()==false)
+    {return;}
+    var formData = new FormData($("#efvcotizacion")[0]);
+    formData.append('id', localStorage.getItem("idCot")); 
+    $('.guardarCambios').prop('disabled',true); 
+    jQuery.ajax({
+        url: "{{ url('cotizacion/guardarCambios') }}",
+        method: 'POST', 
+        data: formData,
+        dataType: 'json',
+        processData: false, 
+        contentType: false, 
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function (r) {
+            if (r.estado) 
+            {
+                // $('.guardar').prop('disabled',false); 
+                Swal.fire({
+                    title: "COTIZACION",
+                    text: r.message,
+                    icon: "success",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    confirmButtonText: "OK",
+                    allowOutsideClick: false, 
+                    allowEscapeKey: false, 
+                    showCancelButton: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{url('cotizacion/ver')}}";
+                    }
+                });
+            } 
+            else 
+            {
                 $('.overlayRegistros').css("display","none");
-                
-                
-            },
-            error: function (xhr, status, error) {
-                alert('salio un error');
+                msjRee(r);
             }
-        });
-    }
-    function initValidate()
-    {
-        $('#efvcotizacion').validate({
-            rules: rules(),
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function (element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
-                $(element).addClass('is-valid');
-            }
-        });
-    }
-    function guardarCambios()
-    {
-        if($('#efvcotizacion').valid()==false)
-        {return;}
-        var formData = new FormData($("#efvcotizacion")[0]);
-        formData.append('id', localStorage.getItem("idCot")); 
-        $('.guardarCambios').prop('disabled',true); 
-        jQuery.ajax({
-            url: "{{ url('cotizacion/guardarCambios') }}",
-            method: 'POST', 
-            data: formData,
-            dataType: 'json',
-            processData: false, 
-            contentType: false, 
-            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-            success: function (r) {
-                if (r.estado) 
-                {
-                    // $('.guardar').prop('disabled',false); 
-                    Swal.fire({
-                        title: "COTIZACION",
-                        text: r.message,
-                        icon: "success",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        confirmButtonText: "OK",
-                        allowOutsideClick: false, 
-                        allowEscapeKey: false, 
-                        showCancelButton: false,
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = "{{url('cotizacion/ver')}}";
-                        }
-                    });
-                } 
-                else 
-                {
-                    $('.overlayRegistros').css("display","none");
-                    msjRee(r);
-                }
-                $('.guardarCambios').prop('disabled',false);
-            },
-            error: function (xhr, status, error) {
-                alert('salio un error');
-            }
-        });
-    }
+            $('.guardarCambios').prop('disabled',false);
+        },
+        error: function (xhr, status, error) {
+            alert('salio un error');
+        }
+    });
+}
 </script>
 @endsection

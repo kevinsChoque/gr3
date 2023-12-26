@@ -5,7 +5,6 @@
         <div class="row mb-2">
             <div class="col-sm-6"><h1 class="m-0">Cotizaciones Activas</h1></div>
             <div class="col-sm-6">
-                <!-- <a href="{{url('cotizacion/ver')}}" class="btn btn-success float-right"><i class="fa fa-list"></i> Cotizaciones</a> -->
                 <ol class="breadcrumb float-sm-right" style="display: none;">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
                     <li class="breadcrumb-item active">Dashboard v3</li>
@@ -18,9 +17,7 @@
 @section('contentPanelAdmin')
 <style>
 	.custom-file-input:lang(en)~.custom-file-label::after {
-	    /*content: "\f004";*/
-	    content: "PDF"; /* Código Unicode del icono de PDF */
-      	/*font-family: 'Font Awesome 4 Free';*/
+	    content: "PDF";
       	font-size: .9rem;
       	padding-inline: 3px;
 	}
@@ -110,55 +107,7 @@
 						</div>
 					</div>
 				</div>
-				<!-- <div class="col-lg-6">
-					<div class="form-group row">
-						<label class="col-sm-4 col-form-label text-right">Tiempo de garantia: <span class="text-danger">*</span></label>
-						<div class="col-sm-6">
-							<input type="text" id="timeGarantia" name="timeGarantia" class="form-control timeGarantia">
-						</div>
-					</div>
-				</div> -->
     		</div>
-    		<!-- <hr>
-    		<div class="row">
-    			<div class="col-lg-12">
-    				<div class="callout callout-info py-2 bg-teal">
-						<h5 class="m-0 font-weight-bold font-italic">Formatos!</h5>
-						<p class="m-0">- Los formatos se encuentran en el <strong>MENU (COLUMNA IZQUIERDA)</strong>.</p>
-						<p class="m-0">- Descargar los formatos y llenar los datos que falten, una vez realizado subirlos donde corresponda.</p>
-						<p class="m-0">- <strong>La COTIZACION LLENADA:</strong> Registramos todos los datos e imprimimos.</p>
-					</div>
-    			</div>	
-    			<div class="col-lg-3">
-    				<label class="m-0">Cotizacion llenada: <span class="text-danger">*</span></label>
-    				<div class="custom-file">
-                      	<input type="file" class="custom-file-input" onchange="changeNameFile(this)" name="pdfCll" id="pdfCll">
-                      	<label class="custom-file-label" for="customFile">Cotizacion llenada</label>
-                    </div>
-    			</div>	
-    			<div class="col-lg-3">
-    				<label class="m-0">Declaracion Jurada: <span class="text-danger">*</span></label>
-    				<div class="custom-file">
-                      	<input type="file" class="custom-file-input" onchange="changeNameFile(this)" name="pdfDj" id="pdfDj">
-                      	<label class="custom-file-label" for="customFile">Declaracion jurada</label>
-                    </div>
-    			</div>
-    			<div class="col-lg-3">
-    				<label class="m-0">CCI: <span class="text-danger">*</span></label>
-    				<div class="custom-file">
-                      	<input type="file" class="custom-file-input" onchange="changeNameFile(this)" name="pdfCci" id="pdfCci">
-                      	<label class="custom-file-label" for="customFile">CCI</label>
-                    </div>
-    			</div>
-    			<div class="col-lg-3">
-    				<label class="m-0">Anexo 5: <span class="text-danger">*</span></label>
-    				<div class="custom-file">
-                      	<input type="file" class="custom-file-input" onchange="changeNameFile(this)" name="pdfAnexo5" id="pdfAnexo5">
-                      	<label class="custom-file-label" for="customFile">Anexo 5</label>
-                    </div>
-    			</div>
-    		</div>
-    		<hr> -->
     		<div class="row">
                 <div class="col-lg-12">
                 	<div class="table-responsive">
@@ -177,9 +126,6 @@
 	                            </tr>
 	                        </thead>
 	                        <tbody id="listItems">
-	                            <!-- <tr class="text-center">
-	                                <th colspan="6">Sin items</th>
-	                            </tr> -->
 	                        </tbody>
 	                        <tfoot>
 	                        	<tr class="footTable">
@@ -195,13 +141,6 @@
     	</div>
     	<div class="card-footer text-center">
     		<button type="button" class="btn btn-success guardarCotPro ml-2"><i class="fa fa-save"></i> Guardar Cotizacion</button>
-			<!-- <button type="button" class="btn btn-primary downloadCotLle"><i class="fa fa-file-pdf"></i> Descargar cotizacion llenada</button> -->
-
-
-            
-			<!-- <a href="{{url('panelAdm/paCotRecPro/generarCot')}}" target="_blank" class="btn btn-primary shadow downloadCotLle">
-                <i class="fas fa-file-pdf"></i> Descargar Cotizacion Llenada
-            </a> -->
     	</div>
     	<form id="downloadCotizacion" action="{{ url('panelAdm/paCotRecPro/generarCot') }}" method="POST" target="_blank">
 		    @csrf
@@ -210,10 +149,6 @@
 		    <input type="hidden" id="tValidez" name="tValidez">
 		    <input type="hidden" id="tGarantia" name="tGarantia">
 		    <input type="hidden" id="idCot" name="idCot">
-		    <!-- Agrega aquí cualquier dato adicional que desees enviar -->
-		    <!-- <button type="submit" class="btn btn-primary shadow">
-		        <i class="fas fa-file-pdf"></i> Descargar Cotizacion Llenada
-		    </button> -->
 		</form>
     </div>
 </div>
@@ -244,7 +179,7 @@
  //    	// $('.changeNameFile').html(fileName);
  //    });
  	$('.downloadCotLle').on('click',function(){
- 		downloadCotLle()
+ 		downloadCotLle();
  	});
 var po='';
  	function downloadCotLle()
@@ -354,12 +289,6 @@ var po='';
 	        timeEntrega: {required: true,},
 	        timeValidez: {required: true,},
 	        dedica: {required: true,},
-	        // timeGarantia: {required: true,},
-
-	        // pdfCll: {required: true,},
-	        // pdfDj: {required: true,},
-	        // pdfCci: {required: true,},
-	        // pdfAnexo5: {required: true,},
 	    };
 	}
 	var obj;
@@ -536,7 +465,6 @@ var po='';
     
     function loadData()
     {
-    	// console.log('entro')
     	$('#mCotizacion').modal('show');
         jQuery.ajax(
         { 
@@ -545,12 +473,12 @@ var po='';
             method: 'post',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function(r){
-                console.log('-------showProCot-------');
-                console.log(r.cot.tipo);
+                // console.log('-------showProCot-------');
+                // console.log(r.cot.tipo);
                 tipoCotizacion=r.cot.tipo;
-                console.log('-------showProCot-------');
+                // console.log('-------showProCot-------');
+
                 // showDataCotizacion(r);
-                // console.log(r.pro.tipoPersona);
                 $('.nombreRazon').val(r.pro.tipoPersona=="PERSONA NATURAL"?
                 	r.pro.nombre+' '+r.pro.apellidoPaterno+' '+r.pro.apellidoMaterno:r.pro.razonSocial);
                 $('.concepto').val(r.cot.concepto);
@@ -598,9 +526,9 @@ var po='';
 	        dataType: 'json',
 	        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
 	        success: function (r) {
-	        	console.log('-------loadSegunCotizacion-------');
-	            console.log(r);
-	            console.log('-------loadSegunCotizacion-------');
+	        	// console.log('-------loadSegunCotizacion-------');
+	         //    console.log(r);
+	         //    console.log('-------loadSegunCotizacion-------');
 	            let idFila = '';
 	            var html = '';
                 let segunTipo = '';
@@ -616,7 +544,7 @@ var po='';
 	                html += '<tr class="itemsCotizacion fila'+idFila+'">' +
 	                    '<td class="font-weight-bold idCi nombreItem" data-id="'+novDato(r.data[i].idCi)+'">' + novDato(r.data[i].nombre) +'</td>' +
 	                    '<td class="text-center umItem"><span class="font-weight-bold badge badge-light um'+idFila+'">'+ novDato(r.data[i].nombreUm) + '</td>' +
-	                    '<td class="text-center cantItem cant'+r.data[i].idItm+'">' + r.data[i].cantidad + '</td>' +
+	                    '<td class="text-center cantItem cant'+r.data[i].idItm+'">' + novDato(r.data[i].cantidad) + '</td>' +
                         segunTipo +
 
 	                    // '<td class="text-center">' + '<input type="text" class="form-control garantia px-1">' + '</td>' +
@@ -648,12 +576,15 @@ var po='';
 	function changeNameFile(elem)
 	{
 		var fileName = $(elem).val().split('\\').pop();
-    	console.log(fileName);
+    	// console.log(fileName);
     	$(elem).parent().find('label').html(fileName);
 	}
 	function calcSubTotal(ele,id)
 	{
-		$('.st'+id).val($(ele).val()*parseFloat($('.cant'+id).html()));
+        if(tipoCotizacion=='Bienes')
+		    $('.st'+id).val($(ele).val()*parseFloat($('.cant'+id).html()));
+        else
+            $('.st'+id).val($(ele).val());
 		calcTotal();
 	}
 	function calcTotal()

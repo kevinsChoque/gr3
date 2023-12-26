@@ -9,7 +9,7 @@ class TProveedor extends Model
 {
     protected $table='proveedor';
 	protected $primaryKey='idPro';
-	public $incrementing=true;
+	public $incrementing=false;
 	public $timestamps=false;
 
     protected $fillable = [

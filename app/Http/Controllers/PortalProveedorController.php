@@ -31,6 +31,7 @@ class PortalProveedorController extends Controller
         $r->merge(['numeroDocumento' => $r->ruc]);
         // $r->merge(['password' => Hash::make($r->numeroDocumento)]);
         $password = Str::random(8);
+        $r->merge(['idPro' => Str::uuid()]);
         $r->merge(['password' => Hash::make($password)]);
         $r->merge(['estadoProveedor' => '1']);
     	$r->merge(['estado' => '1']);

@@ -5,18 +5,19 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\TSuspension;
+use App\Models\TProveedor;
 
 class SuspensionController extends Controller
 {
     public function actGuardar(Request $r)
     {
+        // dd($r->all());
         $tSus = TSuspension::where('idPro',$r->idPro)->where('estadoSuspension','1')->first();
         if($tSus!=null)
-        {
-            return response()->json(['estado' => false, 'message' => 'El proveedor ya cuenta con suspension.']);
-        }
+        {   return response()->json(['estado' => false, 'message' => 'El proveedor ya cuenta con suspension.']);}
         DB::beginTransaction();
         if ($r->hasFile('file')) 
         {
@@ -24,13 +25,24 @@ class SuspensionController extends Controller
             $nombreArchivo = time() . '_' . str_replace(' ', '',$archivo->getClientOriginalName());
             if (Storage::put('public/suspensiones/'.$r->idPro.'/' . $nombreArchivo, file_get_contents($archivo))) 
             {
+                $r->merge(['idSus' => Str::uuid()]);
                 $r->merge(['estadoSuspension' => '1']);
                 $r->merge(['archivo' => $nombreArchivo]);
                 $r->merge(['fr' => Carbon::now()]);
                 if(TSuspension::create($r->all()))
                 {
-                    DB::commit();
-                    return response()->json(['estado' => true, 'message' => 'La suspension del proveedor fue registrada correctamente.']);
+                    $tPro = TProveedor::find($r->idPro);
+                    $tPro->estadoProveedor = '0';
+                    if($tPro->save())
+                    {
+                        DB::commit();
+                        return response()->json(['estado' => true, 'message' => 'La suspension del proveedor fue registrada correctamente.']);
+                    }
+                    else
+                    {
+                        DB::rollBack();
+                        return response()->json(['estado' => false, 'message' => 'Error al actualizar estado de proveedor.']);
+                    }
                 }
                 else
                 {

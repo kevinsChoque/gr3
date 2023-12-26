@@ -9,7 +9,7 @@ class TDetalleprocot extends Model
 {
     protected $table='detalleprocot';
 	protected $primaryKey='idCrp';
-	public $incrementing=true;
+	public $incrementing=false;
 	public $timestamps=false;
 
     protected $fillable = [

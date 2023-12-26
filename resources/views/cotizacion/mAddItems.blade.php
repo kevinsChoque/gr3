@@ -206,19 +206,19 @@ function addItem()
     jQuery.ajax({
         url: "{{ url('cotxitm/guardar') }}",
         method: 'POST', 
-        data: {idCot:localStorage.getItem('idCot'),idItm:$('#items').val(),},
+        data: {idCot:idCot,idItm:$('#items').val(),},
         dataType: 'json',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
-            console.log(r);
+            // console.log(r);
             if (r.estado) {
-                let idFila = localStorage.getItem('idCot')+r.item.idItm;
+                let idFila = idCot+r.item.idItm;
                 let html='';
                 html += '<tr class="fila'+idFila+'">' +
                         '<td class="font-weight-bold">' + novDato(r.item.nombre) +'</td>' +
                         '<td class="text-center">' + novDato(r.item.clasificador) + '</td>' +
                         '<td class="text-center">' + novDato(r.item.descripcion) + '</td>' +
-                        '<td class="text-center"><span class="font-weight-bold badge badge-light shadow um'+idFila+'">'+ novDato(r.item.cantidad) +'</span> <button class="btn text-success" onclick="seleccionarUm('+idFila+','+r.item.idItm+')"><i class="fa fa-edit"></i></button></td>' +
+                        '<td class="text-center"><span class="font-weight-bold badge badge-light shadow um'+idFila+'">'+ novDato(r.item.cantidad) +'</span> <button class="btn text-success" onclick="seleccionarUm(\''+idFila+'\','+r.item.idItm+')"><i class="fa fa-edit"></i></button></td>' +
                         '<td class="text-center">' + 
                             '<div class="input-group">' +
                                 '<div class="input-group-prepend">' +
@@ -239,7 +239,7 @@ function addItem()
             $('.addItem').prop('disabled',false);
         },
         error: function (xhr, status, error) {
-            alert('salio un error');
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
         }
     });
 }
@@ -256,7 +256,7 @@ function loadCotizacionMai(id)
             var estadoCot = r.data.estadoCotizacion=='1'?'Activo':
                 r.data.estadoCotizacion=='2'?'Finalizado':'Borrador';
             let estateCotizacion = estadoCotizacion(r.data.estadoCotizacion);
-            console.log(estadoCotizacion)
+            // console.log(estadoCotizacion)
             $('.numeroCotizacion').html(r.data.numeroCotizacion);
             $('.tipo').html(r.data.tipo);
             $('.unidadEjecutora').html(novDato(r.data.unidadEjecutora));
@@ -273,7 +273,7 @@ function loadCotizacionMai(id)
             $('.fileCotizacion').attr('href',dir+'/'+r.data.archivo);
             $('.overlayRegistros').css("display","none");
             numero = r.data.numeroCotizacion;
-            console.log(r)
+            // console.log(r)
             // $('#mAddItems').modal('show');
         },
         error: function (xhr, status, error) {
@@ -290,17 +290,16 @@ function loadItemsCotizacion(id)
         dataType: 'json',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
-            console.log(r);
             let idFila = '';
             var html = '';
             for (var i = 0; i < r.data.length; i++) 
             {
-                idFila = localStorage.getItem('idCot')+r.data[i].idItm;
+                idFila = idCot+r.data[i].idItm;
                 html += '<tr class="fila'+idFila+'">' +
                     '<td class="font-weight-bold">' + novDato(r.data[i].nombre) + '</td>' +
                     '<td class="text-center">' + novDato(r.data[i].clasificador) + '</td>' +
                     '<td class="text-center">' + novDato(r.data[i].descripcion) + '</td>' +
-                    '<td class="text-center"><span class="font-weight-bold badge badge-light shadow um'+idFila+'">'+ novDato(r.data[i].nombreUm) +'</span> <button class="btn text-success" onclick="seleccionarUm('+idFila+','+r.data[i].idItm+')"><i class="fa fa-edit"></i></button>' +
+                    '<td class="text-center"><span class="font-weight-bold badge badge-light shadow um'+idFila+'">'+ novDato(r.data[i].nombreUm) +'</span> <button class="btn text-success" onclick="seleccionarUm(\''+idFila+'\','+r.data[i].idItm+')"><i class="fa fa-edit"></i></button>' +
                     '</td>' +
                     '<td class="text-center">' + 
                         '<div class="input-group">' +
@@ -315,13 +314,39 @@ function loadItemsCotizacion(id)
                     '</td>'+
                 '</tr>';
             }
-            console.log(html);
+            // console.log(html);
             $('#listItemsMai').html(html);
         },
         error: function (xhr, status, error) {
             msjSimple(false,'Algo salio mal, porfavor contactese con el Administrador.');
         }
     });
+}
+function changeCant(ele,idItm)
+{
+    let cadena = $(ele).val();
+    if(isNaN(cadena))
+    {
+        $(ele).val('');
+        return;
+    }
+    else
+    {
+        jQuery.ajax({
+            url: "{{ url('cotxitm/changeCant') }}",
+            method: 'POST', 
+            data: {idCot:idCot,idItm:idItm,cant:$(ele).val()},
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function (r) {
+
+            },
+            error: function (xhr, status, error) {
+                msjSimple(false,'Ocurrio un conflicto, porfavor contactese con el administrador.');
+            }
+        });
+    }
+    // ele.value = ele.value.replace(/[^0-9]/g,'');
 }
 function fillItems()
 {
@@ -344,19 +369,20 @@ function fillItems()
 }
 function deleteItem(idItm)
 {
+    // alert('.fila'+idCot+idItm);
     jQuery.ajax({
         url: "{{ url('cotxitm/eliminar') }}",
         method: 'POST', 
-        data: {idCot:localStorage.getItem("idCot"),idItm:idItm},
+        data: {idCot:idCot,idItm:idItm},
         dataType: 'json',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
-            $('.fila'+localStorage.getItem("idCot")+idItm).remove();
+            $('.fila'+idCot+idItm).remove();
             msjRee(r);
 
         },
         error: function (xhr, status, error) {
-            alert('Ocurrio un conflicto, porfavor contactese con el administrador.');
+            msjSimple(false,'Algo salio mal, porfavor contactese con el Administrador.');
         }
     });
 }
@@ -365,7 +391,7 @@ function seleccionar()
     jQuery.ajax({
         url: "{{ url('cotxitm/changeUm') }}",
         method: 'POST', 
-        data: {idCot:localStorage.getItem('idCot'),idItm:idItem,idUm:$('#unidadMedida').val()},
+        data: {idCot:idCot,idItm:idItem,idUm:$('#unidadMedida').val()},
         dataType: 'json',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
@@ -377,7 +403,7 @@ function seleccionar()
             $('#mUnidadMedida').modal('hide');
         },
         error: function (xhr, status, error) {
-            alert('salio un error');
+            msjSimple(false,'Algo salio mal, porfavor contactese con el Administrador.');
         }
     });
     // -----

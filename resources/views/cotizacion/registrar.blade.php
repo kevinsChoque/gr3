@@ -6,9 +6,6 @@
         <div class="row mb-2">
             <div class="col-sm-6"><h1 class="m-0">Cotizaciones</h1></div>
             <div class="col-sm-6">
-                <!-- <button class="btn btn-sm btn-success float-right btnPmsRegistrar" data-toggle="modal" data-target="#modalRegistrar">
-                    <i class="fa fa-list"></i> Cotizaciones
-                </button> -->
                 <a href="{{url('cotizacion/ver')}}" class="btn btn-success float-right"><i class="fa fa-list"></i> Cotizaciones</a>
                 <ol class="breadcrumb float-sm-right" style="display: none;">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -20,18 +17,8 @@
 </div>
 @endsection
 @section('content')
-<!-- <i class="fas fa-file-alt"></i><hr>
-<i class="fas fa-file-invoice"></i><hr>
-<i class="fas fa-chart-bar"></i><hr>
-<i class="fas fa-money-bill"></i> -->
-
 <div class="container-fluid">
     <div class="row">
-        <!-- <div class="col-md-12 mb-3">
-            <button class="btn btn-sm btn-success float-right btnPmsRegistrar" data-toggle="modal" data-target="#modalRegistrar">
-                <i class="fa fa-list"></i> Cotizaciones
-            </button>
-        </div> -->
         <div class="col-md-12 contenedorFormulario">
             <div class="card card-default card-info card-outline">
                 <div class="overlay overlayRegistros">
@@ -65,7 +52,7 @@
                                 <select name="tipo" id="tipo" class="form-control">
                                     <option disabled>Seleccione opcion</option>
                                     <option value="Bienes" selected>Bienes</option>
-                                    <option value="Servicios" selected>Servicios</option>
+                                    <option value="Servicios">Servicios</option>
                                 </select>
                             </div>
                         </div>
@@ -87,15 +74,6 @@
                                 <input type="text" class="form-control input" id="documento" name="documento">
                             </div>
                         </div>
-                        <!-- <div class="form-group col-lg-3">
-                            <label class="m-0">Fecha de la Cotizacion: <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text font-weight-bold"><i class="fa fa-calendar"></i></span>
-                                </div>
-                                <input type="date" class="form-control" id="fechaCotizacion" name="fechaCotizacion">
-                            </div>
-                        </div> -->
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="m-0">Fecha de la Cotizacion: <span class="text-danger">*</span></label>
@@ -114,19 +92,10 @@
                                     <div class="input-group-prepend" data-target="#ihoraCotizacion" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-clock"></i></div>
                                     </div>
-                                    <input type="text" class="form-control datetimepicker-input inputDate" data-target="#ihoraCotizacion" id="horaCotizacion" name="horaCotizacion"/>
+                                    <input type="text" class="form-control datetimepicker-input inputDate" data-target="#ihoraCotizacion" id="horaCotizacion" name="horaCotizacion" autocomplete="off"/>
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="form-group col-lg-3">
-                            <label class="m-0">Fecha de la finalizacion: <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
-                                </div>
-                                <input type="date" class="form-control" id="fechaFinalizacion input" name="fechaFinalizacion">
-                            </div>
-                        </div> -->
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="m-0">Fecha de la finalizacion: <span class="text-danger">*</span></label>
@@ -134,7 +103,7 @@
                                     <div class="input-group-prepend" data-target="#ifechaFinalizacion" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar-alt"></i></div>
                                     </div>
-                                    <input type="text" class="form-control datetimepicker-input inputDate" data-target="#ifechaFinalizacion" id="fechaFinalizacion" name="fechaFinalizacion">
+                                    <input type="text" class="form-control datetimepicker-input inputDate" data-target="#ifechaFinalizacion" id="fechaFinalizacion" name="fechaFinalizacion" autocomplete="off">
                                 </div>
                             </div>
                         </div>
@@ -145,21 +114,10 @@
                                     <div class="input-group-prepend" data-target="#ihoraFinalizacion" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-clock"></i></div>
                                     </div>
-                                    <input type="text" class="form-control datetimepicker-input inputDate" data-target="#ihoraFinalizacion" id="horaFinalizacion" name="horaFinalizacion">
+                                    <input type="text" class="form-control datetimepicker-input inputDate" data-target="#ihoraFinalizacion" id="horaFinalizacion" name="horaFinalizacion" autocomplete="off">
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-sm-3">
-                            <div class="form-group">
-                                <label class="m-0">test: <span class="text-danger">*</span></label>
-                                <div class="input-group date" id="test" data-target-input="nearest">
-                                    <div class="input-group-prepend" data-target="#test" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-clock"></i></div>
-                                    </div>
-                                    <input type="text" class="form-control datetimepicker-input inputDate" data-target="#test" id="ttt" name="ttt">
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="form-group col-lg-6">
                             <label class="m-0">Concepto: <span class="text-danger">*</span></label>
                             <div class="input-group">
@@ -212,14 +170,10 @@
         </div>
     </div>
 </div>
-
 <script>
-    
- // ----
 localStorage.setItem("sbd",1);
 localStorage.setItem("sba",4);
 $(document).ready( function () {
-
     $.validator.addMethod("extensionPdf", function(value, element) {
         return this.optional(element) || value.toLowerCase().endsWith(".pdf");
     }, "Solo se permiten archivos PDF");
@@ -227,18 +181,13 @@ $(document).ready( function () {
     initFv('fvcotizacion',rules());
     $('.overlayPagina').css("display","none");
     $('.overlayRegistros').css("display","none");
-    // ----
     $('#ifechaCotizacion').datetimepicker({format: 'YYYY-MM-DD',minDate: moment(),daysOfWeekDisabled: [0, 6], });
     $('#ifechaFinalizacion').datetimepicker({format: 'YYYY-MM-DD'});
     $('#ihoraCotizacion').datetimepicker({format: 'LT'});
     $('#ihoraFinalizacion').datetimepicker({format: 'LT'});
 });
-$('.inputDate').on('click',function(){
-    $(this).parent().find('.input-group-prepend').click();
-});
-$('.guardar').on('click',function(){
-    guardar();
-});
+$('.inputDate').on('click',function(){$(this).parent().find('.input-group-prepend').click();});
+$('.guardar').on('click',function(){guardar();});
 function loadPage()
 {
     var fechaActual = new Date();
@@ -266,7 +215,6 @@ function guardar()
     if($('#fvcotizacion').valid()==false)
     {return;}
     var formData = new FormData($("#fvcotizacion")[0]);
-    // formData.append('id', idDocumento); 
     // formData.append('file', $('#archivo')[0].files.length>0?'true':'false');
     $('.guardar').prop('disabled',true); 
     $('.overlayRegistros').css("display","flex");
@@ -277,28 +225,10 @@ function guardar()
         dataType: 'json',
         processData: false, 
         contentType: false, 
-        headers: {
-            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-        },
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
-            // limpiarForm();
-            if (r.estado) {
-                Swal.fire({
-                    title: "COTIZACION",
-                    text: r.message,
-                    icon: "success",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: "OK",
-                    allowOutsideClick: false, 
-                    allowEscapeKey: false, 
-                    showCancelButton: false,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = "{{url('cotizacion/ver')}}";
-                    }
-                });
-            } 
+            if (r.estado) 
+                redirectUrlMsj("{{url('cotizacion/ver')}}",r.message);
             else 
             {
                 $('.overlayRegistros').css("display","none");
@@ -307,14 +237,11 @@ function guardar()
             $('.guardar').prop('disabled',false);
         },
         error: function (xhr, status, error) {
-            alert('salio un error');
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
         }
     });
 }
 function limpiarForm()
-{
-    // $(".select2").val("0").trigger("change.select2");
-    $('.input').val('');
-}
+{   $('.input').val('');}
 </script>
 @endsection

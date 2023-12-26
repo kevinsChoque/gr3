@@ -93,7 +93,7 @@ localStorage.setItem("sba",7);
                         '<td class="align-middle text-center font-weight-bold">' + r.data[i].numeroCotizacion + '</td>' +
                         '<td class="align-middle text-left"><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
                         '<td class="align-middle text-center">' + badgeTipoCot(r.data[i].tipo) +'</td>' +
-                        '<td class="align-middle text-center">' + novDato(r.data[i].fechaFinalizacion) + '</td>' +
+                        '<td class="align-middle text-center">' + fechaCotizacionFormat(r.data[i].fechaFinalizacion) +'<br>'+ formatoHour(r.data[i].horaFinalizacion) + '</td>' +
                         '<td class="align-middle text-center font-weight-bold">' + novDato(r.data[i].cantidad) + ' <i class="fa fa-user"></i></td>' +
                         // una cotizacion cuando finaliza no puede ser cambiado, 
                         // '<td class="text-center">' + segunEstadoCotizacion(r.data[i]) + '</td>' +

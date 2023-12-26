@@ -204,9 +204,6 @@
         fillProveedor();
         // initFv('fvproveedor',rules());
 
-
-
-        
         // $('.overlayRegistros').css("display","none");
     });
     $('.tipoPersona').on('change',function(){
@@ -227,7 +224,7 @@
         jQuery.ajax(
         { 
             url: "{{ url('proveedor/editar') }}",
-            data: {id:{{Session::get('proveedor')->idPro}}},
+            data: {id:"{{Session::get('proveedor')->idPro}}"},
             method: 'post',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function(r){

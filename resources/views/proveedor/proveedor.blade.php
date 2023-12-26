@@ -106,7 +106,7 @@ localStorage.setItem("sba",6);
                 for (var i = 0; i < r.data.length; i++) 
                 {
                     opciones = r.data[i].idSus!==null?'':
-                        '<button type="button" class="btn text-info" title="Suspender" onclick="addSuspension('+r.data[i].idPro+');"><i class="fa fa-user-slash"></i></button>';
+                        '<button type="button" class="btn text-info" title="Suspender" onclick="addSuspension(\''+r.data[i].idPro+'\');"><i class="fa fa-user-slash"></i></button>';
                     sunatPro = 'Activo: '+(r.data[i].activo=='1'?'ACTIVO':'INACTIVO')+'<br>Habido:'+(r.data[i].habido=='1'?'HABIDO':'NO HABIDO');
                     html += '<tr>' +
                         @if(session()->get('usuario')->tipo=="administrador")
@@ -122,8 +122,8 @@ localStorage.setItem("sba",6);
                         '<td class="align-middle text-center">' + 
                             '<div class="btn-group btn-group-sm" role="group">'+
                                 opciones+
-                                '<button type="button" class="btn text-info" title="Editar registro" onclick="editar('+r.data[i].idPro+');"><i class="fa fa-edit" ></i></button>'+
-                                '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar('+r.data[i].idPro+');"><i class="fa fa-trash"></i></button>'+
+                                '<button type="button" class="btn text-info" title="Editar registro" onclick="editar(\''+r.data[i].idPro+'\');"><i class="fa fa-edit" ></i></button>'+
+                                '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar(\''+r.data[i].idPro+'\');"><i class="fa fa-trash"></i></button>'+
                             '</div>'+
                         '</td></tr>';
                 }
@@ -140,7 +140,7 @@ localStorage.setItem("sba",6);
     }
     function opcSuspension(pro)
     {
-        return pro.idSus===null?'<span class="badge badge-success shadow">Sin suspension</span>':'<span class="badge badge-danger shadow">Con suspension</span>';
+        return pro.estadoProveedor==1?'<span class="badge badge-success shadow">Sin suspension</span>':'<span class="badge badge-danger shadow">Con suspension</span>';
     }
     function namePro(pro)
     {

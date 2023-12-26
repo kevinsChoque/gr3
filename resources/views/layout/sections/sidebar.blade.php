@@ -36,11 +36,7 @@
                         <i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{url('postulaciones/ver')}}" class="nav-link sba7">
-                        <i class="nav-icon fas fa-handshake"></i><p>Postulaciones</p>
-                    </a>
-                </li>
+                
                 @if(session()->get('usuario')->tipo=="administrador")
                 <li class="nav-item">
                     <a href="{{url('usuario')}}" class="nav-link sba3">
@@ -48,6 +44,11 @@
                     </a>
                 </li>
                 @endif
+                <li class="nav-item">
+                    <a href="{{url('proveedor')}}" class="nav-link sba6">
+                        <i class="nav-icon fas fa-building"></i><p>Proveedor</p>
+                    </a>
+                </li>
                 <li class="sbd1 nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-chart-bar"></i>
@@ -67,8 +68,8 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="{{url('proveedor')}}" class="nav-link sba6">
-                        <i class="nav-icon fas fa-building"></i><p>Proveedor</p>
+                    <a href="{{url('postulaciones/ver')}}" class="nav-link sba7">
+                        <i class="nav-icon fas fa-handshake"></i><p>Postulaciones</p>
                     </a>
                 </li>
                 <li class="nav-item">

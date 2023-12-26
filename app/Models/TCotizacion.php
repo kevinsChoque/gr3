@@ -9,7 +9,7 @@ class TCotizacion extends Model
 {
     protected $table='cotizacion';
 	protected $primaryKey='idCot';
-	public $incrementing=true;
+	public $incrementing=false;
 	public $timestamps=false;
 
     protected $fillable = [

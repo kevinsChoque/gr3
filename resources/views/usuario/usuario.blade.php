@@ -109,7 +109,8 @@ localStorage.setItem("sba",3);
                         '<td class="text-center">' + stateRecord(r.data[i].estado) +'</td>' +
                         '<td class="text-center">' + 
                             '<div class="btn-group btn-group-sm" role="group">'+
-                                '<button type="button" class="btn text-info" title="Editar registro" onclick="editar('+r.data[i].idUsu+');"><i class="fa fa-edit" ></i></button>'+
+                                '<button type="button" class="btn text-info" title="Editar registro" onclick="editar(\''+r.data[i].idUsu+'\');"><i class="fa fa-edit" ></i></button>'+
+                                // '<button type="button" class="btn text-info" title="Ver archivo" onclick="showFile(\''+r.data[i].archivo+'\')"><i class="fa fa-file-pdf"></i></button>'+
                                 // '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar('+r.data[i].idUsu+');"><i class="fa fa-trash"></i></button>'+
                             '</div>'+
                         '</td></tr>';

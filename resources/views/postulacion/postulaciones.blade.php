@@ -247,7 +247,8 @@ localStorage.setItem("sba",7);
 						dir = "{{ route('cotRecPro-archivo') }}"+'/'+r.data[i].idPro+'/'+r.data[i].idCrp+'/'+r.data[i].archivo;
 						enlace = r.data[i].archivo===null?
 							'<b>--</b>':
-							'<a href="'+dir+'" target="_blank">'+r.data[i].archivo+'</a>';
+							'<a href="'+dir+'" target="_blank"><i class="fa fa-file-pdf fa-lg"></i></a>';
+							// '<a href="'+dir+'" target="_blank">'+r.data[i].archivo+'</a>';
 						// ----------------
 						name = r.data[i].tipoPersona=="PERSONA NATURAL"?
 							r.data[i].nombrePro+' '+r.data[i].apellidoPaterno+' '+r.data[i].apellidoMaterno:

@@ -9,7 +9,7 @@ class TCotrecpro extends Model
 {
     protected $table='cotrecpro';
 	protected $primaryKey='idCrp';
-	public $incrementing=true;
+	public $incrementing=false;
 	public $timestamps=false;
 
     protected $fillable = [

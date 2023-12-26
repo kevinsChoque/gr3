@@ -6,21 +6,19 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\TProveedor;
 
 class ProveedorController extends Controller
 {
-    public function actRegistrar()
-    {
-    	echo('cascascasc');exit();
-    }
     public function actGuardar(Request $r)
     {
         $existeNumeroDocumento = TProveedor::where('numeroDocumento',$r->numeroDocumento)->where('estado','1')->first();
         if($existeNumeroDocumento!=null)
             return response()->json(['estado' => false, 'message' => 'El Proveedor con numero de documento: '.$r->numeroDocumento.' ya fue registrado.']);
         $tUsu = Session::get('usuario');
+        $r->merge(['idPro' => Str::uuid()]);
         $r->merge(['idUsu' => $tUsu->idUsu]);
         $r->merge(['usuario' => $r->numeroDocumento]);
         $r->merge(['password' => Hash::make($r->numeroDocumento)]);
@@ -49,7 +47,7 @@ class ProveedorController extends Controller
                 DB::raw("CONCAT(usuario.nombre, ' ', usuario.apellidoPaterno, ' ', usuario.apellidoMaterno) as nameUser"))
                 ->leftjoin('suspension', 'suspension.idPro', '=', 'proveedor.idPro')
                 ->leftjoin('usuario', 'usuario.idUsu', '=', 'proveedor.idUsu')
-                ->orderBy('proveedor.idPro', 'desc')
+                ->orderBy('proveedor.fr', 'desc')
                 ->get();
         }
         else
@@ -59,18 +57,10 @@ class ProveedorController extends Controller
                 ->join('usuario', 'usuario.idUsu', '=', 'proveedor.idUsu')
                 ->where('proveedor.idUsu', $tUsu->idUsu)
                 ->where('proveedor.estado', '1')
-                ->orderBy('proveedor.idPro', 'desc')
+                ->orderBy('proveedor.fr', 'desc')
                 ->get();
         }
-        // $ban = $tUsu->tipo=="administrador"?DB::raw("CONCAT(usuario.nombre, ' ', usuario.apellidoPaterno, ' ', usuario.apellidoMaterno) as nameUser"):'proveedor.*';
-        
-        // $registros = TProveedor::select('proveedor.*','suspension.idSus',$ban)
-        //     ->leftjoin('suspension', 'suspension.idPro', '=', 'proveedor.idPro')
-        //     ->join('usuario', 'usuario.idUsu', '=', 'proveedor.idUsu')
-        //     ->orderBy('proveedor.idPro', 'desc')
-        //     ->get();
         return response()->json(["data"=>$registros]);
-
     }
     public function actEliminar(Request $r)
     {
@@ -88,7 +78,6 @@ class ProveedorController extends Controller
     }
     public function actGuardarCambios(Request $r)
     {
-        // dd($r->all());
         $tPro = TProveedor::find($r->idPro);
         if($r->numeroDocumento!=$tPro->numeroDocumento)
         {
@@ -96,7 +85,6 @@ class ProveedorController extends Controller
             if($existeNumeroDocumento!=null)
                 return response()->json(['estado' => false, 'message' => 'El numero del documento RUC: '.$r->numeroDocumento.' ya fue registrado con otro proveedor.']);
         }
-        // dd($r->password!=null);
         $r->merge(['fa' => Carbon::now()]);
         $tPro->fill($r->all());
         if($tPro->save())

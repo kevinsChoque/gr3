@@ -6,11 +6,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-// use Illuminate\Support\Str;
-use Carbon\Carbon;
-
 use Illuminate\Support\Str;
-
+use Carbon\Carbon;
 use App\Models\TCotizacion;
 use App\Models\TCotxitm;
 use App\Models\TItem;
@@ -33,7 +30,7 @@ class CotizacionController extends Controller
 	        {
                 $tUsu = Session::get('usuario');
 
-                // $r->merge(['idCot' => Str::uuid()]);
+                $r->merge(['idCot' => Str::uuid()]);
                 $r->merge(['idUsu' => $tUsu->idUsu]);
 	        	$r->merge(['estado' => 1]);
                 $r->merge(['estadoCotizacion' => 1]);

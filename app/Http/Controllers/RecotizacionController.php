@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\TRecotizacion;
 use App\Models\TCotizacion;
@@ -18,7 +19,7 @@ class RecotizacionController extends Controller
     // }
     public function actGuardar(Request $r)
     {
-        $tCot = TCotizacion::where('idCot',$r->idCot)->where('estadoCotizacion','2')->first();
+        $tCot = TCotizacion::where('idCot',$r->idCot)->where('estadoCotizacion','3')->first();
         if($tCot==null)
         {
             return response()->json(['estado' => false, 'message' => 'La cotizacion no fue PUBLICADO.']);
@@ -30,6 +31,7 @@ class RecotizacionController extends Controller
             $nombreArchivo = time() . '_' . str_replace(' ', '',$archivo->getClientOriginalName());
             if (Storage::put('public/recotizaciones/'.$r->idCot.'/' . $nombreArchivo, file_get_contents($archivo))) 
             {
+                $r->merge(['idRec' => Str::uuid()]);
                 $r->merge(['archivo' => $nombreArchivo]);
                 $r->merge(['estadoRecotizacion' => '1']);
                 $r->merge(['fr' => Carbon::now()]);

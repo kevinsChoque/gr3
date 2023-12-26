@@ -1,7 +1,5 @@
 <style>
-    .modal-custom-size {
-    max-width: 90%; /* Puedes ajustar el porcentaje según tus necesidades */
-}
+    .modal-custom-size {max-width: 90%; }
 </style>
 <div class="modal fade" id="mRecotizar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered modal-custom-size" role="document">
@@ -14,13 +12,8 @@
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <!-- <div class="col-lg-6" style="background: linear-gradient(to right, #c1d4e2, #8db7be);"> -->
                     <div class="col-lg-6 pr-3" style="border-right: 4px solid #505048;">
                         <div class="row">
-                            <!-- <div class="col-lg-12">
-                                <button class="btn btn-success float-right ml-2" onclick="addItemsM()"><i class="fa fa-plus"></i> Agregar items</button>
-                                <button class="btn btn-success float-right" onclick="editarM()"><i class="fa fa-edit"></i> Modificar Cotizacion</button>
-                            </div> -->
                             <div class="col-lg-12 my-2">
                                 <h4 class="text-center font-weight-bold">Datos de cotizacion</h4>
                             </div>
@@ -151,15 +144,12 @@
 <script>    
 var idM = '';
 $(document).ready( function () {
-    // initFv('fvRecotizar',);
     $.validator.addMethod("extensionPdf", function(value, element) {
         return this.optional(element) || value.toLowerCase().endsWith(".pdf");
     }, "Solo se permiten archivos PDF");
     initFv('fvRecotizar',rulesRecotizacion());
 });
-$('.guardarRecotizacion').on('click',function(){
-    guardarRecotizacion();
-});
+$('.guardarRecotizacion').on('click',function(){guardarRecotizacion();});
 function rulesRecotizacion()
 {
     return {
@@ -174,8 +164,6 @@ function guardarRecotizacion()
     if($('#fvRecotizar').valid()==false)
     {return;}
     var formData = new FormData($("#fvRecotizar")[0]);
-    // alert('paso la validacion');
-
     formData.append('idCot', idM); 
     // formData.append('file', $('#archivo')[0].files.length>0?'true':'false');
     $('.guardarRecotizacion').prop('disabled',true); 
@@ -203,7 +191,7 @@ function guardarRecotizacion()
                 msjRee(r);
         },
         error: function (xhr, status, error) {
-            alert('salio un error');
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
         }
     });
 }
@@ -227,7 +215,8 @@ function showDataRecotizar(r)
     $('.rdescripcion').html(r.cot.descripcion);
     $('.restadoCotizacion').html(estateCotizacion);
     var dir = $('.rfileCotizacion').attr('href');
-    $('.rfileCotizacion').html(r.cot.archivo);
+    // $('.rfileCotizacion').html(r.cot.archivo);
+    $('.rfileCotizacion').html('<i class="fa fa-file-pdf fa-lg"></i>');
     $('.rfileCotizacion').attr('href',dir+'/'+r.cot.archivo);
     var html = '';
     for (var i = 0; i < r.items.length; i++) 

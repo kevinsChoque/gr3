@@ -106,12 +106,6 @@
                                 <button class="btn btn-info form-control form-control-sm addItem"><i class="fa fa-plus"></i> Agregar item</button>
                             </div>
                         </div> 
-                        <!-- <div class="col-lg-3">
-                            <div class="form-group">
-                                <label class="m-0" style="visibility: hidden;">-</label>
-                                <button class="btn btn-success form-control form-control-sm changeEstadoCot"><i class="fa fa-edit"></i> Publicar cotizacion</button>
-                            </div>
-                        </div>  -->
                     </div>
                     <div class="row">
                         <div class="col-lg-12">
@@ -127,9 +121,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="listItems">
-                                    <!-- <tr class="text-center">
-                                        <th colspan="6">Sin items</th>
-                                    </tr> -->
                                 </tbody>
                             </table>
                         </div>
@@ -137,21 +128,14 @@
                 </div>
                 <div class="card-footer">
                     <button class="btn btn-success form-control form-control-sm changeEstadoCot"><i class="fa fa-edit"></i> Publicar cotizacion</button>
-                    
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 @include('cotizacion.item.mItems')
 @include('cotizacion.unidadMedida.mUnidadMedida')
 <script>
-
-// localStorage.setItem("sbd",1);
-// localStorage.setItem("sba",4);
-//     var tablaDeRegistros;
-//     var flip=0;
 var idRow='';
 var idItem='';
 var numero = '';
@@ -166,12 +150,8 @@ $(document).ready( function () {
     //     width:"resolve",
     // });
 });
-$('.addItem').on('click',function(){
-    addItem();
-});
-$('.changeEstadoCot').on('click',function(){
-    changeEstadoCot();
-});
+$('.addItem').on('click',function(){addItem();});
+$('.changeEstadoCot').on('click',function(){changeEstadoCot();});
 function changeEstadoCot()
 {
     let numeroCotizacion = '<strong>'+numero+'</strong>';
@@ -212,7 +192,6 @@ function loadItemsCotizacion()
         dataType: 'json',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
-            console.log(r);
             let idFila = '';
             var html = '';
             for (var i = 0; i < r.data.length; i++) 
@@ -253,7 +232,6 @@ function seleccionar()
         dataType: 'json',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
-            console.log(r);
             var opcionSelect = $('#unidadMedida option[value="' + $('#unidadMedida').val() + '"]');
             var opcionSelectHtml = opcionSelect.prop('outerHTML');
             $('.um'+idRow).html(opcionSelectHtml.split('|')[0]);
@@ -261,7 +239,7 @@ function seleccionar()
             $('#mUnidadMedida').modal('hide');
         },
         error: function (xhr, status, error) {
-            alert('salio un error');
+            msjSimple(false,'Algo salio mal, porfavor contactese con el Administrador.');
         }
     });
     // -----
@@ -362,10 +340,9 @@ function deleteItem(idItm)
         success: function (r) {
             $('.fila'+localStorage.getItem("idCot")+idItm).remove();
             msjRee(r);
-
         },
         error: function (xhr, status, error) {
-            alert('Ocurrio un conflicto, porfavor contactese con el administrador.');
+            msjSimple(false,'Ocurrio un conflicto, porfavor contactese con el Administrador.');
         }
     });
 }
@@ -419,13 +396,12 @@ function loadCotizacion()
             console.log(r)
         },
         error: function (xhr, status, error) {
-            alert('salio un error');
+            msjSimple(false,'Ocurrio un conflicto, porfavor contactese con el Administrador.');
         }
     });
 }
 function procedure(r)
 {
-    // console.log(r);
     var data = {
         id: r.item.idItm,
         text: r.item.clasificador+': '+r.item.nombre+' | ' + r.item.descripcion,
@@ -433,89 +409,5 @@ function procedure(r)
     var newOptionReg = new Option(data.text, data.id, true, true);
     $('#items').prepend(newOptionReg).trigger('change');
 }
-//     function fillRegistros()
-//     {
-//         $('.contenedorRegistros').css('display','block');
-//         jQuery.ajax(
-//         { 
-//             url: "{{ url('cotizacion/listar') }}",
-//             method: 'get',
-//             success: function(r)
-//             {
-//                 console.log(r.data);
-//                 var html = '';
-//                 for (var i = 0; i < r.data.length; i++) 
-//                 {
-//                     edit = '<button type="button" class="btn text-info" title="Editar registro" onclick="editar('+r.data[i].idCot+');"><i class="fa fa-edit" ></i></button>';
-//                     dele = '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar('+r.data[i].idCot+');"><i class="fa fa-trash"></i></button>';
-//                     html += '<tr>' +
-//                         '<td class="text-center">' + r.data[i].numeroCotizacion + '</td>' +
-//                         '<td class="text-center">' + novDato(r.data[i].tipo) +'</td>' +
-//                         '<td class="text-center">' + novDato(r.data[i].fechaCotizacion) + '</td>' +
-//                         '<td class="text-center">' + novDato(r.data[i].fechaFinalizacion) + '</td>' +
-//                         '<td class="text-center">' + novDato(r.data[i].estadoCotizacion) + '</td>' +
-//                         '<td class="text-center">' + 
-//                             '<div class="btn-group btn-group-sm" role="group">'+
-//                                 '<button type="button" class="btn text-info"><i class="fa fa-eye"></i></button>'+
-//                                 '<button type="button" class="btn text-info"><i class="fa fa-file-pdf"></i></button>'+
-//                                 '<button type="button" class="btn text-info"><i class="fa fa-plus" onclick="addItems('+r.data[i].idCot+');"></i></button>'+
-//                                 edit+
-//                                 dele+
-//                             '</div>'+
-//                         '</td></tr>';
-//                 }
-//                 $('#data').html(html);
-//                 initDatatable('registros');
-//                 $('.overlayRegistros').css('display','none');
-//             }
-//         });
-        
-//     }
-//     function editar(id)
-//     {
-//         localStorage.setItem("idCot",id);
-//         window.location.href = "{{url('cotizacion/editar')}}";
-//     }
-//     function addItems(id)
-//     {
-//         localStorage.setItem("idCot",id);
-//         window.location.href = "{{url('cotizacion/addItems')}}";
-//     }
-//     function eliminar(id)
-//     {
-//         Swal.fire({
-//             title: 'Esta seguro de eliminar el registro?',
-//             text: "¡No podrás revertir esto!",
-//             icon: 'warning',
-//             showCancelButton: true,
-//             confirmButtonColor: '#28a745',
-//             cancelButtonColor: '#6c757d',
-//             confirmButtonText: 'Si, eliminar!'
-//         }).then((result) => {
-//             if(result.isConfirmed)
-//             {
-//                 $( ".overlayRegistros" ).toggle( flip++ % 2 === 0 );
-//                 jQuery.ajax(
-//                 { 
-//                     url: "{{url('cotizacion/eliminar')}}",
-//                     data: {id:id},
-//                     method: 'post',
-//                     headers: {
-//                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
-//                     },
-//                     success: function(result){
-//                         construirTabla();
-//                         fillRegistros();
-//                         msjRee(result);
-//                     }
-//                 });
-//             }
-//         });
-//     }
-//     function construirTabla()
-//     {
-//         $('.contenedorRegistros>div').remove();
-//         $('.contenedorRegistros').html(tablaDeRegistros);
-//     }
 </script>
 @endsection

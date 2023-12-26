@@ -12,7 +12,6 @@ use App\Models\TCotrecpro;
 use App\Models\TCotizacion;
 use App\Models\TRecotizacion;
 use App\Models\TDetalleprocot;
-
 // use Codedge\Fpdf\Fpdf\Fpdf;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use setasign\Fpdi\Fpdi;
@@ -40,6 +39,8 @@ class PaCotRecProController extends Controller
         foreach (json_decode($r->items,true) as $item) 
         {
             $tDpc=new TDetalleprocot();
+            // $r->merge(['idUsu' => Str::uuid()]);
+            $tDpc->idDpc=Str::uuid();
             $tDpc->idCrp=$idCrp;
             $tDpc->idItm=$item['id'];
             $tDpc->garantia=$item['garantia'];
@@ -63,7 +64,6 @@ class PaCotRecProController extends Controller
     public function actGuardar(Request $r)
     {
         // dd($r->all());
-
         $tPro = Session::get('proveedor');
         $nombreOferta = $r->idCot.'_'.$tPro->idPro.'.pdf';
 
@@ -72,6 +72,7 @@ class PaCotRecProController extends Controller
         {
             $r->merge(['idRec' => $tRec->idRec]);
         }
+        $r->merge(['idCrp' => Str::uuid()]);
         $r->merge(['archivo' => $nombreOferta]);
         $r->merge(['idPro' => $tPro->idPro]);
         $r->merge(['estadoCrp' => '0']);
@@ -87,15 +88,16 @@ class PaCotRecProController extends Controller
             if($this->saveDetalleProCot($r,$tCrp->idCrp))
             {
                 // dd(gettype($r->file('archivos')));
-                if($r->file('archivos')!==null)
-                {
-                    for ($i=0; $i < count($r->file('archivos')) ; $i++) 
-                    { 
-                        $archivo = $r->file('archivos')[$i];
-                        $nombreArchivo = $this->arrayNombresFiles[$i]. '.' . $archivo->getClientOriginalExtension();
-                        $ruta = Storage::putFileAs('public/ofertas/'.$tPro->idPro.'/'.$tCrp->idCrp.'/', $archivo, $nombreArchivo);
-                    }
-                }
+                
+                // if($r->file('archivos')!==null)
+                // {
+                //     for ($i=0; $i < count($r->file('archivos')) ; $i++) 
+                //     { 
+                //         $archivo = $r->file('archivos')[$i];
+                //         $nombreArchivo = $this->arrayNombresFiles[$i]. '.' . $archivo->getClientOriginalExtension();
+                //         $ruta = Storage::putFileAs('public/ofertas/'.$tPro->idPro.'/'.$tCrp->idCrp.'/', $archivo, $nombreArchivo);
+                //     }
+                // }
                 DB::commit();
                 return response()->json(['estado' => true, 'message' => 'El siguiente paso es para enviar los archivos, sin estos archivos no podra culminar con la COTIZACION y no se tomara en cuenta la postulacion.']);
             }

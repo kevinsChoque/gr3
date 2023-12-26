@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 use Carbon\Carbon;
 use App\Models\TUsuario;
 
@@ -20,10 +22,7 @@ class UsuarioController extends Controller
             if($tUsu->usuario == $r->usuario)
                 return response()->json(['estado' => false, 'message' => 'El usuario : '.$r->usuario.' ya fue registrado.']); 
         }
-        // if($existeDni!=null)
-        // {
-        //     return response()->json(['estado' => false, 'message' => 'El numero de DNI: '.$r->dni.' ya fue registrado.']);
-        // }
+        $r->merge(['idUsu' => Str::uuid()]);
         $r->merge(['password' => Hash::make($r->password)]);
     	$r->merge(['estado' => '1']);
         $r->merge(['fr' => Carbon::now()]);

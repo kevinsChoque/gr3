@@ -246,8 +246,8 @@
                     }
                     else
                     {
-                        opciones = '<button type="button" class="btn btn-sm btn-primary" onclick="showArchivos('+r.data[i].idCrp+');"><i class="fa fa-download" ></i></button>'+
-                            '<button type="button" class="btn btn-sm btn-success ml-1" onclick="mSend('+r.data[i].idCrp+');"><i class="fa fa-paper-plane"></i> Enviar</button>';
+                        opciones = '<button type="button" class="btn btn-sm btn-primary" onclick="showArchivos(\''+r.data[i].idCrp+'\');"><i class="fa fa-download" ></i></button>'+
+                            '<button type="button" class="btn btn-sm btn-success ml-1" onclick="mSend(\''+r.data[i].idCrp+'\');"><i class="fa fa-paper-plane"></i> Enviar</button>';
                     }
                     html += '<tr>' +
                         '<td class="text-center font-weight-bold">' + (i+1) + '</td>' +
