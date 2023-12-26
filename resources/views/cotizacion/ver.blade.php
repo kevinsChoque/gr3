@@ -95,13 +95,13 @@ localStorage.setItem("sba",5);
             method: 'get',
             success: function(r)
             {
-                console.log(r.data);
+                // console.log(r.data);
                 var html = '';
                 let opciones = '';
                 let opcRec = '';
                 for (var i = 0; i < r.data.length; i++) 
                 {
-                    console.log(r.data[i].idCot);
+                    // console.log(r.data[i].idCot);
                     if(r.data[i].estadoCotizacion=='1')
                     {
                         opciones = '<button type="button" class="btn text-info" title="Agregar items" onclick="addItems('+r.data[i].idCot+');"><i class="fa fa-plus"></i></button>'+
@@ -114,17 +114,33 @@ localStorage.setItem("sba",5);
                     {
                         opcRec = '<button type="button" class="btn text-info" onclick="showRecotizar(\''+r.data[i].idCot+'\')" title="Recotizar"><i class="fa fa-calendar-alt"></i></button>';
                     }
+                    // ---------------------------------------
+                    var fecha = new Date(r.data[i].fechaFinalizacion);
+
+                    // Crea una nueva fecha con un día adicional
+                    var fechaCorregida = new Date(fecha);
+                    fechaCorregida.setDate(fecha.getDate() + 1);
+
+                    // Imprime las fechas originales y la nueva fecha
+                    console.log("Fecha original:", fecha);
+                    console.log("Nueva fecha:", fechaCorregida);
+                    // console.log('----')
+                    // console.log(fechaOriginal.getDate() + 1)
+                    // console.log('----')
+                    // ---------------------------------------
                     html += '<tr>' +
                         @if(session()->get('usuario')->tipo=="administrador")
-                        '<td class="text-left text-uppercase font-weight-bold">' + novDato(r.data[i].nameUser) + '</td>' +
+                        '<td class="align-middle text-left text-uppercase font-weight-bold">' + novDato(r.data[i].nameUser) + '</td>' +
                         @endif
-                        '<td class="text-center font-weight-bold">' + r.data[i].numeroCotizacion + '</td>' +
-                        '<td class="text-left"><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
-                        '<td class="text-center">' + badgeTipoCot(r.data[i].tipo) +'</td>' +
-                        '<td class="text-center">' + novDato(r.data[i].fechaFinalizacion) + '</td>' +
+                        '<td class="align-middle text-center font-weight-bold">' + r.data[i].numeroCotizacion + '</td>' +
+                        '<td class="align-middle text-left"><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
+                        '<td class="align-middle text-center">' + badgeTipoCot(r.data[i].tipo) +'</td>' +
+                        // verificarFecha
+                        // formatoDateHours
+                        '<td class="align-middle text-left">' + formatoDate(fechaCorregida) +'<br>'+ formatoHour(r.data[i].horaFinalizacion) + '</td>' +
                         // '<td class="text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '<button class="btn text-info" onclick="changeEstadoCot('+r.data[i].idCot+','+r.data[i].numeroCotizacion+')"><i class="fa fa-edit"></i></button></td>' +
-                        '<td class="text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '</td>' +
-                        '<td class="text-center">' + 
+                        '<td class="align-middle text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '</td>' +
+                        '<td class="align-middle text-center">' + 
                             '<div class="btn-group btn-group-sm" role="group">'+
                                 '<button type="button" class="btn text-info" title="Ver cotizacion" onclick="showCotizacion('+r.data[i].idCot+')"><i class="fa fa-eye"></i></button>'+
                                 '<button type="button" class="btn text-info" title="Ver archivo" onclick="showFile(\''+r.data[i].archivo+'\')"><i class="fa fa-file-pdf"></i></button>'+

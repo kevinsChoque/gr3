@@ -104,7 +104,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-lg-4">
-                                <label class="m-0">Fecha de Fin: <span class="text-danger">*</span></label>
+                                <label class="m-0">Fecha de Fin:</label>
                                 <div class="input-group date" id="ifechaFinalizacion" data-target-input="nearest">
                                     <div class="input-group-prepend" data-target="#ifechaFinalizacion" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="fa fa-calendar-alt"></i></div>
@@ -113,7 +113,7 @@
                                 </div>
                             </div>
                             <div class="form-group col-lg-4">
-                                <label class="m-0">Tipo de Solicitud: <span class="text-danger">*</span> <i class="fa fa-info-circle text-info"></i></label>
+                                <label class="m-0">Tipo de Solicitud:</label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>

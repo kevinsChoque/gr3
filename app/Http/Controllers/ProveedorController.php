@@ -48,7 +48,7 @@ class ProveedorController extends Controller
                 'suspension.idSus',
                 DB::raw("CONCAT(usuario.nombre, ' ', usuario.apellidoPaterno, ' ', usuario.apellidoMaterno) as nameUser"))
                 ->leftjoin('suspension', 'suspension.idPro', '=', 'proveedor.idPro')
-                ->join('usuario', 'usuario.idUsu', '=', 'proveedor.idUsu')
+                ->leftjoin('usuario', 'usuario.idUsu', '=', 'proveedor.idUsu')
                 ->orderBy('proveedor.idPro', 'desc')
                 ->get();
         }

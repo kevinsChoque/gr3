@@ -110,7 +110,7 @@ localStorage.setItem("sba",6);
                     sunatPro = 'Activo: '+(r.data[i].activo=='1'?'ACTIVO':'INACTIVO')+'<br>Habido:'+(r.data[i].habido=='1'?'HABIDO':'NO HABIDO');
                     html += '<tr>' +
                         @if(session()->get('usuario')->tipo=="administrador")
-                        '<td class="align-middle text-left text-uppercase font-weight-bold">' + novDato(r.data[i].nameUser) + '</td>' +
+                        '<td class="align-middle text-left text-uppercase font-weight-bold">' + personal(novDato(r.data[i].nameUser)) + '</td>' +
                         @endif
                         '<td class="align-middle text-center font-weight-bold">' + novDato(r.data[i].tipoPersona) + '</td>' +
                         '<td class="align-middle">' + namePro(r.data[i]) + '</td>' +
@@ -118,7 +118,7 @@ localStorage.setItem("sba",6);
                         '<td class="align-middle">' + novDato(sunatPro) + '</td>' +
                         '<td class="align-middle">' + novDato(r.data[i].nombreRep) +'</td>' +
                         '<td class="align-middle text-center">' + opcSuspension(r.data[i]) + '<br>' + stateRecord(r.data[i].estado) +'</td>' +
-                        '<td class="align-middle text-center">' + novDato(r.data[i].fr) +'</td>' +
+                        '<td class="align-middle text-center">' + formatoDateHours(r.data[i].fr) +'</td>' +
                         '<td class="align-middle text-center">' + 
                             '<div class="btn-group btn-group-sm" role="group">'+
                                 opciones+
@@ -133,6 +133,10 @@ localStorage.setItem("sba",6);
             }
         });
         
+    }
+    function personal(personal)
+    {
+        return personal=='--'?"WEB":personal;
     }
     function opcSuspension(pro)
     {

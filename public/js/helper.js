@@ -272,7 +272,7 @@ function msjRee(result)
                 var message='';
                 for (const property in verifyObject) 
                 {
-                    console.log(`${property}: ${verifyObject[property]}`);
+                    // console.log(`${property}: ${verifyObject[property]}`);
                     message=message+`${verifyObject[property]}`+'<br>';
                 }
                 Toast.fire({
@@ -299,4 +299,38 @@ function msjError(error)
         showConfirmButton: false,
         timer: 4500
     });
+}
+function verificarFecha(valor)
+{
+    if(valor=='--')
+    {
+        return valor;
+    }
+    return formatoDateHours(valor);
+}
+function formatoDateHours(fecha)
+{
+    var date = new Date(fecha);
+    const months = ["ENE", "FEB", "MAR","APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    const formatDate = (date)=>{
+        let formatted_date = '<span class="badge badge-light"><i class="fa fa-calendar-alt"></i> '+date.getDate() + "-" + months[date.getMonth()] + "-" + date.getFullYear()+'</span> ';
+        let formatted_hours = '<span class="badge badge-light"><i class="fa fa-clock"></i> '+date.getHours() + ":" + date.getMinutes()+'</span>';
+        return formatted_date+formatted_hours;
+    }
+    return formatDate(date);
+}
+function formatoDate(fecha)
+{
+    var date = new Date(fecha);
+    const months = ["ENE", "FEB", "MAR","APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    const formatDateo = (date)=>{
+        let formatted_date = '<span class="badge badge-light"><i class="fa fa-calendar-alt"></i> '+date.getDate() + "-" + months[date.getMonth()] + "-" + date.getFullYear()+'</span> ';
+        return formatted_date;
+    }
+    return formatDateo(date);
+}
+function formatoHour(hora)
+{
+    let formatted_hours = '<span class="badge badge-light"><i class="fa fa-clock"></i> '+hora+'</span>';
+    return formatted_hours;
 }

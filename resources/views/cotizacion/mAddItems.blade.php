@@ -268,7 +268,8 @@ function loadCotizacionMai(id)
             $('.archivo').html(r.data.archivo);
             $('.estadoCotizacion').html(estateCotizacion);
             var dir = $('.fileCotizacion').attr('href');
-            $('.fileCotizacion').html(r.data.archivo);
+            // $('.fileCotizacion').html(r.data.archivo);
+            $('.fileCotizacion').html('<i class="fa fa-file-pdf fa-lg"></i>');
             $('.fileCotizacion').attr('href',dir+'/'+r.data.archivo);
             $('.overlayRegistros').css("display","none");
             numero = r.data.numeroCotizacion;
