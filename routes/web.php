@@ -122,13 +122,16 @@ Route::get('panelAdm/paCotizacion/cotizacionesActivas', function () {return view
 Route::get('panelAdm/paCotizacion/cotizar', function () {return view('panelAdm.cotizacion.cotizar');});
 Route::get('panelAdm/paCotizacion/misCotizaciones', function () {return view('panelAdm.cotizacion.misCotizaciones');});
 Route::get('panelAdm/paCotizacion/listar',[PaCotizacionController::class, 'actListar']);
+Route::get('panelAdm/paCotizacion/listarPortal',[PaCotizacionController::class, 'actListarPortal']);
 Route::post('panelAdm/paCotizacion/search',[PaCotizacionController::class, 'actSearch']);
 // Route::post('panelAdm/paCotizacion/searchMisCot',[PaCotizacionController::class, 'searchMisCot']);
 Route::post('panelAdm/paCotizacion/showProCot',[PaCotizacionController::class, 'actShowProCot']);
+Route::post('panelAdm/paCotizacion/searchPortal',[PaCotizacionController::class, 'actSearchPortal']);//---------------------------------
 // paCotRecPro asociada a las cotizaciones y recotizaciones con los proveedores
 Route::post('panelAdm/paCotRecPro/guardar',[PaCotRecProController::class, 'actGuardar']);
 Route::post('panelAdm/paCotRecPro/listar',[PaCotRecProController::class, 'actListar']);
 Route::post('panelAdm/paCotRecPro/search',[PaCotRecProController::class, 'actSearch']);//---------------------------------
+
 
 Route::post('panelAdm/paCotRecPro/subirArchivo',[PaCotRecProController::class, 'actSubirArchivo']);
 Route::post('panelAdm/paCotRecPro/generarCot',[PaCotRecProController::class, 'actGenerarCot']);

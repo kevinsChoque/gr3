@@ -18,11 +18,9 @@
     <link rel="stylesheet" href="{{asset('adminlte3/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
     <script src="{{asset('adminlte3/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
 <link rel="stylesheet" href="{{asset('cdn/jquery.dataTables.min.css')}}">
-    <style>
-    	/*.hoverLink:hover{
-    		color: #1b00ff !important;
-    	}*/
-    </style>
+    <!-- ---------------------- -->
+    <link rel="stylesheet" href="{{asset('adminlte3/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
+<link rel="stylesheet" href="{{asset('adminlte3/plugins/daterangepicker/daterangepicker.css')}}">
 </head>
 <!--
 `body` tag options:
@@ -81,62 +79,55 @@
                 </div> -->
                 <div class="form-group">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Numero de cotizacion o concepto">
-                        <div class="input-group-append">
+                        <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-search"></i></span>
-                            <span class="input-group-text font-weight-bold"> BUSCAR</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Numero de cotizacion o concepto" id="cadena" name="cadena">
+                        <div class="input-group-append">
+                            <!-- <span class="input-group-text"><i class="fa fa-search"></i></span> -->
+                            <!-- <span class="input-group-text font-weight-bold"> BUSCAR</span> -->
+                            <button class="btn btn-success font-weight-bold buscarCotizacion" type="button">BUSCAR</button>
                         </div>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body">
+                        <form id="fvsearch">
                         <div class="row">
-                            <!-- <div class="form-group col-lg-12">
-                                <label class="m-0">Rubro: <span class="text-danger">*</span> <i class="fa fa-info-circle text-info"></i></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
+                            <div class="form-group col-lg-4">
+                                <label class="m-0">Fecha de Inicio:</label>
+                                <div class="input-group date" id="ifechaCotizacion" data-target-input="nearest">
+                                    <div class="input-group-prepend" data-target="#ifechaCotizacion" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar-alt"></i></div>
                                     </div>
-                                    <input type="text" class="form-control soloNumeros input" id="numeroCotizacion" name="numeroCotizacion">
-                                </div>
-                            </div> -->
-                            <div class="form-group col-lg-6">
-                                <label class="m-0">Fecha de Inicio: <span class="text-danger">*</span> <i class="fa fa-info-circle text-info"></i></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control soloNumeros input" id="numeroCotizacion" name="numeroCotizacion">
+                                    <input type="text" class="form-control datetimepicker-input inputDate" data-target="#ifechaCotizacion" id="fechaInicial" name="fechaInicial">
                                 </div>
                             </div>
-                            <div class="form-group col-lg-6">
-                                <label class="m-0">Fecha de Fin: <span class="text-danger">*</span> <i class="fa fa-info-circle text-info"></i></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
+                            <div class="form-group col-lg-4">
+                                <label class="m-0">Fecha de Fin: <span class="text-danger">*</span></label>
+                                <div class="input-group date" id="ifechaFinalizacion" data-target-input="nearest">
+                                    <div class="input-group-prepend" data-target="#ifechaFinalizacion" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar-alt"></i></div>
                                     </div>
-                                    <input type="text" class="form-control soloNumeros input" id="numeroCotizacion" name="numeroCotizacion">
+                                    <input type="text" class="form-control datetimepicker-input inputDate" data-target="#ifechaFinalizacion" id="fechaFinal" name="fechaFinal">
                                 </div>
                             </div>
-                            <div class="form-group col-lg-6">
+                            <div class="form-group col-lg-4">
                                 <label class="m-0">Tipo de Solicitud: <span class="text-danger">*</span> <i class="fa fa-info-circle text-info"></i></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
                                     </div>
-                                    <input type="text" class="form-control soloNumeros input" id="numeroCotizacion" name="numeroCotizacion">
-                                </div>
-                            </div>
-                            <div class="form-group col-lg-6">
-                                <label class="m-0">Estado de Solicitud: <span class="text-danger">*</span> <i class="fa fa-info-circle text-info"></i></label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
-                                    </div>
-                                    <input type="text" class="form-control soloNumeros input" id="numeroCotizacion" name="numeroCotizacion">
+                                    <select name="tipo" id="tipo" class="form-control">
+                                        <option disabled>Seleccione su opcion</option>
+                                        <option value="0" selected>Todos</option>
+                                        <option value="Bienes">Bienes</option>
+                                        <option value="Servicios">Servicios</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -157,21 +148,13 @@
             </div>
         </div>
     </div>
-    <style>
-        .ocultarText{
-            overflow: hidden;
-            white-space: nowrap;
-            width: 500px;
-            text-overflow: ellipsis;
-        }
-    </style>
     <div class="container-fluid pt-3" style="background-image: url('{{asset('img/portal/bgg.jpg')}}')">
         <div class="row justify-content-center">
-            <div class="col-lg-11">
+            <div class="col-lg-10">
                 <div class="card">
                     <div class="card-body">
                         <div class="contenedorRegistros" style="display: none;">
-                            <table id="registros" class="table table-hover table-bordered dt-responsive nowrap">
+                            <table id="registros" class="table table-hover table-bordered dt-responsive nowrap table-striped">
                                 <thead class="thead-light">
                                     <tr>
                                         <th class="align-middle text-center text-uppercase" data-priority="2" width="10%">NRO <br> COTIZACION</th>
@@ -200,28 +183,55 @@
 
 <!-- jquery validate -->
 <!-- transJQV -->
+<!-- --------------------------------datepicker-------------------- -->
+<script src="{{asset('adminlte3/plugins/moment/moment.min.js')}}"></script>
+
+<script src="{{asset('adminlte3/plugins/daterangepicker/daterangepicker.js')}}"></script>
+<script src="{{asset('adminlte3/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 <script>
+    var tablaDeRegistros;
     $(document).ready( function () {
+        $('#ifechaCotizacion').datetimepicker({format: 'YYYY-MM-DD'});
+        $('#ifechaFinalizacion').datetimepicker({format: 'YYYY-MM-DD'});
         tablaDeRegistros=$('.contenedorRegistros').html();
         // initFv('fvbuscot',rules());
         fillRegistros();
         $('.overlayPagina').css("display","none");
         // $('.overlayRegistros').css("display","none");
     });
-    function fillRegistros()
+    $('.inputDate').on('click',function(){
+        $(this).parent().find('.input-group-prepend').click();
+    });
+    $('.buscarCotizacion').on('click',function(){
+        buscarCotizacion();
+
+    });
+    function buscarCotizacion()
     {
-        $('.contenedorRegistros').css('display','block');
-        jQuery.ajax(
-        { 
-            url: "{{ url('panelAdm/paCotizacion/listar') }}",
-            method: 'get',
-            success: function(r)
-            {
+        var formData = new FormData($("#fvsearch")[0]);
+        formData.append('cadena',$('#cadena').val());
+        jQuery.ajax({
+            url: "{{ url('panelAdm/paCotizacion/searchPortal') }}",
+            method: 'POST', 
+            data: formData,
+            dataType: 'json',
+            processData: false, 
+            contentType: false, 
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function (r) {
+                // limpiarForm();
+                // $('.guardar').prop('disabled',false);
+                
+                construirTabla();
+                console.log(r);
                 var html = '';
+                let ban = true;
+                let colorNc = '';
                 for (var i = 0; i < r.data.length; i++) 
                 {
+                    // colorNc = ban?'#f1f1f1':'#fafafa';
                     html += '<tr>' +
-                        '<td class="text-left align-middle font-weight-bold">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
+                        '<td class="text-left align-middle font-weight-bold" style="background-color:'+colorNc+'">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
                         '<td class="text-center font-weight-bold align-middle">' + novDato(r.data[i].tipo) + '</td>' +
                         // ocultarText
                         // '<td class="align-middle"><p class="m-0 text-uppercase">' + novDato(r.data[i].concepto) + '</p></td>' +
@@ -242,35 +252,92 @@
                             '<button type="button" class="btn btn-sm btn-success btn-flat w-100" title="Editar registro" onclick="cotizar('+r.data[i].idCot+');"><i class="far fa-envelope"></i> Emviar Cotizacion</button>'+
                         '</td>' +
                     '</tr>';
+                    // ban=ban?false:true;
                 }
                 $('#data').html(html);
                 // initDatatable('registros');
-                $('#registros').DataTable( {
-                    "searching": false,
-                    "autoWidth":false,
-                    "responsive":true,
-                    "ordering": false,
-                    "lengthChange": false,
-                    "lengthMenu": [[5, 10,25, -1], [5, 10,25, "Todos"]],   
-                    // "order": [[ 1, 'desc' ]],
-                    "language": {
-                        "info": "Mostrando la pagina _PAGE_ de _PAGES_. (Total: _MAX_)",
-                        "search":"",
-                        "infoFiltered": "(filtrando)",
-                        "infoEmpty": "No hay registros disponibles",
-                        "sEmptyTable": "No tiene registros guardados.",
-                        "lengthMenu":"Mostrar registros _MENU_ .",
-                        "paginate": {
-                            "first": "Primero",
-                            "last": "Ultimo",
-                            "next": "Siguiente",
-                            "previous": "Anterior"
-                        }
-                    },
-                } );
+                initDt('registros');
+                
+                $('.overlayRegistros').css('display','none');
+            },
+            error: function (xhr, status, error) {
+                msjSimple(false,"Algo salio mal, porfavor contactese con el Administrador.")
+            }
+        });
+    }
+    function fillRegistros()
+    {
+        $('.contenedorRegistros').css('display','block');
+        jQuery.ajax(
+        { 
+            url: "{{ url('panelAdm/paCotizacion/listarPortal') }}",
+            method: 'get',
+            success: function(r)
+            {
+                console.log(r);
+                var html = '';
+                let ban = true;
+                let colorNc = '';
+                for (var i = 0; i < r.data.length; i++) 
+                {
+                    // colorNc = ban?'#f1f1f1':'#fafafa';
+                    html += '<tr>' +
+                        '<td class="text-left align-middle font-weight-bold" style="background-color:'+colorNc+'">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
+                        '<td class="text-center font-weight-bold align-middle">' + novDato(r.data[i].tipo) + '</td>' +
+                        // ocultarText
+                        // '<td class="align-middle"><p class="m-0 text-uppercase">' + novDato(r.data[i].concepto) + '</p></td>' +
+                        // '<td class="align-middle"><p style="white-space: pre-line;margin-bottom: 0px;font-weight: 400;">SERVICIO DE ESTUDIO DE MECANICA DE SUELOS SEGUN TERMINOS DE REFERENCIA RECOTIZACION POR NO CUMPLIR CON LOS TERMINOS DE REFERENCIA</p></td>'+
+                        // -----
+                        '<td class="align-middle">'+
+                            '<p style="white-space: pre-line;margin-bottom: 0px;font-weight: 400;" class="text-uppercase">' + novDato(r.data[i].concepto) + '</p>'+
+                            '<label style="font-size: 12px;font-weight:normal;"><strong>Dependencia: </strong> Gobierno Regional de Apurímac </label>'+
+                            '<label style="font-size: 12px;font-weight:normal;" class="float-right"><strong>Fecha Publicación:</strong> 20/12/2023</label>'+
+                        '</td>'+
+                        '<td class="align-middle text-left">' + 
+                        // '<td class="text-left">INICIO:<br>' + 
+                            // '<span><i class="fa fa-calendar-alt"></i> '+novDato(r.data[i].fechaCotizacion) +'<br><i class="fa fa-clock"></i> '+novDato(r.data[i].horaCotizacion) + '<span><br>FIN:<br>' +
+                            '<span><i class="fa fa-calendar-alt"></i> '+novDato(r.data[i].fechaFinalizacion) +'<br><i class="fa fa-clock"></i> '+novDato(r.data[i].horaFinalizacion) + '<span><br>' +
+                        '</td>' +
+                        '<td class="text-center align-middle">' + 
+                            '<a href="{{ route('ver-archivo') }}/'+r.data[i].archivo+'" target="_blank" class="btn btn-sm btn-primary mb-1 btn-flat w-100 mb-2"><i class="far fa-file-pdf"></i> Descargar</a><br>'+
+                            '<button type="button" class="btn btn-sm btn-success btn-flat w-100" title="Editar registro" onclick="cotizar('+r.data[i].idCot+');"><i class="far fa-envelope"></i> Emviar Cotizacion</button>'+
+                        '</td>' +
+                    '</tr>';
+                    // ban=ban?false:true;
+                }
+                $('#data').html(html);
+                // initDatatable('registros');
+                initDt('registros');
+                
                 $('.overlayRegistros').css('display','none');
             }
         });
+    }
+    function initDt(id)
+    {
+        $('#'+id).DataTable( {
+            "searching": false,
+            "autoWidth":false,
+            "responsive":true,
+            "ordering": false,
+            "lengthChange": false,
+            "lengthMenu": [[5, 10,25, -1], [5, 10,25, "Todos"]],   
+            // "order": [[ 1, 'desc' ]],
+            "language": {
+                "info": "Mostrando la pagina _PAGE_ de _PAGES_. (Total: _MAX_)",
+                "search":"",
+                "infoFiltered": "(filtrando)",
+                "infoEmpty": "No hay registros disponibles",
+                "sEmptyTable": "No tiene registros guardados.",
+                "lengthMenu":"Mostrar registros _MENU_ .",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Siguiente",
+                    "previous": "Anterior"
+                }
+            },
+        } );
     }
 
     function cotizar()
@@ -290,6 +357,11 @@
                 window.location.href = "{{url('loginProveedor/loginProveedor')}}";
             }
         });
+    }
+    function construirTabla()
+    {
+        $('.contenedorRegistros>div').remove();
+        $('.contenedorRegistros').html(tablaDeRegistros);
     }
 </script>
 </body>
