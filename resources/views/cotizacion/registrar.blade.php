@@ -182,7 +182,7 @@ $(document).ready( function () {
     $('.overlayPagina').css("display","none");
     $('.overlayRegistros').css("display","none");
     $('#ifechaCotizacion').datetimepicker({format: 'YYYY-MM-DD',minDate: moment(),daysOfWeekDisabled: [0, 6], });
-    $('#ifechaFinalizacion').datetimepicker({format: 'YYYY-MM-DD'});
+    $('#ifechaFinalizacion').datetimepicker({format: 'YYYY-MM-DD',minDate: moment()});
     $('#ihoraCotizacion').datetimepicker({format: 'LT'});
     $('#ihoraFinalizacion').datetimepicker({format: 'LT'});
 });

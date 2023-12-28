@@ -243,7 +243,7 @@ function msgRee(result)
         icon: result.estado?"success":'error',
         title: result.message,
         showConfirmButton: false,
-        timer: 2500
+        timer: 3000
     });
 }
 function msjRee(result)

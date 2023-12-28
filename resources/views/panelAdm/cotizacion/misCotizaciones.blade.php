@@ -195,10 +195,10 @@
                     html += '<tr>' +
                         '<td class="text-center font-weight-bold">' + (i+1) + '</td>' +
                         '<td class="text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
-                        '<td class="text-center font-weight-bold">' + r.data[i].frCrp + '</td>' +
+                        '<td class="text-center font-weight-bold">' + formatoDateHours(r.data[i].frCrp) + '</td>' +
                         '<td class="text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
                         '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
-                        '<td class="text-center">' + novDato('S/. '+r.data[i].total) + '</td>' +
+                        '<td class="text-center font-weight-bold">' + novDato('S/. '+r.data[i].total) + '</td>' +
                         '<td class="text-center">' + estadoEnviado(r.data[i].estadoCrp) + '</td>' +
                         '<td class="text-center">' + 
                             opciones + 
@@ -252,10 +252,10 @@
                     html += '<tr>' +
                         '<td class="text-center font-weight-bold">' + (i+1) + '</td>' +
                         '<td class="text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
-                        '<td class="text-center font-weight-bold">' + r.data[i].frCrp + '</td>' +
+                        '<td class="text-center font-weight-bold">' + formatoDateHours(r.data[i].frCrp) + '</td>' +
                         '<td class="text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
                         '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
-                        '<td class="text-center">' + novDato('S/. '+r.data[i].total) + '</td>' +
+                        '<td class="text-center font-weight-bold">' + novDato('S/. '+r.data[i].total) + '</td>' +
                         '<td class="text-center">' + estadoEnviado(r.data[i].estadoCrp) + '</td>' +
                         '<td class="text-center">' + 
                             opciones + 

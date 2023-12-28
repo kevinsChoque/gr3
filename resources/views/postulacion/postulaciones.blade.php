@@ -260,6 +260,7 @@ localStorage.setItem("sba",7);
 											// --
 												'<div class="row">'+
 													'<div class="col-lg-9">'+
+														// '<div class="user-block"><i class="fa fa-file-pdf fa-2x"></i></div>'+
 														'<div class="user-block w-100">'+
 									                        '<img class="img-circle img-bordered-sm shadow mr-3" src="{{asset('img/admin/funcionarios/icono.jpg')}}" alt="user image">'+
 									                        '<span class="username">'+
@@ -269,8 +270,12 @@ localStorage.setItem("sba",7);
 									                  	'</div>'+
 													'</div>'+
 													'<div class="col-lg-3">'+
-														'<span class="shadow bg-info text-center font-weight-bold float-right p-2">Total S/. '+r.data[i].total+'</span>'+
+														'<span class="shadow bg-info text-center font-weight-bold float-right p-2">'+enlace+'</span>'+
+														'<span class="shadow bg-info text-center font-weight-bold float-right p-2 mx-2">Total S/. '+r.data[i].total+'</span>'+
 													'</div>'+
+													// '<div class="col-lg-1">'+
+													// 	'<span class="shadow bg-info text-center font-weight-bold float-right p-2"><i class="fa fa-file-pdf fa-lg"></i></span>'+
+													// '</div>'+
 												'</div>'+
 											// --
 												// '<h4 class="card-title w-100">'+ 
@@ -300,26 +305,26 @@ localStorage.setItem("sba",7);
 	                      		'<div class="col-lg-12">'+
 	                      		 	'<strong><i class="fas fa-info mr-1"></i> Datos de postulacion</strong>'+
 	                      		'</div>'+
-	                      		'<div class="col-lg-3">'+
+	                      		'<div class="col-lg-4">'+
 	                                '<p class="text-sm">Tiempo de entrega:'+
 	                                    '<b class="d-block">'+novDato(r.data[i].timeEntrega)+'</b>'+
 	                                '</p>'+
 	                            '</div>'+
-	                            '<div class="col-lg-3">'+
+	                            '<div class="col-lg-4">'+
 	                                '<p class="text-sm">Tiempo de validez:'+
 	                                    '<b class="d-block">'+novDato(r.data[i].timeValidez)+'</b>'+
 	                                '</p>'+
 	                            '</div>'+
-	                            '<div class="col-lg-3">'+
+	                            '<div class="col-lg-4">'+
 	                                '<p class="text-sm">Se dedica:'+
 	                                    '<b class="d-block">'+novDato(r.data[i].dedica=='1'?'SI':'NO')+'</b>'+
 	                                '</p>'+
 	                            '</div>'+
-	                            '<div class="col-lg-3">'+
-	                                '<p class="text-sm">Tiempo de garantia:'+
-	                                    '<b class="d-block">'+novDato(r.data[i].timeGarantia)+'</b>'+
-	                                '</p>'+
-	                            '</div>'+
+	                            // '<div class="col-lg-3">'+
+	                            //     '<p class="text-sm">Tiempo de garantia:'+
+	                            //         '<b class="d-block">'+novDato(r.data[i].timeGarantia)+'</b>'+
+	                            //     '</p>'+
+	                            // '</div>'+
 	                            '<div class="col-lg-12">'+
 	                      		 	'<strong><i class="fas fa-file-pdf mr-1"></i> Archivos de postulacion</strong>'+
 	                      		'</div>'+
@@ -436,7 +441,7 @@ localStorage.setItem("sba",7);
 
                 $('.concepto').html(novDato(r.data.concepto));
                 $('.descripcion').html(novDato(r.data.descripcion));
-                $('.fechas').html('Fecha de cotizacion:<br>'+r.data.fechaCotizacion+'<br>Fecha de finalizacion:<br>'+r.data.fechaFinalizacion);
+                $('.fechas').html('Fecha de cotizacion:<br>'+formatoDate(r.data.fechaCotizacion) +formatoHour(r.data.horaCotizacion)  +'<br>Fecha de finalizacion:<br>'+formatoDate(r.data.fechaFinalizacion)+formatoHour(r.data.horaCotizacion));
 
                 var dir = $('.fileCotizacion').attr('href');
 	            $('.fileCotizacion').attr('href',dir+'/'+r.data.archivo);

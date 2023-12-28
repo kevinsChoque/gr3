@@ -278,7 +278,7 @@ function changeEstadoCot(id,num)
                     {
                         $( ".overlayRegistros" ).toggle( flip++ % 2 === 0 );
                     }
-                    msjRee(r);
+                    msgRee(r);
                 }
             });
         }

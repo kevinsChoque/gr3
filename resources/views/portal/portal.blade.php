@@ -249,7 +249,7 @@
                         '</td>' +
                         '<td class="text-center align-middle">' + 
                             '<a href="{{ route('ver-archivo') }}/'+r.data[i].archivo+'" target="_blank" class="btn btn-sm btn-primary mb-1 btn-flat w-100 mb-2"><i class="far fa-file-pdf"></i> Descargar</a><br>'+
-                            '<button type="button" class="btn btn-sm btn-success btn-flat w-100" title="Editar registro" onclick="cotizar('+r.data[i].idCot+');"><i class="far fa-envelope"></i> Emviar Cotizacion</button>'+
+                            '<button type="button" class="btn btn-sm btn-success btn-flat w-100" title="Editar registro" onclick="cotizar(\''+r.data[i].idCot+'\');"><i class="far fa-envelope"></i> Emviar Cotizacion</button>'+
                         '</td>' +
                     '</tr>';
                     // ban=ban?false:true;
@@ -300,7 +300,7 @@
                         '</td>' +
                         '<td class="text-center align-middle">' + 
                             '<a href="{{ route('ver-archivo') }}/'+r.data[i].archivo+'" target="_blank" class="btn btn-sm btn-primary mb-1 btn-flat w-100 mb-2"><i class="far fa-file-pdf"></i> Descargar</a><br>'+
-                            '<button type="button" class="btn btn-sm btn-success btn-flat w-100" title="Editar registro" onclick="cotizar('+r.data[i].idCot+');"><i class="far fa-envelope"></i> Emviar Cotizacion</button>'+
+                            '<button type="button" class="btn btn-sm btn-success btn-flat w-100" title="Editar registro" onclick="cotizar(\''+r.data[i].idCot+'\');"><i class="far fa-envelope"></i> Emviar Cotizacion</button>'+
                         '</td>' +
                     '</tr>';
                     // ban=ban?false:true;

@@ -89,15 +89,15 @@ class PaCotRecProController extends Controller
             {
                 // dd(gettype($r->file('archivos')));
                 
-                // if($r->file('archivos')!==null)
-                // {
-                //     for ($i=0; $i < count($r->file('archivos')) ; $i++) 
-                //     { 
-                //         $archivo = $r->file('archivos')[$i];
-                //         $nombreArchivo = $this->arrayNombresFiles[$i]. '.' . $archivo->getClientOriginalExtension();
-                //         $ruta = Storage::putFileAs('public/ofertas/'.$tPro->idPro.'/'.$tCrp->idCrp.'/', $archivo, $nombreArchivo);
-                //     }
-                // }
+                if($r->file('archivos')!==null)
+                {
+                    for ($i=0; $i < count($r->file('archivos')) ; $i++) 
+                    { 
+                        $archivo = $r->file('archivos')[$i];
+                        $nombreArchivo = $this->arrayNombresFiles[$i]. '.' . $archivo->getClientOriginalExtension();
+                        $ruta = Storage::putFileAs('public/ofertas/'.$tPro->idPro.'/'.$tCrp->idCrp.'/', $archivo, $nombreArchivo);
+                    }
+                }
                 DB::commit();
                 return response()->json(['estado' => true, 'message' => 'El siguiente paso es para enviar los archivos, sin estos archivos no podra culminar con la COTIZACION y no se tomara en cuenta la postulacion.']);
             }
@@ -479,9 +479,10 @@ class PaCotRecProController extends Controller
     }
     public function verArchivo($idPro,$idCrp,$nombreArchivo)
     {
-        // dd($idCrp);
+        // dd($nombreArchivo);
         // $rutaArchivo = storage_path('app/public/panel_administrativo/proveedor/cotizaciones/' . $nombreArchivo);
-        $rutaArchivo = storage_path('app/public/ofertas/'.$idPro.'/'.$idCrp.'/35_47.pdf');
+        // $rutaArchivo = storage_path('app/public/ofertas/'.$idPro.'/'.$idCrp.'/35_47.pdf');
+        $rutaArchivo = storage_path('app/public/ofertas/'.$idPro.'/'.$idCrp.'/'.$nombreArchivo);
         if (file_exists($rutaArchivo)) 
             return response()->file($rutaArchivo);
         else 

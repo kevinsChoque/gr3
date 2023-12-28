@@ -90,7 +90,7 @@ class CotizacionController extends Controller
             $registros = TCotizacion::select('cotizacion.*',
                 DB::raw("CONCAT(usuario.nombre, ' ', usuario.apellidoPaterno, ' ', usuario.apellidoMaterno) as nameUser"))
                 ->leftjoin('usuario', 'usuario.idUsu', '=', 'cotizacion.idUsu')
-                ->orderBy('cotizacion.idCot', 'desc')
+                ->orderBy('cotizacion.fr', 'desc')
                 ->get();
         }
         else
@@ -106,7 +106,7 @@ class CotizacionController extends Controller
                 ->leftjoin('usuario', 'usuario.idUsu', '=', 'cotizacion.idUsu')
                 ->where('cotizacion.idUsu', $tUsu->idUsu)
                 ->where('cotizacion.estado', '1')
-                ->orderBy('cotizacion.idCot', 'desc')
+                ->orderBy('cotizacion.fr', 'desc')
                 ->get();
         }
         return response()->json(["data"=>$registros]);
@@ -122,33 +122,36 @@ class CotizacionController extends Controller
     }
     public function actShow(Request $r)
     {
-    	$registro = TCotizacion::find($r->id);
         // dd($r->all());
-        // $registro = TCotizacion::select(DB::raw('count(cotxitm.idCi) as cantidad'),
-        //             'cotizacion.idCot',
-        //             'cotizacion.numeroCotizacion',
-        //             'cotizacion.tipo',
-        //             'cotizacion.concepto',
-        //             'cotizacion.estadoCotizacion',
-        //             'cotizacion.fechaCotizacion',
-        //             'cotizacion.fechaFinalizacion',
-        //             'cotizacion.archivo',
-        //             'cotizacion.estadoCotizacion',
-        //         )
-        //         ->join('cotxitm', 'cotxitm.idCot', '=', 'cotizacion.idCot')
-        //         ->where('cotizacion.idCot', $r->id)
-        //         ->groupBy('cotizacion.idCot',
-        //             'cotizacion.numeroCotizacion',
-        //             'cotizacion.tipo',
-        //             'cotizacion.concepto',
-        //             'cotizacion.estadoCotizacion',
-        //             'cotizacion.fechaCotizacion',
-        //             'cotizacion.fechaFinalizacion',
-        //             'cotizacion.archivo',
-        //             'cotizacion.estadoCotizacion',
-        //         )
-        //         ->first();
-        // echo(json_encode($registro));exit();
+    	// $registro = TCotizacion::find($r->id);
+        $registro = TCotizacion::select(DB::raw('count(cotxitm.idCi) as cantidad'),
+            'cotizacion.idCot',
+            'cotizacion.numeroCotizacion',
+            'cotizacion.tipo',
+            'cotizacion.concepto',
+            'cotizacion.estadoCotizacion',
+            'cotizacion.fechaCotizacion',
+            'cotizacion.fechaFinalizacion',
+            'cotizacion.horaCotizacion',
+            'cotizacion.horaFinalizacion',
+            'cotizacion.archivo',
+            'cotizacion.estadoCotizacion',
+        )
+        ->join('cotxitm', 'cotxitm.idCot', '=', 'cotizacion.idCot')
+        ->where('cotizacion.idCot', $r->id)
+        ->groupBy('cotizacion.idCot',
+            'cotizacion.numeroCotizacion',
+            'cotizacion.tipo',
+            'cotizacion.concepto',
+            'cotizacion.estadoCotizacion',
+            'cotizacion.fechaCotizacion',
+            'cotizacion.fechaFinalizacion',
+            'cotizacion.horaCotizacion',
+            'cotizacion.horaFinalizacion',
+            'cotizacion.archivo',
+            'cotizacion.estadoCotizacion',
+        )
+        ->first();
         return response()->json(["data"=>$registro]);
     }
     public function actGuardarCambios(Request $r)
@@ -199,12 +202,25 @@ class CotizacionController extends Controller
         // dd(count($existeItems));
         if(count($existeItems)!=0)
         {
-            $tCot = TCotizacion::where('idCot',$r->id)->first();
-            $tCot->estadoCotizacion = '2';
-            if($tCot->save())
-                return response()->json(["estado"=>true, "message"=>"La Cotizacion fue publicada exitosamente."]);
+            $itemsIncompletos = TCotxitm::where('idCot',$r->id)
+                ->where('estado','1')
+                ->where(function($query) {
+                    $query->whereNull('cantidad')
+                        ->orWhereNull('idUm');
+                })
+                ->get();
+            // dd(count($itemsIncompletos));
+            if(count($itemsIncompletos)==0)
+            {
+                $tCot = TCotizacion::where('idCot',$r->id)->first();
+                $tCot->estadoCotizacion = '2';
+                if($tCot->save())
+                    return response()->json(["estado"=>true, "message"=>"La Cotizacion fue publicada exitosamente."]);
+                else
+                    return response()->json(["estado"=>false, "message"=>"No se pudo proceder con la publicacion.",]);
+            }
             else
-                return response()->json(["estado"=>false, "message"=>"No se pudo proceder con la publicacion.",]);
+                return response()->json(["estado"=>false, "message"=>"Registre la UNIDAD DE MEDIDA Y CANTIDAD de cada item.",]);
         }
         else
             return response()->json(["estado"=>false, "message"=>"No se puede publicar la cotizacion ya que no cuenta con items asignados.",]);

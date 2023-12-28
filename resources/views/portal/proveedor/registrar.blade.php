@@ -9,7 +9,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{asset('adminlte3/plugins/fontawesome-free/css/all.min.css')}}">
     <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css"> -->
     <!-- Theme style -->
     <link rel="stylesheet" href="{{asset('adminlte3/dist/css/adminlte.min.css')}}">
     <!-- spiner style -->
@@ -18,7 +18,12 @@
     <link rel="stylesheet" href="{{asset('adminlte3/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
     <script src="{{asset('adminlte3/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
     <!-- helper -->
-    <script src="{{asset('js/helper.js')}}"></script>
+    <!-- <script src="{{asset('js/helper.js')}}"></script> -->
+    <style>
+        .overlayPagina {
+            height: 110vh !important;
+        }
+    </style>
 </head>
 <body class="hold-transition login-page">
     <div class="overlayPagina">
@@ -36,27 +41,6 @@
             </div>
             <div class="card-body">
                 <form id="fvregpro">
-                
-                <!-- <div class="row"> -->
-                    <!-- <div class="form-group col-lg-4">
-                        <label class="m-0 text-uppercase">RUC:</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
-                            </div>
-                            <input type="text" id="ruc" name="ruc" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group col-lg-8">
-                        <label class="m-0 text-uppercase">Razon Social:</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
-                            </div>
-                            <input type="text" id="razonSocial" name="razonSocial" class="form-control">
-                        </div>
-                    </div> -->
-                <!-- </div> -->
                 <div class="form-group row">
                     <label class="col-sm-4 col-form-label">Tipo de persona: <span class="text-danger">*</span></label>
                     <div class="col-sm-8">
@@ -104,45 +88,12 @@
                         <input type="text" id="celular" name="celular" class="form-control soloNumeros" placeholder="Celular" maxlength="9">
                     </div>
                 </div>
-                <!-- <div class="form-group col-lg-12">
-                    <label class="m-0 text-uppercase">Correo:</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
-                        </div>
-                        <input type="text" id="correo" name="correo" class="form-control">
-                    </div>
-                </div> -->
                 <div class="form-group row">
                     <label class="col-sm-4 col-form-label">Correo: <span class="text-danger">*</span></label>
                     <div class="col-sm-8">
                         <input type="text" id="correo" name="correo" class="form-control" placeholder="Correo">
                     </div>
                 </div>
-                <!-- <div class="form-group col-lg-12">
-                    <label class="m-0 text-uppercase">Confirmar correo:</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
-                        </div>
-                        <input type="text" id="confirmarCorreo" name="confirmarCorreo" class="form-control">
-                    </div>
-                </div> -->
-                <!-- <div class="form-group row">
-                    <label class="col-sm-3 col-form-label">Confirmar correo: <span class="text-danger">*</span></label>
-                    <div class="col-sm-9">
-                        <input type="text" id="confirmarCorreo" name="confirmarCorreo" class="form-control" placeholder="Confirmar correo">
-                    </div>
-                </div> -->
-                <!-- <div class="form-group col-lg-12">
-                    <label class="m-0 text-uppercase">nro de celular:</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
-                        </div>
-                        <input type="text" id="celular" name="celular" class="form-control">
-                    </div>
-                </div> -->
                 <div class="col-12">
                     <a class="btn btn-primary w-100 regPro"><i class="fa fa-user-plus"></i> REGISTRAR</a>
                 </div>
@@ -153,18 +104,16 @@
             </div>
         </div>
     </div>
-    <!-- <button type="button" class="btn btn-default toastsDefaultAutohide">
-        Launch Default Toasts with autohide
-    </button> -->
 <!-- jQuery -->
 <script src="{{asset('adminlte3/plugins/jquery/jquery.min.js')}}"></script>
 <!-- validate -->
 <script src="{{asset('adminlte3/plugins/jquery-validation/jquery.validate.min.js')}}"></script>
 
 <!-- Bootstrap 4 -->
-<script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script> -->
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte3/dist/js/adminlte.min.js')}}"></script>
+<script src="{{asset('js/helper.js')}}"></script>
 <script>
 $(document).ready( function () {
     initFv('fvregpro',rules());
@@ -191,11 +140,11 @@ function changeTipoPersona()
 $('.regPro').on('click',function(){regPro()});
 function regPro()
 {
+    // formData.append('file', $('#archivo')[0].files.length>0?'true':'false');
     if($('#fvregpro').valid()==false)
     {return;}
     var formData = new FormData($("#fvregpro")[0]);
-    // formData.append('file', $('#archivo')[0].files.length>0?'true':'false');
-    $('.regPro').prop('disabled',true); 
+    // $('.regPro').prop('disabled',true); 
     $('.overlayPagina').css("display","flex");
     jQuery.ajax({
         url: "{{ url('portal/proveedor/guardar') }}",
@@ -207,24 +156,25 @@ function regPro()
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
             if (r.estado) 
-                Swal.fire({
-                    title: "COTIZACION",
-                    text: r.message,
-                    icon: "success",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: "OK",
-                    allowOutsideClick: false, 
-                    allowEscapeKey: false, 
-                    showCancelButton: false,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $('.overlayPagina').css("display","none");
-                        window.location.href = "{{url('loginProveedor/loginProveedor')}}";
-                    }
-                });
+                // Swal.fire({
+                //     title: "COTIZACION",
+                //     text: r.message,
+                //     icon: "success",
+                //     showCancelButton: true,
+                //     confirmButtonColor: "#3085d6",
+                //     confirmButtonText: "OK",
+                //     allowOutsideClick: false, 
+                //     allowEscapeKey: false, 
+                //     showCancelButton: false,
+                // }).then((result) => {
+                //     if (result.isConfirmed) {
+                //         $('.overlayPagina').css("display","none");
+                //         window.location.href = "{{url('loginProveedor/loginProveedor')}}";
+                //     }
+                // });
+                redirectUrlMsj("{{url('loginProveedor/loginProveedor')}}",r.message)
             else 
-                msjRee(r); 
+                msgRee(r); 
             $('.overlayPagina').css("display","none");
             $('.regPro').prop('disabled',false); 
         },

@@ -173,7 +173,7 @@ function changeEstadoCotMai()
                         // window.location.href="{{url('cotizacion/ver')}}";
                     }
                     else
-                        msjRee(r);
+                        msgRee(r);
                 }
             });
         }

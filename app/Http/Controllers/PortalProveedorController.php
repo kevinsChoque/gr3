@@ -17,8 +17,8 @@ class PortalProveedorController extends Controller
 {
     public function actGuardar(Request $r)
     {
+        // dd($r->all());
         $proveedorBuscado = TProveedor::where('numeroDocumento',$r->ruc)->orWhere('correo',$r->correo)->first();
-        // dd($proveedorBuscado);
         if($proveedorBuscado!=null)
         {
             $message = $r->ruc==$proveedorBuscado->numeroDocumento?
@@ -37,7 +37,11 @@ class PortalProveedorController extends Controller
     	$r->merge(['estado' => '1']);
         $r->merge(['passwrodPro' => $password]);
         $r->merge(['fr' => Carbon::now()]);
-        $datosProveedor = ['usuario' => $r->ruc, 'password' => $password];
+        if($r->tipoPersona=="PERSONA NATURAL")
+            $nombre = $r->nombre.' '.$r->apellidoPaterno.' '.$r->apellidoMaterno;
+        else
+            $nombre = $r->razonSocial;
+        $datosProveedor = ['usuario' => $r->ruc, 'password' => $password, 'nombre' => $nombre];
     	// DB::beginTransaction();
     	// if(TProveedor::create($r->all()))
     	// {

@@ -637,7 +637,8 @@ $pdf->SetFont('Arial','',9);
 		$pdf->Cell(190,$tam+2.5,utf8_decode('SEÑORES:'),$marco,1,'L');
 		$pdf->Cell(190,$tam+2.5,utf8_decode('OFICINA DE ABASTECIMIENTO, PATRIMONIO Y MARGESI DE BIENES GOBIERNO REGIONAL DE APURIMAC'),$marco,1,'C');
 // datos-----------------------------------------------------------------------
-		$pdf->text(20,74,utf8_decode($nombre));
+		// $pdf->text(20,74,utf8_decode(strtoupper($nombre)));
+		$pdf->text(20,74,utf8_decode(mb_strtoupper($nombre, 'UTF-8')));
 		$pdf->text(165,74,utf8_decode($dni));
 		$pdf->text(50,80,utf8_decode($razonSocial));
 		$pdf->text(100,98,utf8_decode($domicilio));
