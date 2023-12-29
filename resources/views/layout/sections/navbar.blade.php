@@ -3,12 +3,6 @@
         <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
-        <!-- <li class="nav-item d-none d-sm-inline-block">
-            <a href="index3.html" class="nav-link">Home</a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-            <a href="#" class="nav-link">Contact</a>
-        </li> -->
         <li class="nav-item border-right infraccionPmsNavbar">
             <a class="nav-link border-right" href="{{url('cotizacion/registrar')}}" title="Registrar infraccion">
                 <i class="fas fa-plus d-none d-sm-inline-block"></i>
@@ -21,12 +15,6 @@
                 <span class="description-text">POS</span>
             </a>
         </li>
-        <!-- <li class="nav-item border-right">
-            <a class="nav-link border-right" href="{{url('presentacion/consultar')}}" title="Consultar placa" target="_blank">
-                <i class="fas fa-plus d-none d-sm-inline-block"></i>
-                <span class="description-text">CST</span>
-            </a>
-        </li> -->
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
@@ -47,7 +35,6 @@
                     '--';
             }}
             </span>
-            <!-- <a class="nav-link" data-widget="navbar-search" href="#" role="button"><i class="fas fa-search"></i></a> -->
             <div class="navbar-search-block" style="display: none;">
                 <form class="form-inline">
                     <div class="input-group input-group-sm">

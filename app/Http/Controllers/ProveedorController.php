@@ -17,6 +17,7 @@ class ProveedorController extends Controller
         $existeNumeroDocumento = TProveedor::where('numeroDocumento',$r->numeroDocumento)->where('estado','1')->first();
         if($existeNumeroDocumento!=null)
             return response()->json(['estado' => false, 'message' => 'El Proveedor con numero de documento: '.$r->numeroDocumento.' ya fue registrado.']);
+        // se asigna los datos segun se requiera
         $tUsu = Session::get('usuario');
         $r->merge(['idPro' => Str::uuid()]);
         $r->merge(['idUsu' => $tUsu->idUsu]);
@@ -25,6 +26,7 @@ class ProveedorController extends Controller
         $r->merge(['estadoProveedor' => '1']);
     	$r->merge(['estado' => '1']);
         $r->merge(['fr' => Carbon::now()]);
+        // se inicializa la transaccion y guarda el registro
     	DB::beginTransaction();
     	if(TProveedor::create($r->all()))
     	{
@@ -40,6 +42,8 @@ class ProveedorController extends Controller
     public function actListar()
     {
         $tUsu = Session::get('usuario');
+        // si el tipo de usuario es administrador se envia con el usuario 
+        // quien lo registro caso contrario solo se envia los proveedores que registro
         if($tUsu->tipo=="administrador")
         {
             $registros = TProveedor::select('proveedor.*',
@@ -79,12 +83,14 @@ class ProveedorController extends Controller
     public function actGuardarCambios(Request $r)
     {
         $tPro = TProveedor::find($r->idPro);
+        // se valida el numero de documento para que no se repita en la tabla
         if($r->numeroDocumento!=$tPro->numeroDocumento)
         {
             $existeNumeroDocumento = TProveedor::where('numeroDocumento', $r->numeroDocumento)->first();
             if($existeNumeroDocumento!=null)
                 return response()->json(['estado' => false, 'message' => 'El numero del documento RUC: '.$r->numeroDocumento.' ya fue registrado con otro proveedor.']);
         }
+        // se setea la fecha de actualizacion
         $r->merge(['fa' => Carbon::now()]);
         $tPro->fill($r->all());
         if($tPro->save())

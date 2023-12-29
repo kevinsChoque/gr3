@@ -12,7 +12,11 @@ class CotxitmController extends Controller
 {
     public function actGuardar(Request $r)
     {
-        // dd($r->all());
+        /*
+        *   verifica si existe el item
+        *   dentro de la lista de detalles
+        *   si se encuentra ya no lo vuelve a registrar
+        */
     	$existe = TCotxitm::where('idCot',$r->idCot)->where('idItm',$r->idItm)->where('estado','1')->first();
     	if($existe == null)
     	{
@@ -56,7 +60,6 @@ class CotxitmController extends Controller
     }
     public function actChangeUm(Request $r)
     {
-        // dd($r->all());
         $tCi = TCotxitm::where('idCot',$r->idCot)->where('idItm',$r->idItm)->where('estado','1')->first();
         $tCi->idUm = $r->idUm;
         if($tCi->save())
@@ -66,6 +69,7 @@ class CotxitmController extends Controller
     }
     public function actLoadSegunCotizacion(Request $r)
     {
+        // no muestra los items segun al id de la cotizacion
         $registros = TItem::select('item.*','cotxitm.*','unidadmedida.nombre as nombreUm')
             ->join('cotxitm', 'cotxitm.idItm', '=', 'item.idItm')
             ->leftjoin('unidadmedida', 'unidadmedida.idUm', '=', 'cotxitm.idUm')

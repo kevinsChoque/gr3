@@ -14,6 +14,7 @@ class UsuarioController extends Controller
 {
     public function actGuardar(Request $r)
     {
+        // se realiza una validacion del dni y usuario ya q son unicos
         $tUsu = TUsuario::where('dni',$r->dni)->where('estado','1')->orWhere('usuario',$r->usuario)->first();
         if($tUsu!=null)
         {
@@ -26,6 +27,7 @@ class UsuarioController extends Controller
         $r->merge(['password' => Hash::make($r->password)]);
     	$r->merge(['estado' => '1']);
         $r->merge(['fr' => Carbon::now()]);
+        // se inicializa la transaccion para guardar el registro
     	DB::beginTransaction();
     	if(TUsuario::create($r->all()))
     	{
@@ -45,6 +47,7 @@ class UsuarioController extends Controller
     }
     public function actEliminar(Request $r)
     {
+        // los usuarios no se eliminan solo se cambia el estado, esto para tener en cuenta en el historico
         $tUsu = TUsuario::find($r->id);
         $tUsu->estado = 0;
         if($tUsu->save())
@@ -60,22 +63,26 @@ class UsuarioController extends Controller
     public function actGuardarCambios(Request $r)
     {
         $tUse = TUsuario::find($r->idUsu);
+        // se verifica que el nuevo dni no se duplique en la tabla
         if($r->dni!=$tUse->dni)
         {
             $tusuario = TUsuario::where('dni', $r->dni)->where('estado','1')->first();
             if($tusuario!=null)
                 return response()->json(['estado' => false, 'message' => 'El numero de DNI: '.$r->dni.' ya fue registrado.']); 
         }
+        // se verifica que el nuevo usuario no se duplique en la tabla
         if ($r->usuario!=$tUse->usuario) 
         {
             $tusuario = TUsuario::where('usuario', $r->usuario)->where('estado','1')->first();
             if($tusuario!=null)
                 return response()->json(['estado' => false, 'message' => 'El usuario : '.$r->usuario.' ya fue registrado.']); 
         }
+        // se verifica si cambio la contraseña, si lo iso reemplaza la anterior caso contrario continua con la misma
         if($r->password!=null)
         {
             $r->merge(['password' => Hash::make($r->password)]);
         }
+        // seteamos el request con la fecha de actualizacion y procedemos a guardar
         $r->merge(['fa' => Carbon::now()]);
         $tUse->fill($r->all());
         if($tUse->save())

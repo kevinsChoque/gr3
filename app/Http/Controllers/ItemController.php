@@ -18,13 +18,9 @@ class ItemController extends Controller
         $r->merge(['fr' => Carbon::now()]);
         $tItm = TItem::create($r->all()); 
     	if($tItm)
-    	{
     		return response()->json(['estado' => true, 'message' => 'Item registrado correctamente', 'item' => $tItm]);
-    	}
     	else
-    	{
     		return response()->json(['estado' => false, 'message' => 'Error al registrar el item']);
-    	}
     }
     
 }

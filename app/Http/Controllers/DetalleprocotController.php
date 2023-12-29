@@ -14,7 +14,6 @@ class DetalleprocotController extends Controller
     	$cadena = explode("_", $nombreArchivo);
     	$tCrp = TCotrecpro::find($cadena[0]);
         $rutaArchivo = storage_path('app/public/ofertas/'.$tCrp->idPro.'/'.$cadena[0].'/'. $nombreArchivo);
-    	// dd($rutaArchivo);
         if (file_exists($rutaArchivo)) 
             return response()->file($rutaArchivo);
         else 

@@ -18,16 +18,13 @@
 @section('content')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div class="container-fluid mt-3">
-    <!-- <div class="row">
-        <h1 class="text-center text-uppercase font-weight-bold font-italic">Dashboard segun usuario</h1>
-    </div> -->
     <div class="row">
         <div class="col-12 col-sm-6 col-md-3">
             <div class="info-box">
-                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-chart-bar"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">cant proveedores</span>
-                    <span class="info-box-number">10</span>
+                    <span class="info-box-text">Cant. cotizaciones</span>
+                    <span class="info-box-number cantCot">-</span>
                 </div>
             </div>
         </div>
@@ -35,8 +32,8 @@
             <div class="info-box">
                 <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">cant de cotizadores</span>
-                    <span class="info-box-number">10</span>
+                    <span class="info-box-text">Cant. proveedores</span>
+                    <span class="info-box-number cantPro">-</span>
                 </div>
             </div>
         </div>
@@ -44,8 +41,8 @@
             <div class="info-box">
                 <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">cant de cot de bienes</span>
-                    <span class="info-box-number">10</span>
+                    <span class="info-box-text">Cant. cotizadores</span>
+                    <span class="info-box-number cantCoti">-</span>
                 </div>
             </div>
         </div>
@@ -53,34 +50,55 @@
             <div class="info-box">
                 <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
                 <div class="info-box-content">
-                    <span class="info-box-text">cant de cot de servicios</span>
-                    <span class="info-box-number">10</span>
+                    <span class="info-box-text">Cot. de tipo bienes</span>
+                    <span class="info-box-number cantBie">-</span>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col-12 col-sm-6 col-md-3">
+            <div class="info-box">
+                <span class="info-box-icon bg-info elevation-1"><i class="fas fa-cog"></i></span>
+                <div class="info-box-content">
+                    <span class="info-box-text">Cot. de tipo servicios</span>
+                    <span class="info-box-number cantSer">-</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12"></div>
+        <div class="col-lg-8">
             <div class="card">
-                <div class="card-body">
-                    <div style="width: 100%;">
-                        <canvas id="miGrafico"></canvas>
+                <div class="overlay overlayMontoCotSegunTipoMes" style="display: flex;">
+                    <div class="spinner"></div>
+                </div>
+                <div class="card-header py-0">
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool updateMontoCotSegunTipoMes">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="card">
+                </div>      
                 <div class="card-body">
                     <div style="width: 100%;">
-                        <canvas id="miGrafico2"></canvas>
+                        <canvas id="montoCotSegunTipoMes"></canvas>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-lg-4">
             <div class="card">
+                <div class="card-header py-0">
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
                 <div class="card-body">
                     <div style="width: 100%;">
-                        <canvas id="miGrafico3"></canvas>
+                        <canvas id="cantCotEstadoMes"></canvas>
                     </div>
                 </div>
             </div>
@@ -93,153 +111,27 @@
     $(document).ready( function () {
         $('.overlayPagina').css("display","none");
         $('.overlayRegistros').css("display","none");
+        loadMontoCotSegunTipoMes();
+        cantCotEstadoMes();
     });
-</script>
-<script>
-    // Datos para el gráfico
-    var datos = {
-        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
-        datasets: [
-            {
-                label: 'Servicios',
-                data: [1000, 1500, 800, 1200, 2000, 1700], // Monto para servicios por mes
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            },
-            {
-                label: 'Bienes',
-                data: [800, 1200, 600, 1000, 1500, 1300], // Monto para bienes por mes
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }
-        ]
-    };
-
-    // Configuración del gráfico
-    var opciones = {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
+    jQuery.ajax(
+    { 
+        url: "{{ url('homeAdmin/datos') }}",
+        method: 'get',
+        dataType: 'json',
+        success: function(r){
+            console.log(r);
+            $('.cantCot').html(r.cCot);
+            $('.cantPro').html(r.cPro);
+            $('.cantCoti').html(r.cCoti);
+            $('.cantBie').html(r.cBie);
+            $('.cantSer').html(r.cSer);
         },
-        plugins: {
-            title: {
-                display: true,
-                // text: 'Monto de Cotizaciones por Mes',
-                text: 'Monto de cotizaciones Segun el tipo por mes',
-                font: {
-                    size: 16
-                }
-            }
+        error: function (xhr, status, error) {
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
         }
-    };
-
-    // Crear el gráfico de barras
-    $(document).ready(function() {
-        var ctx = document.getElementById('miGrafico').getContext('2d');
-        var miGrafico = new Chart(ctx, {
-            type: 'bar',
-            data: datos,
-            options: opciones
-        });
     });
 </script>
-<script>
-    // Datos para el gráfico
-    var datos2 = {
-        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
-        datasets: [
-            {
-                label: 'Servicios',
-                data: [142, 12, 50, 11, 211, 170], // Monto para servicios por mes
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-            },
-            {
-                label: 'Bienes',
-                data: [80, 25, 100, 100, 102, 109], // Monto para bienes por mes
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }
-        ]
-    };
-
-    // Configuración del gráfico
-    var opciones2 = {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        },
-        plugins: {
-            title: {
-                display: true,
-                // text: 'Monto de Cotizaciones por Mes',
-                text: 'Cant de cotizaciones Segun el tipo por mes',
-                font: {
-                    size: 16
-                }
-            }
-        }
-    };
-
-    // Crear el gráfico de barras
-    $(document).ready(function() {
-        var ctx = document.getElementById('miGrafico2').getContext('2d');
-        var miGrafico2 = new Chart(ctx, {
-            type: 'bar',
-            data: datos2,
-            options: opciones2
-        });
-    });
-</script>
-<script>
-        // Datos para el gráfico de rosquilla
-        var datosDoughnut = {
-            labels: ['En proceso', 'Publicado', 'Finalizado', 'Recotizando'],
-            datasets: [
-                {
-                    data: [65, 35, 33, 11], // Porcentajes de cotizaciones para servicios y bienes
-                    backgroundColor: ['rgba(255, 99, 132, 0.5)', 
-                        'rgba(54, 162, 235, 0.5)',
-                        'rgba(66, 99, 132, 0.5)',
-                        'rgba(34, 99, 1, 0.5)'
-                    ],
-                    borderColor: ['rgba(255, 99, 132, 1)', 
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(66, 99, 132, 0.5)',
-                        'rgba(34, 99, 1, 0.5)'
-                    ],
-                    borderWidth: 1
-                }
-            ]
-        };
-
-        // Configuración del gráfico de rosquilla
-        var opcionesDoughnut = {
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Cantidad de cotizaciones por estado y mes',
-                    font: {
-                        size: 16
-                    }
-                }
-            }
-        };
-
-        // Crear el gráfico de rosquilla
-        $(document).ready(function() {
-            var ctxDoughnut = document.getElementById('miGrafico3').getContext('2d');
-            var miGraficoDoughnut = new Chart(ctxDoughnut, {
-                type: 'doughnut',
-                data: datosDoughnut,
-                options: opcionesDoughnut
-            });
-        });
-    </script>
+@include('home.admin.montoCotSegunTipoMes')
+@include('home.admin.cantCotEstadoMes')
 @endsection

@@ -13,29 +13,12 @@ class PaCotizacionController extends Controller
 {
     public function actListar()
     {
-        // select c.* from cotizacion c
-        //     left join recotizacion r on c.idCot=r.idCot
-        // where estadoCotizacion='2' or estadoCotizacion='5';
-
-        // SELECT pre.idPro,c.* FROM cotizacion c 
-        // left join cotrecpro pre on c.idCot=pre.idCot 
-        // left join proveedor p on p.idPro=pre.idPro 
-        // where c.estadoCotizacion='2' or c.estadoCotizacion='5';
-
-
-    	// $registros = TCotizacion::select('cotizacion.*')
-     //        // ->leftjoin('recotizacion','recotizacion.idCot','=','cotizacion.idCot')
-     //        ->where('estadoCotizacion','2')
-     //        ->orWhere('estadoCotizacion','5')
-     //        ->orderBy('fr','desc')->get();
+        // envia solo las cotizaciones que solo estan en proceso o recotizando
         $tPro = Session::get('proveedor');
         $registros = TCotizacion::select('cotizacion.*')
-            // ->leftjoin('cotrecpro','cotrecpro.idCot','=','cotizacion.idCot')
-            // ->where('cotrecpro.idPro','!=',$tPro->idPro)
             ->where('cotizacion.estadoCotizacion','2')
             ->orWhere('cotizacion.estadoCotizacion','5')
             ->orderBy('fr','desc')->get();
-
         $registros = TCotizacion::select('cotizacion.*','cotrecpro.idPro')
             ->leftjoin('cotrecpro','cotrecpro.idCot','=','cotizacion.idCot')
             ->leftjoin('proveedor','proveedor.idPro','=','cotrecpro.idPro')
@@ -43,8 +26,6 @@ class PaCotizacionController extends Controller
             ->orWhere('cotizacion.estadoCotizacion','5')
             ->orderBy('fr','desc')
             ->get();
-
-        // $registros = TCotizacion::where('estadoCotizacion','2')->orderBy('fr','desc')->get();
         return response()->json(["data"=>$registros]);
     }
     public function actListarPortal()
@@ -59,101 +40,58 @@ class PaCotizacionController extends Controller
     
     public function actSearch(Request $r)
     {
-    	// Tu array
-		// $array = [1, 2, null, 4, null, 6];
-
-		// Filtra los elementos nulos
+        // busca las cotizaciones que solo estan en proceso o recotizando segun las opciones enviadas en el request
 		$arrayFiltrado = array_filter($r->all(), function ($ele) {
 		    return $ele !== null;
 		});
-
-		// Cuenta los elementos restantes
+		// cuenta si se envio alguna opcion de filtrado
 		$elementosNoNulos = count($arrayFiltrado);
-
-		// Imprime el resultado
-		// echo "Número de elementos no nulos: $elementosNoNulos";
-		// exit();
-  //   	dd(gettype($r->all()));
-    	
-        // ------------------------------------------------------------------
-        // ------------------------------------------------------------------
-        // ------------------------------------------------------------------
         $tipo='';
         if($elementosNoNulos==1)
         {
-            // dd('estra aki');
+            // si no se envio datos para filtrar enviamos por defecto las cotizaciones publicadas
             if(!is_null($r->tipo) && $r->tipo!=0)
-            {   
-                $tipo=" AND tipo = '".$r->tipo."' ";
-            }
+            {   $tipo=" AND tipo = '".$r->tipo."' ";}
         	$sql = "SELECT * FROM cotizacion where estadoCotizacion=2 ".$tipo;
         }
         else
         {
+            // en caso envio los datos de filtrado, se comienza a crear la consulta con estos datos
 	        $numeroCotizacion='';
 	        $concepto='';
 	        $entreFechas='';
             
 	        if(!is_null($r->numeroCotizacion))
-	        {
-	        	$numeroCotizacion=" or numeroCotizacion=".$r->numeroCotizacion;
-	            // array_push($array, $r->numeroCotizacion);
-	        }
+	        {  $numeroCotizacion=" or numeroCotizacion=".$r->numeroCotizacion;}
 	        if(!is_null($r->concepto))
-	        {
-	        	$concepto=" or concepto like '%".$r->concepto."%'";
-	            // array_push($array, $r->concepto);
-	        }
+	        {  $concepto=" or concepto like '%".$r->concepto."%'";}
 	        if(!is_null($r->fechaInicial))
-	        {
-	        	$entreFechas=" or ( fechaCotizacion>='".$r->fechaInicial."' and fechaFinalizacion<='".$r->fechaFinal."')";
-	            // array_push($array, $r->concepto);
-	        }
+	        {  $entreFechas=" or ( fechaCotizacion>='".$r->fechaInicial."' and fechaFinalizacion<='".$r->fechaFinal."')";}
             if(!is_null($r->tipo) && $r->tipo!=0)
-            {   
-                $tipo=" AND tipo = '".$r->tipo."' ";
-            }
-	// SELECT * FROM cotizacion where estadoCotizacion=2 and (tipo='Bienes' or numeroCotizacion=369 or concepto like '%kevins%');-->malo
-	// SELECT * FROM cotizacion where estadoCotizacion=2 and tipo='Bienes' and( numeroCotizacion=369 or concepto like '%kevins%' or (fechaCotizacion>='2023-11-08' and fechaFinalizacion<='2023-12-09'));-->MEJOR
-	        // $sql = "SELECT * FROM cotizacion where estadoCotizacion=2 and ( tipo='".$r->tipo."' ".$numeroCotizacion.$concepto.')';
+            {   $tipo=" AND tipo = '".$r->tipo."' ";}
 	        $sql = "SELECT * FROM cotizacion where (estadoCotizacion=5 or estadoCotizacion=2) ".$tipo." and ( idCot=0 ".$numeroCotizacion.$concepto.$entreFechas.')';
-            // dd($sql);
         }
-        // dd($sql);
-        // $registros=DB::select($sql,$array);
         $registros=DB::select($sql);
         return response()->json(["data"=>$registros]);
-        // return datatables()->of($registros)->toJson(); 
     }
     public function actSearchPortal(Request $r)
     {
-        // $registros = TCotizacion::select('cotizacion.*')
-        //     ->where('cotizacion.estadoCotizacion','2')
-        //     ->orWhere('cotizacion.estadoCotizacion','5')
-        //     ->orderBy('fr','desc')
-        //     ->get();
-        // dd($r->all());
-        // $sql = "SELECT * FROM cotizacion where (estadoCotizacion=5 or estadoCotizacion=2) ".$tipo." and ( idCot=0 ".$numeroCotizacion.$concepto.$entreFechas.')';
-        // ----------------------------------
-        // SELECT cotizacion.*
-        // FROM cotizacion
-        // WHERE cotizacion.estadoCotizacion = '2' OR cotizacion.estadoCotizacion = '5'
-        // ORDER BY fr DESC;
-        // --------------------------------------------------------------------------------------------
-
         $arrayFiltrado = array_filter($r->all(), function ($ele) {
             return $ele !== null;
         });
+        // cuenta si se envio alguna opcion de filtrado
         $elementosNoNulos = count($arrayFiltrado);
         $tipo='';
         if($elementosNoNulos==1)
         {
+            // si no se envio datos para filtrar enviamos por defecto las cotizaciones publicadas
             if(!is_null($r->tipo) && $r->tipo!=0)
             {   $tipo=" AND tipo = '".$r->tipo."' ";}
             $sql = "SELECT * FROM cotizacion where estadoCotizacion=2 ".$tipo;
         }
         else
         {
+            // en caso envio los datos de filtrado, se comienza a crear la consulta con estos datos
             $numeroCotizacion='';
             $concepto='';
             $entreFechas='';
@@ -167,14 +105,11 @@ class PaCotizacionController extends Controller
             {   $tipo=" AND tipo = '".$r->tipo."' ";}
             $sql = "SELECT * FROM cotizacion where (estadoCotizacion=5 or estadoCotizacion=2) ".$tipo." and ( idCot=0 ".$numeroCotizacion.$concepto.$entreFechas.')';
         }
-        // dd($sql);
         $registros=DB::select($sql);
         return response()->json(["data"=>$registros]);
     }
     public function actShowProCot(Request $r)
     {	
-
-    	// dd($r->all());
     	$tPro = Session::get('proveedor');
     	$tCot = TCotizacion::find($r->id);
     	$tPro = TProveedor::find($tPro->idPro);

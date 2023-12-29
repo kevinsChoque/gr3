@@ -12,7 +12,6 @@ use App\Models\TCotrecpro;
 use App\Models\TCotizacion;
 use App\Models\TRecotizacion;
 use App\Models\TDetalleprocot;
-// use Codedge\Fpdf\Fpdf\Fpdf;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use setasign\Fpdi\Fpdi;
 
@@ -35,11 +34,11 @@ class PaCotRecProController extends Controller
 
 	public function saveDetalleProCot($r,$idCrp)
     {
+        // funcion para guardar los detalles de la postulacion que se esta enviando
         $i=1;
         foreach (json_decode($r->items,true) as $item) 
         {
             $tDpc=new TDetalleprocot();
-            // $r->merge(['idUsu' => Str::uuid()]);
             $tDpc->idDpc=Str::uuid();
             $tDpc->idCrp=$idCrp;
             $tDpc->idItm=$item['id'];
@@ -47,14 +46,12 @@ class PaCotRecProController extends Controller
             $tDpc->marca=$item['marca'];
             $tDpc->modelo=$item['modelo'];
             $tDpc->precio=$item['precio'];
-            
-            // $tDpc->archivo=$idCrp;
             if($item['archivo']!='no tiene')
             {
-                // $this->arrayNombresFiles = array();
                 $tDpc->archivo=$idCrp.'_'.$i.'.pdf';
                 array_push($this->arrayNombresFiles, $idCrp.'_'.$i);
             }
+            // en caso ocurra un error en el guardado retorna false para revertir el proceso
             if(!$tDpc->save())
             {return false;}
             $i++;
@@ -63,32 +60,26 @@ class PaCotRecProController extends Controller
     }
     public function actGuardar(Request $r)
     {
-        // dd($r->all());
         $tPro = Session::get('proveedor');
         $nombreOferta = $r->idCot.'_'.$tPro->idPro.'.pdf';
-
         $tRec = TRecotizacion::where('idCot',$r->idCot)->where('estadoRecotizacion','1')->first();
         if($tRec!=null)
-        {
-            $r->merge(['idRec' => $tRec->idRec]);
-        }
+        {   $r->merge(['idRec' => $tRec->idRec]);}
         $r->merge(['idCrp' => Str::uuid()]);
         $r->merge(['archivo' => $nombreOferta]);
         $r->merge(['idPro' => $tPro->idPro]);
         $r->merge(['estadoCrp' => '0']);
         $r->merge(['estado' => '1']);
         $r->merge(['fr' => Carbon::now()]);
+        // inicializacion de la transaccion
         DB::beginTransaction();
-        // if(TCotrecpro::create($r->all()))
-        // if(true)
         $tCrp = TCotrecpro::create($r->all());
         if($tCrp)
         {
-            // $this->saveDetalleProCot($r,'3');
+            // guarda los detalles de la postulacion, en caso ocurra un error se devuelve el proceso desde la inicializacion de la transaccion
             if($this->saveDetalleProCot($r,$tCrp->idCrp))
             {
-                // dd(gettype($r->file('archivos')));
-                
+                // se guarda los archivos de cada item
                 if($r->file('archivos')!==null)
                 {
                     for ($i=0; $i < count($r->file('archivos')) ; $i++) 
@@ -115,7 +106,6 @@ class PaCotRecProController extends Controller
     }
     public function actGuardar_last_2funcionalidad_b(Request $r)
     {
-        // dd($r->all());
         $tPro = Session::get('proveedor');
         $nombreOferta = $r->idCot.'_'.$tPro->idPro.'.pdf';
 
@@ -131,12 +121,9 @@ class PaCotRecProController extends Controller
         $r->merge(['estado' => '1']);
         $r->merge(['fr' => Carbon::now()]);
         DB::beginTransaction();
-        // if(TCotrecpro::create($r->all()))
-        // if(true)
         $tCrp = TCotrecpro::create($r->all());
         if($tCrp)
         {
-            // $this->saveDetalleProCot($r,'3');
             if($this->saveDetalleProCot($r,$tCrp->idCrp))
             {
                 // dd(gettype($r->file('archivos')));

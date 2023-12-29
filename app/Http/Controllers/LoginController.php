@@ -10,24 +10,6 @@ use App\Models\TProveedor;
 
 class LoginController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware(function ($request, $next) 
-    //     {
-    //         // Verificar si hay una sesión activa o una variable de sesión llamada "usuario"
-    //         if (Session::has('usuario')) {
-    //             return redirect('/home/home');
-    //             // Acciones a realizar si hay sesión o variable de sesión "usuario"
-    //             // Puedes agregar cualquier lógica adicional aquí
-    //         } else {
-    //             // Acciones a realizar si no hay sesión o variable de sesión "usuario"
-    //             // Por ejemplo, podrías redirigir a una página de inicio de sesión
-    //             // return redirect('/login');
-    //             return view('login/login');
-    //         }
-    //         // return $next($request);
-    //     });
-    // }
     public function actionLogin()
     {
         if (Session::has('usuario')) 
@@ -37,49 +19,36 @@ class LoginController extends Controller
     }
     public function sigin(Request $r)
     {
-        // dd($r->all());
     	$tUsu = TUsuario::where('usuario',$r->usuario)->first();
-        // dd($tUsu);
+        // validacion de usuario para ver si esta inactivo
         if($tUsu->estado=='0')
-        {
-            return response()->json(['estado' => false, 'message' => 'El usuario '.$r->usuario.' no cuenta con acceso al sistema.']);
-        }
+        {   return response()->json(['estado' => false, 'message' => 'El usuario '.$r->usuario.' no cuenta con acceso al sistema.']);}
+        // validacion de usuario para ver siexiste
     	if($tUsu==null)
-    	{
-    		return response()->json(['estado' => false, 'message' => 'El usuario no se encuentra registrado.']);
-    	}
+    	{  return response()->json(['estado' => false, 'message' => 'El usuario no se encuentra registrado.']);}
+        // validacion de usuario para ver si la contraseña es la correcta
     	if(!Hash::check($r->password, $tUsu->password)) 
-    	{
-    		return response()->json(['estado' => false, 'message' => 'La contraseña es incorrecta.']);
-    	}
+    	{  return response()->json(['estado' => false, 'message' => 'La contraseña es incorrecta.']);}
+        // guardado en sesion el usuario logueado
     	session(['usuario' => $tUsu]);
     	return response()->json(['estado' => true, 'message' => 'ok']);
     }
     public function siginpro(Request $r)
     {
-        // session()->flush();
-        // session(['proveedor' => TProveedor::find(3)]);
-        // return response()->json(['estado' => true, 'message' => 'ok']);
-        // ---
-
         $tPro = TProveedor::where('usuario',$r->usuario)->first();
-        // dd($r->all());
+        // validacion del proveedor para ver si esta inactivo o eliminado
         if($tPro->estado=='0' || $tPro->estadoProveedor=='0')
-        {
-            return response()->json(['estado' => false, 'message' => 'El proveedor '.$r->usuario.' no cuenta con acceso al sistema.']);
-        }
+        {   return response()->json(['estado' => false, 'message' => 'El proveedor '.$r->usuario.' no cuenta con acceso al sistema.']);}
+        // validacion del proveedor para ver si existe
         if($tPro==null)
-        {
-            return response()->json(['estado' => false, 'message' => 'El usuario '.$r->usuario.' no se encuentra registrado.']);
-        }
+        {   return response()->json(['estado' => false, 'message' => 'El usuario '.$r->usuario.' no se encuentra registrado.']);}
+        // validacion del proveedor para ver si la contraseña es la correcta
         if(!Hash::check($r->password, $tPro->password)) 
-        {
-            return response()->json(['estado' => false, 'message' => 'La contraseña es incorrecta.']);
-        }
+        {   return response()->json(['estado' => false, 'message' => 'La contraseña es incorrecta.']);}
+        // guardado en sesion del proveedor logueado
         session(['proveedor' => $tPro]);
         return response()->json(['estado' => true, 'message' => 'ok']);
     }
-    
     public function logout()
     {
     	session()->flush();
@@ -87,7 +56,6 @@ class LoginController extends Controller
     }
     public function logoutPro()
     {
-        // session()->flush();
         session()->forget('proveedor');
         return redirect('loginProveedor/loginProveedor');
     }

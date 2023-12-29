@@ -14,6 +14,7 @@ use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\SuspensionController;
 use App\Http\Controllers\RecotizacionController;
 use App\Http\Controllers\LoginProveedorController;
+use App\Http\Controllers\HomeAdminController;
 // portal
 use App\Http\Controllers\PortalProveedorController;
 use App\Http\Controllers\PaCotizacionController;
@@ -25,19 +26,11 @@ use App\Http\Controllers\FilesCotizacionController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\CotLlenadaController;
 use App\Http\Controllers\FormatosController;
-
-
-
+// middleware
 use App\Http\Middleware\MDAdministrador;
-
 Route::middleware([MDAdministrador::class])->group(function () {
-	// home
 	Route::get('home/home',[HomeController::class, 'actionHome']);
 });
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
 // portal
 Route::get('/',[PortalController::class, 'actionPortal']);
 // login
@@ -47,10 +40,8 @@ Route::post('login/sigin',[LoginController::class, 'sigin']);
 Route::post('login/siginpro',[LoginController::class, 'siginpro']);
 Route::get('login/logout',[LoginController::class, 'logout']);
 Route::get('loginProveedor/logoutPro',[LoginController::class, 'logoutPro']);
-
 // proveedor
 Route::get('proveedor', function () {return view('proveedor.proveedor');});
-// Route::get('proveedor/registrar',[ProveedorController::class, 'actRegistrar']);
 Route::post('proveedor/guardar',[ProveedorController::class, 'actGuardar']);
 Route::get('proveedor/listar',[ProveedorController::class, 'actListar']);
 Route::post('proveedor/eliminar',[ProveedorController::class, 'actEliminar']);
@@ -61,7 +52,6 @@ Route::get('cotizacion/registrar', function () {return view('cotizacion.registra
 Route::get('cotizacion/ver', function () {return view('cotizacion.ver');});
 Route::get('cotizacion/editar', function () {return view('cotizacion.editar');});
 Route::get('cotizacion/addItems', function () {return view('cotizacion.addItems');});
-
 Route::post('cotizacion/guardar',[CotizacionController::class, 'actGurdar']);
 Route::get('cotizacion/listar',[CotizacionController::class, 'actListar']);
 Route::post('cotizacion/eliminar',[CotizacionController::class, 'actEliminar']);
@@ -69,11 +59,7 @@ Route::post('cotizacion/show',[CotizacionController::class, 'actShow']);
 Route::post('cotizacion/guardarCambios',[CotizacionController::class, 'actGuardarCambios']);
 Route::post('cotizacion/changeEstadoCotizacion',[CotizacionController::class, 'actChangeEstadoCotizacion']);
 Route::post('cotizacion/showCotizacion',[CotizacionController::class, 'actShowCotizacion']);
-// - interesante manejo de file
-// Route::get('cotizacion/archivo/{nombreArchivo}', 'CotizacionController@verArchivo')->name('ver-archivo');
 Route::get('cotizacion/archivo/{nombreArchivo?}',[CotizacionController::class, 'verArchivo'])->name('ver-archivo');
-// -
-
 // items
 Route::post('item/guardar',[ItemController::class, 'actGurdar']);
 Route::get('item/listar',[ItemController::class, 'actListar']);
@@ -83,12 +69,10 @@ Route::post('cotxitm/eliminar',[CotxitmController::class, 'actEliminar']);
 Route::post('cotxitm/changeCant',[CotxitmController::class, 'actChangeCant']);
 Route::post('cotxitm/changeUm',[CotxitmController::class, 'actChangeUm']);
 Route::post('cotxitm/loadSegunCotizacion',[CotxitmController::class, 'actLoadSegunCotizacion']);
-
 // unidad de medida
 Route::get('unidadMedida/listar',[UnidadMedidaController::class, 'actListar']);
 // usuario
 Route::get('usuario', function () {return view('usuario.usuario');});
-
 Route::post('usuario/guardar',[UsuarioController::class, 'actGuardar']);
 Route::get('usuario/listar',[UsuarioController::class, 'actListar']);
 Route::post('usuario/eliminar',[UsuarioController::class, 'actEliminar']);
@@ -103,14 +87,7 @@ Route::get('postulaciones/ver', function () {return view('postulacion.ver');});
 Route::get('postulacion/postulaciones', function () {return view('postulacion.postulaciones');});
 Route::get('postulaciones/listar',[PostulacionesController::class, 'actListar']);
 Route::post('postulaciones/showPostulantes',[PostulacionesController::class, 'actShowPostulantes']);
-
-// -------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------
 // PORTAL-------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------
-// -------------------------------------------------------------------------------
 // proveedor
 Route::get('portal/proveedor/registrar', function () {return view('portal.proveedor.registrar');});
 Route::post('portal/proveedor/guardar',[PortalProveedorController::class, 'actGuardar']);
@@ -124,18 +101,14 @@ Route::get('panelAdm/paCotizacion/misCotizaciones', function () {return view('pa
 Route::get('panelAdm/paCotizacion/listar',[PaCotizacionController::class, 'actListar']);
 Route::get('panelAdm/paCotizacion/listarPortal',[PaCotizacionController::class, 'actListarPortal']);
 Route::post('panelAdm/paCotizacion/search',[PaCotizacionController::class, 'actSearch']);
-// Route::post('panelAdm/paCotizacion/searchMisCot',[PaCotizacionController::class, 'searchMisCot']);
 Route::post('panelAdm/paCotizacion/showProCot',[PaCotizacionController::class, 'actShowProCot']);
-Route::post('panelAdm/paCotizacion/searchPortal',[PaCotizacionController::class, 'actSearchPortal']);//---------------------------------
-// paCotRecPro asociada a las cotizaciones y recotizaciones con los proveedores
+Route::post('panelAdm/paCotizacion/searchPortal',[PaCotizacionController::class, 'actSearchPortal']);
+// postulaciones
 Route::post('panelAdm/paCotRecPro/guardar',[PaCotRecProController::class, 'actGuardar']);
 Route::post('panelAdm/paCotRecPro/listar',[PaCotRecProController::class, 'actListar']);
-Route::post('panelAdm/paCotRecPro/search',[PaCotRecProController::class, 'actSearch']);//---------------------------------
-
-
+Route::post('panelAdm/paCotRecPro/search',[PaCotRecProController::class, 'actSearch']);
 Route::post('panelAdm/paCotRecPro/subirArchivo',[PaCotRecProController::class, 'actSubirArchivo']);
 Route::post('panelAdm/paCotRecPro/generarCot',[PaCotRecProController::class, 'actGenerarCot']);
-
 Route::get('panelAdm/paCotRecPro/{idPro?}/{idCrp?}/{nombreArchivo?}',[PaCotRecProController::class, 'verArchivo'])->name('cotRecPro-archivo');
 // proveedor
 Route::get('panelAdm/paProveedor/datos', function () {return view('panelAdm.proveedor.datos');});
@@ -144,7 +117,6 @@ Route::get('panelAdm/paProveedor/changePassword', function () {return view('pane
 Route::post('panelAdm/paProveedor/guardar',[PaProveedorController::class, 'actGuardar']);
 Route::post('panelAdm/paProveedor/savePassword',[PaProveedorController::class, 'actSavePassword']);
 // detalle de las cotizaciones que envian
-
 Route::get('panelAdm/detalleprocot/{nombreArchivo?}',[DetalleprocotController::class, 'verArchivo'])->name('detalle-archivo');
 // archivos de cotizacion
 Route::get('panelAdm/declaracionJurada',[FilesCotizacionController::class, 'declaracionJurada'])->name('declaracion-jurada');
@@ -156,9 +128,12 @@ Route::get('panelAdm/pdfCot',[PdfController::class, 'cotizacion'])->name('pdf-co
 Route::get('panelAdm/cotLlenada',[CotLlenadaController::class, 'cotizacion'])->name('cotizacion-llenada');
 // formatos
 Route::get('panelAdm/formatos/file/{nombreArchivo?}',[FormatosController::class, 'formatosFile'])->name('formatos-file');
-// Route::get('cotizacion/archivo/{nombreArchivo?}',[CotizacionController::class, 'verArchivo'])->name('ver-archivo');
 Route::get('panelAdm/formatos/saveCciDel',[FormatosController::class, 'actSaveCciDel'])->name('saveCciDel');
 Route::get('panelAdm/formatos/saveDjDel',[FormatosController::class, 'actSaveDjDel'])->name('saveDjDel');
 Route::get('panelAdm/formatos/saveAnexo5Del',[FormatosController::class, 'actSaveAnexo5Del'])->name('saveAnexo5Del');
-// saveCciDel
+// home de admin controller
+Route::get('homeAdmin/datos',[HomeAdminController::class, 'actDatos']);
+Route::get('homeAdmin/montoCotSegunTipoMes',[HomeAdminController::class, 'actMontoCotSegunTipoMes']);
+Route::get('homeAdmin/cantCotEstadoMes',[HomeAdminController::class, 'actCantCotEstadoMes']);
+
 

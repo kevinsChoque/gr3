@@ -9,7 +9,6 @@ class HomeController extends Controller
 {
     public function actionHome(Request $r)
     {
-    	// echo('csacs');
     	return view('home/home');
     }
 }
