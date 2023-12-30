@@ -5,7 +5,6 @@
         <div class="row mb-2">
             <div class="col-sm-6"><h1 class="m-0">Mis Cotizaciones</h1></div>
             <div class="col-sm-6">
-                <!-- <a href="{{url('cotizacion/ver')}}" class="btn btn-success float-right"><i class="fa fa-list"></i> Cotizaciones</a> -->
                 <ol class="breadcrumb float-sm-right" style="display: none;">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
                     <li class="breadcrumb-item active">Dashboard v3</li>
@@ -25,8 +24,6 @@
     <div class="alert alert-warning alert-dismissible">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         <h5 class="font-weight-bold"><i class="icon fas fa-info"></i> Culminar cotizacion:</h5>
-        <!-- <div class="row">
-        </div> -->
         <ol class="m-0">
             <li class="font-weight-bold font-italic mb-2">Descarga los formatos asiendo click en el boton <button type="button" class="btn btn-sm btn-primary"><i class="fa fa-download"></i></button></li>
             <li class="font-weight-bold font-italic mb-2">Subir los formatos asiendo click en el boton <button type="button" class="btn btn-sm btn-success ml-1"><i class="fa fa-paper-plane"></i> Enviar</button></li>
@@ -39,16 +36,6 @@
         </div>
     	<div class="card-body">
             <h3 class="text-center font-weight-bold font-italic m-0">MIS COTIZACIONES</h3>
-    		<!-- <h3 class="text-center font-weight-bold font-italic">MIS COTIZACIONES</h3>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="alert alert-info alert-dismissible">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <h5><i class="icon fas fa-info"></i> Alert!</h5>
-                        Info alert preview. This alert is dismissable.
-                    </div>
-                </div>
-            </div> -->
     		<form id="fvbuscot">
     		<div class="row mt-4 justify-content-center">
     			<div class="col-lg-2 col-sm-3">
@@ -83,7 +70,6 @@
 					<div class="form-group row">
 						<label class="col-sm-4 col-form-label text-right">Tipo:</label>
 						<div class="col-sm-8">
-							<!-- <input type="date" id="fechaInicial" name="fechaInicial" class="form-control"> -->
                             <select name="tipo" id="tipo" class="form-control">
                                 <option disabled>Selecciona una opcion</option>
                                 <option value="0" selected>Todos</option>
@@ -137,175 +123,131 @@
 @include('panelAdm.cotizacion.finalizarCotizacion.mArchivos')
 @include('panelAdm.cotizacion.finalizarCotizacion.mEnviarArchivo')
 <script>
-    localStorage.setItem("sba",4);
-    var tablaDeRegistros;
-    var flip=0;
-    var idCrp = '';
-    $(document).ready( function () {
-        tablaDeRegistros=$('.contenedorRegistros').html();
-     //    initFv('fvbuscot',rules());
-    	fillRegistros();
-        $('.overlayPagina').css("display","none");
-        $('.overlayRegistros').css("display","none");
-
-        // var fechaActual = new Date();
-        // var anioActual = new Date().getFullYear();
-        $('#anio').val(new Date().getFullYear());
-    });
-    $('.searchMisCot').on('click',function(){
-        searchMisCot();
-    });
-    function searchMisCot()
-    {
-        // if($('#fvbuscot').valid()==false)
-        // {return;}
-        // if($('#fechaInicial').val()>$('#fechaFinal').val())
-        // {msjSimple(false,"La fecha inicial debe ser menor a la fecha final."); return;}
-        var formData = new FormData($("#fvbuscot")[0]);
-        // $('.searchCot').prop('disabled',true); 
-        $( ".overlayRegistros" ).toggle( flip++ % 2 === 0 );
-        jQuery.ajax(
-        { 
-            url: "{{ url('panelAdm/paCotRecPro/search') }}",
-            method: 'post',
-            data: formData,
-            dataType: 'json',
-            processData: false, 
-            contentType: false, 
-            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-            success: function(r)
+localStorage.setItem("sba",4);
+var tablaDeRegistros;
+var flip=0;
+var idCrp = '';
+$(document).ready( function () {
+    tablaDeRegistros=$('.contenedorRegistros').html();
+	fillRegistros();
+    $('.overlayPagina').css("display","none");
+    $('.overlayRegistros').css("display","none");
+    $('#anio').val(new Date().getFullYear());
+});
+$('.searchMisCot').on('click',function(){
+    searchMisCot();
+});
+// funcion para realizar la busqueda de las cotizaciones segun los datos ingresados
+function searchMisCot()
+{
+    var formData = new FormData($("#fvbuscot")[0]);
+    $( ".overlayRegistros" ).toggle( flip++ % 2 === 0 );
+    jQuery.ajax(
+    { 
+        url: "{{ url('panelAdm/paCotRecPro/search') }}",
+        method: 'post',
+        data: formData,
+        dataType: 'json',
+        processData: false, 
+        contentType: false, 
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function(r)
+        {
+            var html = '';
+            var opciones = '';
+            construirTabla();
+            for (var i = 0; i < r.data.length; i++) 
             {
-                console.log('----------------------');
-                console.log(r);
-                console.log('----------------------');
-                var html = '';
-                var opciones = '';
-                construirTabla();
-                for (var i = 0; i < r.data.length; i++) 
+                // si el archivo de cotizacion fue enviado nos mostrara este mensaje 
+                // caso contrario nos mostrara botones para poder enviar el archivo de cotizacion
+                if(r.data[i].estadoCrp=='1')
+                {   opciones = '<span class="badge badge-light shadow"> Cotizacion Enviada</span>';}
+                else
                 {
-                    if(r.data[i].estadoCrp=='1')
-                    {
-                        opciones = '<span class="badge badge-light shadow"> Cotizacion Enviada</span>';
-                    }
-                    else
-                    {
-                        opciones = '<button type="button" class="btn btn-sm btn-primary" onclick="showArchivos('+r.data[i].idCrp+');"><i class="fa fa-download" ></i></button>'+
-                            '<button type="button" class="btn btn-sm btn-success ml-1" onclick="mSend('+r.data[i].idCrp+');"><i class="fa fa-paper-plane"></i> Enviar</button>';
-                    }
-                    html += '<tr>' +
-                        '<td class="text-center font-weight-bold">' + (i+1) + '</td>' +
-                        '<td class="text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
-                        '<td class="text-center font-weight-bold">' + formatoDateHours(r.data[i].frCrp) + '</td>' +
-                        '<td class="text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
-                        '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
-                        '<td class="text-center font-weight-bold">' + novDato('S/. '+r.data[i].total) + '</td>' +
-                        '<td class="text-center">' + estadoEnviado(r.data[i].estadoCrp) + '</td>' +
-                        '<td class="text-center">' + 
-                            opciones + 
-                            // '<button type="button" class="btn btn-sm btn-primary" onclick="showArchivos('+r.data[i].idCrp+');"><i class="fa fa-download" ></i></button>'+
-                            // '<button type="button" class="btn btn-sm btn-success ml-1" onclick="mSend('+r.data[i].idCrp+');"><i class="fa fa-paper-plane"></i> Enviar</button>'+
-
-                            // '<div class="btn-group btn-group-sm" role="group">'+
-                            //     '<button type="button" class="btn btn-info" title="Editar registro" onclick="cotizar('+r.data[i].idCot+');"><i class="far fa-file-alt" ></i></button>'+
-                            //     '<button type="button" class="btn btn-success" title="Editar registro" onclick="cotizar('+r.data[i].idCot+');"><i class="far fa-file-alt" ></i></button>'+
-                            // '</div>'+
-                        '</td></tr>';
+                    opciones = '<button type="button" class="btn btn-sm btn-primary" onclick="showArchivos('+r.data[i].idCrp+');"><i class="fa fa-download" ></i></button>'+
+                        '<button type="button" class="btn btn-sm btn-success ml-1" onclick="mSend('+r.data[i].idCrp+');"><i class="fa fa-paper-plane"></i> Enviar</button>';
                 }
-                $('#data').html(html);
-                initDatatable('registros');
-                $('.overlayRegistros').css('display','none');
-                // construirTabla();
-                // changeRegistros(r);
-
-
-                // $('.searchCot').prop('disabled',false); 
-                // msjRee(r);
+                html += '<tr>' +
+                    '<td class="text-center font-weight-bold">' + (i+1) + '</td>' +
+                    '<td class="text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
+                    '<td class="text-center font-weight-bold">' + formatoDateHours(r.data[i].frCrp) + '</td>' +
+                    '<td class="text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
+                    '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
+                    '<td class="text-center font-weight-bold">' + novDato('S/. '+r.data[i].total) + '</td>' +
+                    '<td class="text-center">' + estadoEnviado(r.data[i].estadoCrp) + '</td>' +
+                    '<td class="text-center">' + 
+                        opciones + 
+                    '</td></tr>';
             }
-        });
-    }
-    function fillRegistros()
-    {
-        $('.contenedorRegistros').css('display','block');
-        jQuery.ajax(
-        { 
-            url: "{{ url('panelAdm/paCotRecPro/listar') }}",
-            method: 'post',
-            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-            success: function(r)
+            $('#data').html(html);
+            initDatatable('registros');
+            $('.overlayRegistros').css('display','none');
+        }
+    });
+}
+// esta funcion nos muestra la lista de cotizaciones a las cuales esta postulando el proveedor,
+// cada uno con su respectivas opciones q corresponda segun la opcion de envio
+function fillRegistros()
+{
+    $('.contenedorRegistros').css('display','block');
+    jQuery.ajax(
+    { 
+        url: "{{ url('panelAdm/paCotRecPro/listar') }}",
+        method: 'post',
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function(r)
+        {
+            var html = '';
+            var opciones = '';
+            for (var i = 0; i < r.data.length; i++) 
             {
-                // console.log('r.data');
-                // console.log(r.data);
-                // console.log('r.data');
-                var html = '';
-                var opciones = '';
-                for (var i = 0; i < r.data.length; i++) 
+                if(r.data[i].estadoCrp=='1')
+                {   opciones = '<span class="badge badge-light shadow"> Cotizacion Enviada</span>';}
+                else
                 {
-                    if(r.data[i].estadoCrp=='1')
-                    {
-                        opciones = '<span class="badge badge-light shadow"> Cotizacion Enviada</span>';
-                    }
-                    else
-                    {
-                        opciones = '<button type="button" class="btn btn-sm btn-primary" onclick="showArchivos(\''+r.data[i].idCrp+'\');"><i class="fa fa-download" ></i></button>'+
-                            '<button type="button" class="btn btn-sm btn-success ml-1" onclick="mSend(\''+r.data[i].idCrp+'\');"><i class="fa fa-paper-plane"></i> Enviar</button>';
-                    }
-                    html += '<tr>' +
-                        '<td class="text-center font-weight-bold">' + (i+1) + '</td>' +
-                        '<td class="text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
-                        '<td class="text-center font-weight-bold">' + formatoDateHours(r.data[i].frCrp) + '</td>' +
-                        '<td class="text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
-                        '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
-                        '<td class="text-center font-weight-bold">' + novDato('S/. '+r.data[i].total) + '</td>' +
-                        '<td class="text-center">' + estadoEnviado(r.data[i].estadoCrp) + '</td>' +
-                        '<td class="text-center">' + 
-                            opciones + 
-                            // '<button type="button" class="btn btn-sm btn-primary" onclick="showArchivos('+r.data[i].idCrp+');"><i class="fa fa-download" ></i></button>'+
-                            // '<button type="button" class="btn btn-sm btn-success ml-1" onclick="mSend('+r.data[i].idCrp+');"><i class="fa fa-paper-plane"></i> Enviar</button>'+
-
-                            // '<div class="btn-group btn-group-sm" role="group">'+
-                            //     '<button type="button" class="btn btn-info" title="Editar registro" onclick="cotizar('+r.data[i].idCot+');"><i class="far fa-file-alt" ></i></button>'+
-                            //     '<button type="button" class="btn btn-success" title="Editar registro" onclick="cotizar('+r.data[i].idCot+');"><i class="far fa-file-alt" ></i></button>'+
-                            // '</div>'+
-                        '</td></tr>';
+                    opciones = '<button type="button" class="btn btn-sm btn-primary" onclick="showArchivos(\''+r.data[i].idCrp+'\');"><i class="fa fa-download" ></i></button>'+
+                        '<button type="button" class="btn btn-sm btn-success ml-1" onclick="mSend(\''+r.data[i].idCrp+'\');"><i class="fa fa-paper-plane"></i> Enviar</button>';
                 }
-                $('#data').html(html);
-                initDatatable('registros');
-                $('.overlayRegistros').css('display','none');
+                html += '<tr>' +
+                    '<td class="text-center font-weight-bold">' + (i+1) + '</td>' +
+                    '<td class="text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
+                    '<td class="text-center font-weight-bold">' + formatoDateHours(r.data[i].frCrp) + '</td>' +
+                    '<td class="text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
+                    '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
+                    '<td class="text-center font-weight-bold">' + novDato('S/. '+r.data[i].total) + '</td>' +
+                    '<td class="text-center">' + estadoEnviado(r.data[i].estadoCrp) + '</td>' +
+                    '<td class="text-center">' + 
+                        opciones + 
+                    '</td></tr>';
             }
-        });
-    }
-    function showArchivos(id)
-    {
-        idCrp = id;
-        $('#mArchivos').modal('show');
-        // jQuery.ajax(
-        // { 
-        //     url: "{{url('cotizacion/showCotizacion')}}",
-        //     data: {id:id},
-        //     method: 'post',
-        //     headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-        //     success: function(r){
-        //         showDataCotizacion(r);
-        //     }
-        // });
-    }
-    function mSend(id)
-    {
-        idCrp = id;
-        $('#mSend').modal('show');
-        cleanFiles();
-    }
-    function estadoEnviado(estado)
-    {
-        let badgeEstado='';
-        if(estado == '0') badgeEstado='<span class="badge badge-light">PENDIENTE</span>';
-        if(estado == '1') badgeEstado='<span class="badge badge-success">ENVIADO</span>';
-        return badgeEstado
-    }
-    function construirTabla()
-    {
-        $('.contenedorRegistros>div').remove();
-        $('.contenedorRegistros').html(tablaDeRegistros);
-    }
+            $('#data').html(html);
+            initDatatable('registros');
+            $('.overlayRegistros').css('display','none');
+        }
+    });
+}
+function showArchivos(id)
+{
+    idCrp = id;
+    $('#mArchivos').modal('show');
+}
+function mSend(id)
+{
+    idCrp = id;
+    $('#mSend').modal('show');
+    cleanFiles();
+}
+function estadoEnviado(estado)
+{
+    let badgeEstado='';
+    if(estado == '0') badgeEstado='<span class="badge badge-light">PENDIENTE</span>';
+    if(estado == '1') badgeEstado='<span class="badge badge-success">ENVIADO</span>';
+    return badgeEstado
+}
+function construirTabla()
+{
+    $('.contenedorRegistros>div').remove();
+    $('.contenedorRegistros').html(tablaDeRegistros);
+}
 </script>
 @endsection

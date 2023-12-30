@@ -144,9 +144,11 @@
 <script>    
 var idM = '';
 $(document).ready( function () {
+    // validacion personalizada para verificar la extension del archivo
     $.validator.addMethod("extensionPdf", function(value, element) {
         return this.optional(element) || value.toLowerCase().endsWith(".pdf");
     }, "Solo se permiten archivos PDF");
+    // inicializamosel formulario con las reglas de validacion rulesRecotizacion
     initFv('fvRecotizar',rulesRecotizacion());
 });
 $('.guardarRecotizacion').on('click',function(){guardarRecotizacion();});
@@ -159,13 +161,14 @@ function rulesRecotizacion()
         newFechaFinalizacion: {required: true,}
     };
 }
+
 function guardarRecotizacion()
 {
     if($('#fvRecotizar').valid()==false)
     {return;}
     var formData = new FormData($("#fvRecotizar")[0]);
     formData.append('idCot', idM); 
-    // formData.append('file', $('#archivo')[0].files.length>0?'true':'false');
+    
     $('.guardarRecotizacion').prop('disabled',true); 
     jQuery.ajax({
         url: "{{ url('recotizacion/guardar') }}",
@@ -180,7 +183,6 @@ function guardarRecotizacion()
             if (r.estado) 
             {
                 cleanFormRecotizacion();
-                // procedure(r);
                 construirTabla();
                 fillRegistros();
                 $('.guardarRecotizacion').prop('disabled',false); 
@@ -199,8 +201,9 @@ function cleanFormRecotizacion()
 {
     cleanFv('fvRecotizar');
     $('.inpRec').val('');
-    // $('#estado').val('1');
 }
+// nos muestra los datos de la cotizacion el cual ya esta finalizada,
+// como tambien nos muestra los items
 function showDataRecotizar(r)
 {
     idM = r.cot.idCot;
@@ -215,7 +218,7 @@ function showDataRecotizar(r)
     $('.rdescripcion').html(r.cot.descripcion);
     $('.restadoCotizacion').html(estateCotizacion);
     var dir = $('.rfileCotizacion').attr('href');
-    // $('.rfileCotizacion').html(r.cot.archivo);
+    
     $('.rfileCotizacion').html('<i class="fa fa-file-pdf fa-lg"></i>');
     $('.rfileCotizacion').attr('href',dir+'/'+r.cot.archivo);
     var html = '';

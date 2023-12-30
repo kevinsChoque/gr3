@@ -44,7 +44,6 @@
                     </div> 
                     <div class="col-lg-3">
                         <p class="text-sm">Archivo:
-                            <!-- <b class="d-block archivo">-</b> -->
                             <a href="{{ route('ver-archivo') }}" class="d-block fileCotizacion font-weight-bold" target="_blank">-</a>
                         </p>
                     </div> 
@@ -68,11 +67,9 @@
                     <div class="col-lg-6">
                         <div class="form-group">
                             <label class="m-0">Items: <a href="#" class="control-label font-weight-bold text-info" data-toggle="modal" data-target="#mItems"> [ + Nuevo]</a></label>
-                            <!-- <div class="form-control"> -->
-                                <select name="items" id="items" class="form-control select2" style="width: 100%;">
-                                    <option disabled selected>Agregar items (Nombre)</option>
-                                </select>
-                            <!-- </div> -->
+                            <select name="items" id="items" class="form-control select2" style="width: 100%;">
+                                <option disabled selected>Agregar items (Nombre)</option>
+                            </select>
                         </div>
                     </div>  
                     <div class="col-lg-6">
@@ -81,12 +78,6 @@
                             <button class="btn btn-info form-control form-control-sm addItem"><i class="fa fa-plus"></i> Agregar item</button>
                         </div>
                     </div> 
-                    <!-- <div class="col-lg-3">
-                        <div class="form-group">
-                            <label class="m-0" style="visibility: hidden;">-</label>
-                            <button class="btn btn-success form-control form-control-sm changeEstadoCotMai"><i class="fa fa-edit"></i> Publicar cotizacion</button>
-                        </div>
-                    </div>  -->
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
@@ -102,9 +93,6 @@
                                 </tr>
                             </thead>
                             <tbody id="listItemsMai">
-                                <!-- <tr class="text-center">
-                                    <th colspan="6">Sin items</th>
-                                </tr> -->
                             </tbody>
                         </table>
                     </div>
@@ -125,17 +113,7 @@ var idItem='';
 var numero = '';
 var idCot = '';
 $(document).ready( function () {
-    // loadCotizacion();
-    // loadItemsCotizacion();
     fillItems();
-    // $('.overlayPagina').css("display","none");
-    // $('.overlayRegistros').css("display","none");
-
-
-    // $('#items').select2({
-    //     placeholder:"Seleccione los items.",
-    //     width:"resolve",
-    // });
 });
 $('.addItem').on('click',function(){
     addItem();
@@ -145,6 +123,7 @@ $('.changeEstadoCotMai').on('click',function(){
 });
 function changeEstadoCotMai()
 {
+    // confirmamos el cambo de estado de EN PROCESO A PUBLICADO
     let numeroCotizacion = '<strong>'+numero+'</strong>';
     Swal.fire({
         title: 'Esta seguro de publicar la COTIZACION?',
@@ -165,12 +144,13 @@ function changeEstadoCotMai()
                 method: 'post',
                 headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
                 success: function(r){
+                    // en caso se guardo se actualiza la table, 
+                    // caso contrario solo nos muestra el mensaje de error
                     if(r.estado)
                     {
                         construirTabla();
                         fillRegistros();
                         $('#mAddItems').modal('hide');
-                        // window.location.href="{{url('cotizacion/ver')}}";
                     }
                     else
                         msgRee(r);
@@ -185,16 +165,19 @@ function seleccionarUm(idFila,idItm)
     idItem = idItm;
     $('#mUnidadMedida').modal('show');
 }
+// esta funcion selecciona el item q ingresamos y selecciona por defecto en la lista de select2
 function procedure(r)
 {
-    // console.log(r);
     var data = {
         id: r.item.idItm,
         text: r.item.clasificador+': '+r.item.nombre+' | ' + r.item.descripcion,
     };
+    // creamos la opcion segun la libreria de select2 y agregamos dentro de la lista
     var newOptionReg = new Option(data.text, data.id, true, true);
     $('#items').prepend(newOptionReg).trigger('change');
 }
+// una vez agregado el item con el select2 crea una fila en la tabla de items
+// esto lo realiza despues q lo guarde con ajax
 function addItem()
 {
     if($('#items').val()==null)
@@ -210,7 +193,6 @@ function addItem()
         dataType: 'json',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
-            // console.log(r);
             if (r.estado) {
                 let idFila = idCot+r.item.idItm;
                 let html='';
@@ -245,6 +227,7 @@ function addItem()
 }
 function loadCotizacionMai(id)
 {
+    // llena los datos en el modal, datos que son de la cotizacion
     jQuery.ajax({
         url: "{{ url('cotizacion/show') }}",
         method: 'POST', 
@@ -252,11 +235,10 @@ function loadCotizacionMai(id)
         dataType: 'json',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
-            // limpiarForm();
             var estadoCot = r.data.estadoCotizacion=='1'?'Activo':
                 r.data.estadoCotizacion=='2'?'Finalizado':'Borrador';
             let estateCotizacion = estadoCotizacion(r.data.estadoCotizacion);
-            // console.log(estadoCotizacion)
+            
             $('.numeroCotizacion').html(r.data.numeroCotizacion);
             $('.tipo').html(r.data.tipo);
             $('.unidadEjecutora').html(novDato(r.data.unidadEjecutora));
@@ -268,19 +250,18 @@ function loadCotizacionMai(id)
             $('.archivo').html(r.data.archivo);
             $('.estadoCotizacion').html(estateCotizacion);
             var dir = $('.fileCotizacion').attr('href');
-            // $('.fileCotizacion').html(r.data.archivo);
+            
             $('.fileCotizacion').html('<i class="fa fa-file-pdf fa-lg"></i>');
             $('.fileCotizacion').attr('href',dir+'/'+r.data.archivo);
             $('.overlayRegistros').css("display","none");
             numero = r.data.numeroCotizacion;
-            // console.log(r)
-            // $('#mAddItems').modal('show');
         },
         error: function (xhr, status, error) {
             alert('salio un error');
         }
     });
 }
+// esta funcion llena la tabla de items en caso la cotizacion fuera llenada de items anteriormente
 function loadItemsCotizacion(id)
 {
     jQuery.ajax({
@@ -314,7 +295,6 @@ function loadItemsCotizacion(id)
                     '</td>'+
                 '</tr>';
             }
-            // console.log(html);
             $('#listItemsMai').html(html);
         },
         error: function (xhr, status, error) {
@@ -322,6 +302,8 @@ function loadItemsCotizacion(id)
         }
     });
 }
+// una vez se lanza el evento blur se guarda la cantidad en el item
+// se guarda en la tabla de cotxitm
 function changeCant(ele,idItm)
 {
     let cadena = $(ele).val();
@@ -346,8 +328,8 @@ function changeCant(ele,idItm)
             }
         });
     }
-    // ele.value = ele.value.replace(/[^0-9]/g,'');
 }
+// con esta funcion se carga el select2 donde se encuentra listado los items
 function fillItems()
 {
     jQuery.ajax(
@@ -362,7 +344,6 @@ function fillItems()
                 placeholder:"Seleccione los items.",
                 width:"resolve",
                 dropdownParent: $('#mAddItems')
-                // theme: "adminlte"
             });
         }
     });

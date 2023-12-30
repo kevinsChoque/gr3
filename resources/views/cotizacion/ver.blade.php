@@ -82,6 +82,7 @@ var flip=0;
 $(document).ready( function () 
 {
     tablaDeRegistros=$('.contenedorRegistros').html();
+    // funcion q llenara la tabla con los registros
     fillRegistros();
     $('.overlayPagina').css("display","none");
 });
@@ -100,12 +101,14 @@ function fillRegistros()
             let segunEstado;
             for (var i = 0; i < r.data.length; i++) 
             {
+                // solo se muestra estas opciones para lascotizaciones q estan EN PROCESO
                 if(r.data[i].estadoCotizacion=='1')
                 {
                     opciones = '<button type="button" class="btn text-info" title="Agregar items" onclick="addItems(\''+r.data[i].idCot+'\');"><i class="fa fa-plus"></i></button>'+
                         '<button type="button" class="btn text-info" title="Editar registro" onclick="editar(\''+r.data[i].idCot+'\');"><i class="fa fa-edit"></i></button>'+
                         '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar(\''+r.data[i].idCot+'\');"><i class="fa fa-trash"></i></button>';
                 }
+                // solo se muestra esta opcion cuando la cotizacion FINALIZO
                 if(r.data[i].estadoCotizacion == '3')
                 {
                     opcRec = '<button type="button" class="btn text-info" onclick="showRecotizar(\''+r.data[i].idCot+'\')" title="Recotizar"><i class="fa fa-calendar-alt"></i></button>';
@@ -113,6 +116,7 @@ function fillRegistros()
                 let deleteColor = r.data[i].estado==0?'background: rgba(157,23,22,.5)':'';
                 opciones = r.data[i].estado==0?'':opciones;
                 segunEstado = r.data[i].estado==0?estadoCotizacion(r.data[i].estadoCotizacion):segunEstadoCotizacion(r.data[i]);
+                // SE CARGA LAS COTIZACIONES
                 html += '<tr style="'+deleteColor+'">' +
                     @if(session()->get('usuario')->tipo=="administrador")
                     '<td class="align-middle text-left text-uppercase font-weight-bold">' + novDato(r.data[i].nameUser) + '</td>' +
@@ -121,18 +125,13 @@ function fillRegistros()
                     '<td class="align-middle text-left"><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
                     '<td class="align-middle text-center">' + badgeTipoCot(r.data[i].tipo) +'</td>' +
                     '<td class="align-middle text-left">' + fechaCotizacionFormat(r.data[i].fechaFinalizacion) +'<br>'+ formatoHour(r.data[i].horaFinalizacion) + '</td>' +
-                    // '<td class="text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '<button class="btn text-info" onclick="changeEstadoCot('+r.data[i].idCot+','+r.data[i].numeroCotizacion+')"><i class="fa fa-edit"></i></button></td>' +
                     '<td class="align-middle text-center">' + segunEstado + '</td>' +
-                    // '<td class="align-middle text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '</td>' +
                     '<td class="align-middle text-center">' + 
                         '<div class="btn-group btn-group-sm" role="group">'+
                             '<button type="button" class="btn text-info" title="Ver cotizacion" onclick="showCotizacion(\''+r.data[i].idCot+'\')"><i class="fa fa-eye"></i></button>'+
                             '<button type="button" class="btn text-info" title="Ver archivo" onclick="showFile(\''+r.data[i].archivo+'\')"><i class="fa fa-file-pdf"></i></button>'+
                             opcRec +
                             opciones +
-                            // '<button type="button" class="btn text-info"><i class="fa fa-plus" onclick="addItems('+r.data[i].idCot+');"></i></button>'+
-                            // '<button type="button" class="btn text-info" title="Editar registro" onclick="editar('+r.data[i].idCot+');"><i class="fa fa-edit" ></i></button>'+
-                            // '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar('+r.data[i].idCot+');"><i class="fa fa-trash"></i></button>'+
                         '</div>'+
                     '</td></tr>';
                 opciones='';
@@ -144,22 +143,13 @@ function fillRegistros()
         }
     });
 }
-// function fechaCotizacionFormat(fechaCotizacion)
-// {
-//     var fecha = new Date(fechaCotizacion);
-//     var fechaCorregida = new Date(fecha);
-//     fechaCorregida.setDate(fecha.getDate() + 1);
-//     return formatoDate(fechaCorregida);
-// }
 function segunEstadoCotizacion(cot)
 {
-    // console.log(cot.estadoCotizacion);
     let opcion = cot.estadoCotizacion == '5' || cot.estadoCotizacion == '2' || cot.estadoCotizacion == '3' ? '':'<button class="btn text-info" onclick="changeEstadoCot(\''+cot.idCot+'\','+cot.numeroCotizacion+')"><i class="fa fa-edit"></i></button>';
     return estadoCotizacion(cot.estadoCotizacion) + opcion;
 }
 function showFile(archivo)
 {
-    // window.location.href = "{{ route('ver-archivo') }}"+'/'+archivo;
     window.open("{{ route('ver-archivo') }}/" + archivo, "_blank");
 }
 function showCotizacion(id)
@@ -192,16 +182,7 @@ function showRecotizar(id)
 function editar(id)
 {
     loadCotizacion(id);
-    // $('#mEditar').modal('show');
-
-    // localStorage.setItem("idCot",id);
-    // window.location.href = "{{url('cotizacion/editar')}}";
 }
-// function editar_b(id)
-// {
-//     localStorage.setItem("idCot",id);
-//     window.location.href = "{{url('cotizacion/editar')}}";
-// }
 function addItems(id)
 {
     idCot = id;
@@ -209,13 +190,9 @@ function addItems(id)
     loadCotizacionMai(id);
     loadItemsCotizacion(id);
 }
-// function addItems_b(id)
-// {
-//     localStorage.setItem("idCot",id);
-//     window.location.href = "{{url('cotizacion/addItems')}}";
-// }
 function eliminar(id)
 {
+    // nos muestra un mensaje de confirmacion para la eliminacion del registro
     Swal.fire({
         title: 'Esta seguro de eliminar el registro?',
         text: "¡No podrás revertir esto!",

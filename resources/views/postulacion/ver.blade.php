@@ -6,7 +6,6 @@
         <div class="row mb-2">
             <div class="col-sm-6"><h1 class="m-0">Postulaciones</h1></div>
             <div class="col-sm-6">
-                <!-- <a href="{{url('cotizacion/registrar')}}" class="btn btn-success float-right"><i class="fa fa-plus"></i> Nueva</a> -->
                 <ol class="breadcrumb float-sm-right" style="display: none;">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
                     <li class="breadcrumb-item active">Dashboard v3</li>
@@ -95,8 +94,6 @@ localStorage.setItem("sba",7);
                         '<td class="align-middle text-center">' + badgeTipoCot(r.data[i].tipo) +'</td>' +
                         '<td class="align-middle text-center">' + fechaCotizacionFormat(r.data[i].fechaFinalizacion) +'<br>'+ formatoHour(r.data[i].horaFinalizacion) + '</td>' +
                         '<td class="align-middle text-center font-weight-bold">' + novDato(r.data[i].cantidad) + ' <i class="fa fa-user"></i></td>' +
-                        // una cotizacion cuando finaliza no puede ser cambiado, 
-                        // '<td class="text-center">' + segunEstadoCotizacion(r.data[i]) + '</td>' +
                         '<td class="align-middle text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '</td>' +
                         '<td class="align-middle text-center">' + 
                             '<button type="button" class="btn text-info" onclick="showPostulaciones(\''+r.data[i].idCot+'\')"><i class="fa fa-list-ol fa-lg"></i></button>'+
@@ -119,7 +116,6 @@ localStorage.setItem("sba",7);
     {
         localStorage.setItem("idCot",id);
         window.location.href = "{{ url('postulacion/postulaciones') }}";
-        // window.open("{{ route('ver-archivo') }}/" + archivo, "_blank");
     }
     function construirTabla()
     {

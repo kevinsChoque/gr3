@@ -14,11 +14,12 @@ class SuspensionController extends Controller
 {
     public function actGuardar(Request $r)
     {
-        // dd($r->all());
+        // se verifica si el proveedor no tiene una suspension previamente
         $tSus = TSuspension::where('idPro',$r->idPro)->where('estadoSuspension','1')->first();
         if($tSus!=null)
         {   return response()->json(['estado' => false, 'message' => 'El proveedor ya cuenta con suspension.']);}
         DB::beginTransaction();
+        // toda suspension al proveedor contendra un archivo relacionado
         if ($r->hasFile('file')) 
         {
             $archivo = $r->file('file');

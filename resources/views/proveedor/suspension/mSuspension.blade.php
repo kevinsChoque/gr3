@@ -1,4 +1,3 @@
-<!-- modal mItems -->
 <div class="modal fade" id="mSuspension" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -181,6 +180,5 @@ function cleanFormSuspension()
 {
 	cleanFv('fvsuspension');
     $('#fvsuspension .input').val('');
-    // $('#estado').val('1');
 }
 </script>

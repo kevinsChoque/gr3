@@ -4,25 +4,19 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>GOBIERNO REGIONAL DE APURIMAC</title>
-    <!-- Google Font: Source Sans Pro -->
+    <!-- fuente de google Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{asset('adminlte3/plugins/fontawesome-free/css/all.min.css')}}">
-    <!-- icheck bootstrap -->
-    <!-- <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css"> -->
-    <!-- Theme style -->
+    <!-- estilos del tema -->
     <link rel="stylesheet" href="{{asset('adminlte3/dist/css/adminlte.min.css')}}">
-    <!-- spiner style -->
+    <!-- estilos del spiner de la pagina -->
     <link rel="stylesheet" href="{{asset('css/spinerLogin.css')}}">
     <!-- sweetalert2 -->
     <link rel="stylesheet" href="{{asset('adminlte3/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
     <script src="{{asset('adminlte3/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
-    <!-- helper -->
-    <!-- <script src="{{asset('js/helper.js')}}"></script> -->
     <style>
-        .overlayPagina {
-            height: 110vh !important;
-        }
+        .overlayPagina {height: 110vh !important;}
     </style>
 </head>
 <body class="hold-transition login-page">
@@ -106,11 +100,8 @@
     </div>
 <!-- jQuery -->
 <script src="{{asset('adminlte3/plugins/jquery/jquery.min.js')}}"></script>
-<!-- validate -->
+<!-- jquery validate -->
 <script src="{{asset('adminlte3/plugins/jquery-validation/jquery.validate.min.js')}}"></script>
-
-<!-- Bootstrap 4 -->
-<!-- <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script> -->
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte3/dist/js/adminlte.min.js')}}"></script>
 <script src="{{asset('js/helper.js')}}"></script>
@@ -122,6 +113,7 @@ $(document).ready( function () {
 $('.tipoPersona').on('change',function(){
     changeTipoPersona($(this).val());
 });
+// segun el tipo de persona q se elija, habilita los inputs a llenar
 function changeTipoPersona()
 {
     if($('.tipoPersona').val()=='PERSONA NATURAL')
@@ -138,13 +130,13 @@ function changeTipoPersona()
     }
 }
 $('.regPro').on('click',function(){regPro()});
+// funcion para registrar al proveedor validando el formulario fvregpro
 function regPro()
 {
-    // formData.append('file', $('#archivo')[0].files.length>0?'true':'false');
     if($('#fvregpro').valid()==false)
     {return;}
     var formData = new FormData($("#fvregpro")[0]);
-    // $('.regPro').prop('disabled',true); 
+    
     $('.overlayPagina').css("display","flex");
     jQuery.ajax({
         url: "{{ url('portal/proveedor/guardar') }}",
@@ -155,23 +147,8 @@ function regPro()
         contentType: false, 
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
+            // una vez registrado nos redirecciona a la pagina de login
             if (r.estado) 
-                // Swal.fire({
-                //     title: "COTIZACION",
-                //     text: r.message,
-                //     icon: "success",
-                //     showCancelButton: true,
-                //     confirmButtonColor: "#3085d6",
-                //     confirmButtonText: "OK",
-                //     allowOutsideClick: false, 
-                //     allowEscapeKey: false, 
-                //     showCancelButton: false,
-                // }).then((result) => {
-                //     if (result.isConfirmed) {
-                //         $('.overlayPagina').css("display","none");
-                //         window.location.href = "{{url('loginProveedor/loginProveedor')}}";
-                //     }
-                // });
                 redirectUrlMsj("{{url('loginProveedor/loginProveedor')}}",r.message)
             else 
                 msgRee(r); 

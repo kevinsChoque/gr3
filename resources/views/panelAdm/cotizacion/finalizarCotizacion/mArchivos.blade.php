@@ -13,12 +13,8 @@
     				<div class="row">
                         <div class="col-lg-6 col-12">
                             <div class="info-box">
-                                <!-- <span class="info-box-icon bg-light shadow"><i class="fa fa-download"></i></span> -->
                                 <a href="{{route('cotizacion-llenada')}}" target="_blank" class="info-box-icon bg-light shadow">
-                                    <!-- <i class="fas fa-file-pdf"></i> Descargar Cotizacion Llenada -->
-                                    <!-- <span class="info-box-icon bg-light shadow"> -->
-                                        <i class="fa fa-download"></i>
-                                    <!-- </span> -->
+                                    <i class="fa fa-download"></i>
                                 </a>
                                 <div class="info-box-content">
                                     <span class="info-box-text">Descargar</span>
@@ -28,7 +24,6 @@
                         </div>
                         <div class="col-lg-6 col-12">
                             <div class="info-box">
-                                <!-- <span class="info-box-icon bg-light shadow"><i class="fa fa-download"></i></span> -->
                                 <a href="{{route('declaracion-jurada')}}" target="_blank" class="info-box-icon bg-light shadow">
                                     <i class="fa fa-download"></i>
                                 </a>
@@ -40,7 +35,6 @@
                         </div>
                         <div class="col-lg-6 col-12">
                             <div class="info-box">
-                                <!-- <span class="info-box-icon bg-light shadow"><i class="fa fa-download"></i></span> -->
                                 <a href="{{route('anexo5')}}" target="_blank" class="info-box-icon bg-light shadow">
                                     <i class="fa fa-download"></i>
                                 </a>
@@ -52,36 +46,15 @@
                         </div>
                         <div class="col-lg-6 col-12">
                             <div class="info-box">
-                                <!-- <span class="info-box-icon bg-light shadow"><i class="fa fa-download"></i></span> -->
                                 <a href="{{route('cci')}}" target="_blank" class="info-box-icon bg-light shadow">
                                     <i class="fa fa-download"></i>
                                 </a>
                                 <div class="info-box-content">
                                     <span class="info-box-text">Descargar</span>
-                                    <span class="info-box-number">CCI<!-- (Cuenta corriente interbancaria) --></span>
+                                    <span class="info-box-number">CCI</span>
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-lg-3 text-center">
-                            <a href="{{route('cotizacion-llenada')}}" target="_blank" class="btn btn-app shadow bg-purple">
-                                <i class="fas fa-file-pdf"></i> Descargar Cotizacion Llenada
-                            </a>
-                        </div>  
-                        <div class="col-lg-3 text-center">
-                            <a href="{{route('cci')}}" target="_blank" class="btn btn-app shadow bg-purple">
-                                <i class="fas fa-file-pdf"></i> Descargar CCI
-                            </a>
-                        </div> 
-                        <div class="col-lg-3 text-center">
-                            <a href="{{route('declaracion-jurada')}}" target="_blank" class="btn btn-app shadow bg-purple">
-                                <i class="fas fa-file-pdf"></i> Descargar Declaracion Jurada
-                            </a>
-                        </div> 
-                        <div class="col-lg-3 text-center">
-                            <a href="{{route('anexo5')}}" target="_blank" class="btn btn-app shadow bg-purple">
-                                <i class="fas fa-file-pdf"></i> ANEXO 5
-                            </a>
-                        </div>  -->
     				</div>
             	</form>
             </div>

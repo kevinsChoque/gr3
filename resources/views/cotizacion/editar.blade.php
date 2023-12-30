@@ -20,11 +20,6 @@
 @section('content')
 <div class="container-fluid">
     <div class="row">
-        <!-- <div class="col-md-12 mb-3">
-            <button class="btn btn-sm btn-success float-right btnPmsRegistrar" data-toggle="modal" data-target="#modalRegistrar">
-                <i class="fa fa-list"></i> Cotizaciones
-            </button>
-        </div> -->
         <div class="col-md-12 contenedorFormulario">
             <div class="card card-default card-info card-outline">
                 <div class="overlay overlayRegistros">
@@ -54,7 +49,6 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
                                 </div>
-                                <!-- <input type="text" class="form-control" id="tipo" name="tipo"> -->
                                 <select name="tipo" id="tipo" class="form-control">
                                     <option disabled>Seleccione opcion</option>
                                     <option value="Bienes" selected>Bienes</option>
@@ -80,15 +74,6 @@
                                 <input type="text" class="form-control input" id="documento" name="documento">
                             </div>
                         </div>
-                        <!-- <div class="form-group col-lg-3">
-                            <label class="m-0">Fecha de la Cotizacion: <span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
-                                </div>
-                                <input type="date" class="form-control" id="fechaCotizacion" name="fechaCotizacion">
-                            </div>
-                        </div> -->
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="m-0">Fecha de la Cotizacion: <span class="text-danger">*</span></label>
@@ -100,17 +85,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-sm-3">
-                            <div class="form-group">
-                                <label class="m-0">Hora de la Cotizacion: <span class="text-danger">*</span></label>
-                                <div class="input-group date" id="ihoraCotizacion" data-target-input="nearest">
-                                    <div class="input-group-prepend" data-target="#ihoraCotizacion" data-toggle="datetimepicker">
-                                        <div class="input-group-text"><i class="fa fa-clock"></i></div>
-                                    </div>
-                                    <input type="text" class="form-control datetimepicker-input inputDate" data-target="#ihoraCotizacion" id="horaCotizacion" name="horaCotizacion"/>
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="col-sm-3">
                             <div class="form-group">
                                 <label class="m-0">Hora de la Cotizacion: <span class="text-danger">*</span></label>

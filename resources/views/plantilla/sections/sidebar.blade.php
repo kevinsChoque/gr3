@@ -1,8 +1,5 @@
 <style>
-    .active-p{
-        /*box-shadow: 1px 3px rgba(0,0,0,.5) !important;*/
-        box-shadow: 0px 3px 6px rgb(23 162 184) !important;
-    }
+    .active-p{box-shadow: 0px 3px 6px rgb(23 162 184) !important;}
 </style>
 <aside class="main-sidebar sidebar-light-navy elevation-4">
     <a href="index3.html" class="brand-link">
@@ -12,7 +9,6 @@
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <!-- <img src="https://whaticket.com/wp-content/uploads/2023/05/Consejos-para-enviar-presupuestos-o-cotizaciones-por-Whatsapp.jpg" class="img-circle elevation-2" alt="User Image"> -->
                 <span class="text-info"><i class="fa fa-user-tie fa-2x"></i></span>
             </div>
             <div class="info">
@@ -34,11 +30,6 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-header">COTIZACIONES</li>
-                <!-- <li class="nav-item">
-                    <a href="pages/gallery.html" class="nav-link sba2">
-                        <i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p>
-                    </a>
-                </li> -->
                 <li class="nav-item">
                     <a href="{{url('panelAdm/paProveedor/datos')}}" class="nav-link sba3">
                         <i class="nav-icon fas fa-file"></i><p>Mis datos</p>
@@ -59,16 +50,6 @@
                         <i class="nav-icon fas fa-file"></i><p>Cotizaciones activas</p>
                     </a>
                 </li>
-                <!-- <li class="nav-item">
-                    <a href="{{url('proveedor')}}" class="nav-link sba6">
-                        <i class="nav-icon fas fa-file"></i><p>Ayuda</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{url('proveedor')}}" class="nav-link sba7">
-                        <i class="nav-icon fas fa-file"></i><p>Instructivos</p>
-                    </a>
-                </li> -->
                 <li class="nav-item">
                     <a href="javascript:void(0)" class="nav-link logout">
                         <i class="nav-icon fas fa-sign-out-alt"></i><p>cerrar sesion</p>

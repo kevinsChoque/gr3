@@ -11,15 +11,10 @@ class PdfController extends Controller
 {
     public function cotizacion()
 	{
-		// dd('cascascacasc');
 		$p = Session::get('proveedor');
 
-		// $nombre = strtoupper($p->tipoPersona="PERSONA NATURAL"?
-  //   	 	$p->nombre.' '.$p->apellidoPaterno.' '.$p->apellidoMaterno:
-  //   	 	$p->nombreRep.' '.$p->apellidoPaternoRep.' '.$p->apellidoMaternoRep);
 		$nombre = 'csacasc';
 		$dni = '47655230';
-		// $ruc = $p->numeroDocumento;
 
 		$marco = 1;
     	$smarco = 1;
@@ -29,11 +24,11 @@ class PdfController extends Controller
     	$tam = 3.5;
     	$sl = 2;
 
+    	// se crea la hoja de pdf
     	$pdf = new Fpdf('P','mm','a4');
-    	// $pdf->SetFont('Arial','',6);
+    	
 		$pdf->AddPage();
-		// --------------------cabecera
-		// $pdf->Cell(0,$tam+35,utf8_decode('-'),$marco,1,'C');
+		// cabecera
 		$pdf->Image('img/panelAdm/logoFile.png',10,10,18);
 		$pdf->SetFont('Arial','B',9);
 		$pdf->text(33,13.5,utf8_decode('GOBIERNO REGIONAL DE APURIMAC'));
@@ -53,15 +48,13 @@ class PdfController extends Controller
 		$pdf->text(181,18,utf8_decode('03/03/6666'));
 		$pdf->text(166,18,utf8_decode('6666'));
 		$pdf->ln(12);
-		// estas lineas borrar
-		// $pdf->Cell(190,5,utf8_decode('_______________________________________________________________________________________________________________________________'),$marco,1,'C');
-		// $pdf->Line(10, 20, 100, 20);
-// ------titulo
+		
+		// titulo
 		$pdf->SetFont('Arial','B',12);
 		$pdf->Cell(190,6,utf8_decode('SOLICITUD DE COTIZACION Nª 609'),$marco,1,'C');
 		$pdf->ln(9);
-// ------primera seccion
-	$pdf->SetFont('Arial','',9);
+		// primera seccion
+		$pdf->SetFont('Arial','',9);
 		$pdf->Rect(10, 47, 190, 23, 'D');
 		$pdf->Cell(3,$tam,utf8_decode('-'),$marco,0,'L');
 		$pdf->Cell(30,$tam,utf8_decode('RAZON SOCIAL:'),$marco,0,'L');
@@ -98,7 +91,7 @@ class PdfController extends Controller
 		$pdf->ln(6);
 
 
-// items
+		// items
 		$pdf->Rect(10, 75, 10, 150, 'D');
 		$pdf->Rect(20, 75, 15, 150, 'D');
 		$pdf->Rect(35, 75, 15, 150, 'D');
@@ -163,7 +156,7 @@ class PdfController extends Controller
 			'39.-kevins Este es un texto largo que ocupa vars líneas rs líneas c to largo que ocupa vars líneas rs líneas c to largo que ocupa vars líneas rs líneas c',
 			'40.-Este es un texto largo que ocupa vars líneas rs líneas c to largo independiente ocupa vars líneas rs líneas c to largo que ocupa vars líneas rs líneas cars líneas líneas independiente largo que ocupa vars líneas rs líneas c'];
 		$alcance = 0;
-		// $pdf->text(95,45,count($lispar));
+		
 		for ($i=0; $i < count($lispar); $i++) 
 		{ 
 			$tam = 4;
@@ -186,7 +179,7 @@ class PdfController extends Controller
 				$pdf->text(120,44,'alcance->'.$alcance);
 				$pdf->text(120,46,'cant lista->'.count($lispar));
 				$pdf->AddPage();
-				// enviar a una funcion
+				// enviar a una funcion para la iteracion de los items en cada hoja
 				$this->cot($pdf,$lispar2);
 				break;
 
@@ -199,8 +192,7 @@ class PdfController extends Controller
 			$pdf->Cell(10,$tam,utf8_decode($i),$ssmarco,0,'C');
 			$pdf->Cell(15,$tam,utf8_decode('1.00'),$ssmarco,0,'C');
 			$pdf->Cell(15,$tam,utf8_decode('servicio'),$ssmarco,0,'C');
-			// $pdf->Cell(75,$tam,utf8_decode('adquisicion de productos'),$ssmarco,0,'L');
-			// $pdf->MultiCell(75, $tam, utf8_decode($parrafo2.strlen($parrafo2)),$ssmarco);
+			
 			$pdf->MultiCell(75, $tam2, utf8_decode($lispar[$i].strlen($lispar[$i])),$ssmarco);
 			$pdf->SetY($yPosition);
 			$pdf->SetX($xPosition+115);
@@ -208,19 +200,10 @@ class PdfController extends Controller
 			$pdf->Cell(20,$tam,utf8_decode('modelo'),$ssmarco,0,'C');
 			$pdf->Cell(20,$tam,utf8_decode('100.00'),$ssmarco,0,'C');
 			$pdf->Cell(20,$tam,utf8_decode('100.00'),$ssmarco,1,'C');
-
-			// unset($lispar[$i]);
 		}
 
 		$pdf->text(95,250,$alcance.'---');
-		// $tam = 3.5;
-		// $pdf->ln(105.6);
-		// $pdf->SetFont('Arial','',9);
-		// $pdf->Cell(150,$tam+3,utf8_decode('-'),0,0,'C');
-		// $pdf->Cell(20,$tam+3,utf8_decode('Total'),$ssmarco,0,'C');
-		// $pdf->Cell(20,$tam+3,utf8_decode('S/. 256'),$ssmarco,1,'C');
-
-
+		
 		$pdf->Output();
 
         exit;
@@ -229,12 +212,8 @@ class PdfController extends Controller
 	{
 		$p = Session::get('proveedor');
 
-		// $nombre = strtoupper($p->tipoPersona="PERSONA NATURAL"?
-  		// $p->nombre.' '.$p->apellidoPaterno.' '.$p->apellidoMaterno:
-  		// $p->nombreRep.' '.$p->apellidoPaternoRep.' '.$p->apellidoMaternoRep);
 		$nombre = 'csacasc';
 		$dni = '47655230';
-		// $ruc = $p->numeroDocumento;
 
 		$marco = 1;
     	$smarco = 1;
@@ -244,7 +223,7 @@ class PdfController extends Controller
     	$tam = 3.5;
     	$sl = 2;
 
-// cabecera
+		// cabecera
 		$pdf->Image('img/panelAdm/logoFile.png',10,10,18);
 		$pdf->SetFont('Arial','B',9);
 		$pdf->text(33,13.5,utf8_decode('GOBIERNO REGIONAL DE APURIMAC'));
@@ -263,16 +242,12 @@ class PdfController extends Controller
 		$pdf->SetFont('Arial','',10);
 		$pdf->text(181,18,utf8_decode('03/03/6666'));
 		$pdf->text(166,18,utf8_decode('6666'));
-		$pdf->ln(12);
-// fin de cabecera
-		
-// titulo
+		$pdf->ln(12);		
+		// titulo
 		$pdf->SetFont('Arial','B',12);
 		$pdf->Cell(190,6,utf8_decode('SOLICITUD DE COTIZACION Nª 609'),$marco,1,'C');
 		$pdf->ln(9);
-// fin de titulo
-
-// primera seccion
+		// primera seccion
 		$pdf->SetFont('Arial','',9);
 		$pdf->Rect(10, 47, 190, 23, 'D');
 		$pdf->Cell(3,$tam,utf8_decode('-'),$marco,0,'L');
@@ -308,10 +283,7 @@ class PdfController extends Controller
 		$pdf->SetFont('Arial','B',9);
 		$pdf->Cell(18,$tam,utf8_decode('03/03/6666'),$marco,1,'L');
 		$pdf->ln(6);
-// fin de primera seccion
-
-// ---------------------------------------------------------------items
-// esquema
+		// esquema de la tabla de los items
 		$pdf->Rect(10, 75, 10, 150, 'D');
 		$pdf->Rect(20, 75, 15, 150, 'D');
 		$pdf->Rect(35, 75, 15, 150, 'D');
@@ -320,9 +292,7 @@ class PdfController extends Controller
 		$pdf->Rect(140, 75, 20, 150, 'D');
 		$pdf->Rect(160, 75, 20, 150, 'D');
 		$pdf->Rect(180, 75, 20, 150, 'D');
-// fin de esquema
-
-// cabezera de tabla
+		// cabezera de la tabla
 		$pdf->SetFont('Arial','B',8);
 		$pdf->Cell(10,$tam+6,utf8_decode('ITEM'),$ssmarco,0,'C');
 		$pdf->Cell(15,$tam+6,utf8_decode('CANT'),$ssmarco,0,'C');
@@ -332,9 +302,7 @@ class PdfController extends Controller
 		$pdf->Cell(20,$tam+6,utf8_decode('MODELO'),$ssmarco,0,'C');
 		$pdf->Cell(20,$tam+6,utf8_decode('P.V'),$ssmarco,0,'C');
 		$pdf->Cell(20,$tam+6,utf8_decode('SUBTOTAL'),$ssmarco,1,'C');
-// fin de cabera de tabla
-
-// lista
+		// lista de los items
 		$pdf->SetFont('Arial','',8);
 		$alcance = 0;
 		for ($i=0; $i < count($lispar); $i++) 
@@ -342,13 +310,9 @@ class PdfController extends Controller
 			$tam = 4;
 			$tam2 = 4;
 			if(strlen($lispar[$i])>60)
-			{
-				$mul = intval(strlen($lispar[$i]) / 60)+1;
-			}
+			{	$mul = intval(strlen($lispar[$i]) / 60)+1;}
 			else
-			{
-				$mul = 1;
-			}
+			{	$mul = 1;}
 			$alcance = $alcance + $mul;
 			if($alcance>35)
 			{
@@ -359,7 +323,7 @@ class PdfController extends Controller
 				$pdf->text(120,44,'alcance->'.$alcance);
 				$pdf->text(120,46,'cant lista->'.count($lispar));
 				$pdf->AddPage();
-				// enviar a una funcion
+				// enviar a una funcion 
 				$this->cot($pdf,$lispar2);
 				break;
 
@@ -372,8 +336,7 @@ class PdfController extends Controller
 			$pdf->Cell(10,$tam,utf8_decode($i),$ssmarco,0,'C');
 			$pdf->Cell(15,$tam,utf8_decode('1.00'),$ssmarco,0,'C');
 			$pdf->Cell(15,$tam,utf8_decode('servicio'),$ssmarco,0,'C');
-			// $pdf->Cell(75,$tam,utf8_decode('adquisicion de productos'),$ssmarco,0,'L');
-			// $pdf->MultiCell(75, $tam, utf8_decode($parrafo2.strlen($parrafo2)),$ssmarco);
+			
 			$pdf->MultiCell(75, $tam2, utf8_decode($lispar[$i].strlen($lispar[$i])),$ssmarco);
 			$pdf->SetY($yPosition);
 			$pdf->SetX($xPosition+115);
@@ -382,15 +345,13 @@ class PdfController extends Controller
 			$pdf->Cell(20,$tam,utf8_decode('100.00'),$ssmarco,0,'C');
 			$pdf->Cell(20,$tam,utf8_decode('100.00'),$ssmarco,1,'C');
 		}
-// fin de lista
-		$pdf->text(95,250,$alcance.'----------------------------------terminado------------------------------');
+		// fin de lista de los items
 		$tam = 3.5;
 		$pdf->ln(124.3);
 		$pdf->SetFont('Arial','B',9);
 		$pdf->Cell(150,$tam+3,utf8_decode('-'),0,0,'C');
 		$pdf->Cell(20,$tam+3,utf8_decode('Total'),$ssmarco,0,'C');
 		$pdf->Cell(20,$tam+3,utf8_decode('S/. 256'),$ssmarco,1,'C');
-
 
 		$pdf->Output();
         exit;

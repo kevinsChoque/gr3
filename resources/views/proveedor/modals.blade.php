@@ -1,10 +1,6 @@
-<!-- modal modalRegistrar -->
 <div class="modal fade" id="modalRegistrar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
-            <!-- <div class="overlay overlayRegistros">
-                <div class="spinner"></div>
-            </div> -->
             <div class="modal-header py-1 border-transparent" style="background-color: rgba(0, 0, 0, 0.03);">
                 <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-building"></i> Nuevo Proveedor</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -378,14 +374,12 @@
     </div>
 </div>
 
-<!-- <script src="{{asset('js/modificacionJqueryValidate.js')}}"></script> -->
 <script>    
 var idPro = '';
 $(document).ready( function () {
     $.validator.addMethod("lettersOnly", function(value, element) {
         return this.optional(element) || /^[A-Za-z]+$/.test(value);
     }, "Este campo debe contener solo letras.");
-    // initValidate();
     initFv('fvproveedor',rules());
     einitValidate();
 });
@@ -416,7 +410,7 @@ function changeTipoPersona()
             required: true
         });
         $('#fvproveedor .razonSocial').rules('remove', 'required');
-        // $('.razonSocial').rules('remove', ['required', 'otraRegla']);
+        
         $('#fvproveedor .pj').val('');
         cleanFv('fvproveedor');
         $('#fvproveedor .pj').parent().parent().css('display','none');
@@ -445,7 +439,7 @@ function echangeTipoPersona()
         $('#efvproveedor .apellidoPaterno').rules('add', {required: true});
         $('#efvproveedor .apellidoMaterno').rules('add', {required: true});
         $('#efvproveedor .razonSocial').rules('remove', 'required');
-        // $('#efvproveedor .pj').val('');
+        
         cleanFv('efvproveedor');
         $('#efvproveedor .pj').parent().parent().css('display','none');
         $('#efvproveedor .pn').parent().parent().css('display','block');
@@ -456,7 +450,7 @@ function echangeTipoPersona()
         $('#efvproveedor .nombre').rules('remove', 'required');
         $('#efvproveedor .apellidoPaterno').rules('remove', 'required');
         $('#efvproveedor .apellidoMaterno').rules('remove', 'required');
-        // $('#efvproveedor .pn').val('');
+       
         cleanFv('efvproveedor');
         $('#efvproveedor .pn').parent().parent().css('display','none');
         $('#efvproveedor .pj').parent().parent().css('display','block');
@@ -468,7 +462,7 @@ function guardar()
     if($('#fvproveedor').valid()==false)
     {   return;}
     var formData = new FormData($("#fvproveedor")[0]);
-    // $('.guardar').prop('disabled',true);
+    
     jQuery.ajax(
     { 
         url: "{{ url('proveedor/guardar') }}",
@@ -491,7 +485,6 @@ function guardar()
 }
 function editar(id)
 {
-    // $('#modalEditar').modal('show');
     jQuery.ajax(
     { 
         url: "{{ url('proveedor/editar') }}",
@@ -555,9 +548,7 @@ function guardarCambios()
         $('#efvproveedor .pn').val('');
     var formData = new FormData($("#efvproveedor")[0]);
     formData.append('idPro',idPro);
-    // var idRuta = {idRuta: $('#idRuta').val(),};
-    // var datos = data(false);
-    // Object.assign(datos,idRuta);
+    
     jQuery.ajax(
     { 
         url: "{{ url('proveedor/guardarCambios') }}",
@@ -581,91 +572,35 @@ function guardarCambios()
 function rules()
 {
     return {
-        tipoPersona: {
-            required: true,
-        },
-        numeroDocumento: {
-            required: true,
-            digits: true,
-            minlength: 11
-        },
-        razonSocial: {
-            required: true,
-        },
-        direccion: {
-            required: true,
-        },
-        activo: {
-            required: true,
-        },
-        habido: {
-            required: true,
-        },
-        dniRep: {
-            digits: true,
-            minlength: 8
-        },
-        nombreRep: {
-            lettersOnly: true
-        },
-        apellidoPaternoRep: {
-            lettersOnly: true
-        },
-        apellidoMaternoRep: {
-            lettersOnly: true
-        },
-        correo: {
-            required: true,
-        },
-        celular: {
-            required: true,
-            minlength: 9
-        }
+        tipoPersona: {required: true,},
+        numeroDocumento: {required: true,digits: true,minlength: 11},
+        razonSocial: {required: true,},
+        direccion: {required: true,},
+        activo: {required: true,},
+        habido: {required: true,},
+        dniRep: {digits: true,minlength: 8},
+        nombreRep: {lettersOnly: true},
+        apellidoPaternoRep: {lettersOnly: true},
+        apellidoMaternoRep: {lettersOnly: true},
+        correo: {required: true,},
+        celular: {required: true,minlength: 9}
     };
 }
 function erules()
 {
     return {
-        tipoPersona: {
-            required: true,
-        },
-        numeroDocumento: {
-            required: true,
-            digits: true,
-            minlength: 11
-        },
-        razonSocial: {
-            required: true,
-        },
-        direccion: {
-            required: true,
-        },
-        activo: {
-            required: true,
-        },
-        habido: {
-            required: true,
-        },
-        dniRep: {
-            digits: true,
-            minlength: 8
-        },
-        nombreRep: {
-            lettersOnly: true
-        },
-        apellidoPaternoRep: {
-            lettersOnly: true
-        },
-        apellidoMaternoRep: {
-            lettersOnly: true
-        },
-        correo: {
-            required: true,
-        },
-        celular: {
-            required: true,
-            minlength: 9
-        }
+        tipoPersona: {required: true,},
+        numeroDocumento: {required: true,digits: true,minlength: 11},
+        razonSocial: {required: true,},
+        direccion: {required: true,},
+        activo: {required: true,},
+        habido: {required: true,},
+        dniRep: {digits: true,minlength: 8},
+        nombreRep: {lettersOnly: true},
+        apellidoPaternoRep: {lettersOnly: true},
+        apellidoMaternoRep: {lettersOnly: true},
+        correo: {required: true,},
+        celular: {required: true,minlength: 9}
     };
 }
 function einitValidate()
@@ -686,11 +621,4 @@ function einitValidate()
         }
     });
 }
-// $("#formValidateEdit").validate({
-//     errorClass: "text-danger font-italic font-weight-normal",
-//     ignore: ".ignore",
-//     rules: {
-//         enombre: "required",
-//     },
-// });
 </script>

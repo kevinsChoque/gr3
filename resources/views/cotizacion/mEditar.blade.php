@@ -1,4 +1,3 @@
-<!-- modal mArchivos -->
 <div class="modal fade" id="mEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content">
@@ -27,7 +26,6 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
                             </div>
-                            <!-- <input type="text" class="form-control" id="tipo" name="tipo"> -->
                             <select name="tipo" id="tipo" class="form-control">
                                 <option disabled>Seleccione opcion</option>
                                 <option value="Bienes" selected>Bienes</option>
@@ -103,7 +101,6 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
                             </div>
-                            <!-- <input type="text" class="form-control" id="concepto" name="concepto"> -->
                             <textarea name="concepto" id="concepto" cols="30" rows="3" class="form-control input"></textarea>
                         </div>
                     </div>
@@ -113,7 +110,6 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
                             </div>
-                            <!-- <input type="text" class="form-control" id="descripcion" name="descripcion"> -->
                             <textarea name="descripcion" id="descripcion" cols="30" rows="3" class="form-control input"></textarea>
                         </div>
                     </div>
@@ -165,6 +161,8 @@
     });
     $('.guardarCambios').on('click',function(){guardarCambios();});
     $('.inputDate').on('click',function(){$(this).parent().find('.input-group-prepend').click();});
+
+    // reglas del formulario efvcotizacion, formulario q usamos para editar los datos de la cotizaion
     function rules()
     {
         return {
@@ -177,6 +175,7 @@
             concepto: {required: true,},
         };
     }
+    // esta funcion abrira el modal y llenara los datos del registro
     function loadCotizacion(id)
     {
         jQuery.ajax({
@@ -211,10 +210,12 @@
     }
     function guardarCambios()
     {
+        // se verifica la validacion del formulario efvcotizacion acorde a las reglas
         if($('#efvcotizacion').valid()==false)
         {return;}
-        // alert('paso la validacion');
+        
         var formData = new FormData($("#efvcotizacion")[0]);
+        // adjuntamos el id de la cotizacion para poder editarlo
         formData.append('id', $('#idCot').val()); 
         $('.guardarCambios').prop('disabled',true); 
         jQuery.ajax({
@@ -232,23 +233,6 @@
                     fillRegistros();
                     msjRee(r);
                     $('#mEditar').modal('hide');
-                    // $('.guardar').prop('disabled',false); 
-
-                    // Swal.fire({
-                    //     title: "COTIZACION",
-                    //     text: r.message,
-                    //     icon: "success",
-                    //     showCancelButton: true,
-                    //     confirmButtonColor: "#3085d6",
-                    //     confirmButtonText: "OK",
-                    //     allowOutsideClick: false, 
-                    //     allowEscapeKey: false, 
-                    //     showCancelButton: false,
-                    // }).then((result) => {
-                    //     if (result.isConfirmed) {
-                    //         window.location.href = "{{url('cotizacion/ver')}}";
-                    //     }
-                    // });
                 } 
                 else 
                 {

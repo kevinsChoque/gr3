@@ -157,31 +157,19 @@
 	var flip=0;
     var tipoCotizacion = '';
     $(document).ready( function () {
-    	// fillRegistros();
+    	// se inicializa el formulario fvcotpro con sus respectivas reglas
     	initFv('fvcotpro',rules());
     	loadData();
-    	// loadItemsCotizacion()
         $('.overlayPagina').css("display","none");
         $('.overlayRegistros').css("display","none");
-  		// bsCustomFileInput.init();
-  		// $('.downloadCotLle').attr('href')
-  		// var dir = $('.downloadCotLle').attr('href');
-    //     $('.downloadCotLle').attr('href',dir+'/'+r.cot.archivo);
     });
-    
     $('.guardarCotPro').on('click',function(){
     	guardarCotPro();
     });
-	// $('.fileItem').on('change',function(){
-	// 	var fileName = $(this).val().split('\\').pop();
- //    	console.log(fileName);
- //    	$(this).parent().find('label').html(fileName);
- //    	// $('.changeNameFile').html(fileName);
- //    });
  	$('.downloadCotLle').on('click',function(){
  		downloadCotLle();
  	});
-var po='';
+	var po='';
  	function downloadCotLle()
     {
     	let banGarantia = true;
@@ -199,6 +187,8 @@ var po='';
     	let eMarca = '';
     	let eModelo = '';
     	let ePrecio = '';
+    	// se agrega en un array
+    	// cada uno de los elementos para posteriormente contruir un objeto
     	$(".idCi").each(function(){
     	    ids.push($(this).attr('data-id'))
     	});
@@ -232,14 +222,12 @@ var po='';
     	    precio.push($(this).val())
     	});
 
-    	// $('#fvproveedor .apellidoMaterno').rules('add', {
-     //        required: true
-     //    });
         $('#pdfCll').rules('remove', 'required');
         $('#pdfDj').rules('remove', 'required');
         $('#pdfCci').rules('remove', 'required');
         $('#pdfAnexo5').rules('remove', 'required');
 
+        // se realiza la validacion, del formulario
     	if($('#fvcotpro').valid()==false)
     	{return;}
     	if(banMarca && banModelo && banPrecio)
@@ -255,23 +243,12 @@ var po='';
 				    modelo: $(this).find('.modelo').val(),
 				    precio: $(this).find('.precio').val(),
 			  	};
-                // miObjeto.push(
-                //     {
-                //         nombre: $(this).find('.nombreItem').html(),
-                //         um: $(this).find('.umItem>span').html(),
-                //         cant: $(this).find('.cantItem').html(),
-                //         garantia: $(this).find('.garantia').val(),
-                //         marca: $(this).find('.marca').val(),
-                //         modelo: $(this).find('.modelo').val(),
-                //         precio: $(this).find('.precio').val(),
-                //     }
-                // );
 	    	});
-            // po = miObjeto;
+            
 	    	$('#data').val(JSON.stringify(miObjeto));
 	    	$('#tEntrega').val($('#timeEntrega').val());
 	    	$('#tValidez').val($('#timeValidez').val());
-	    	// $('#tGarantia').val($('#timeGarantia').val());
+	    	
 	    	$('#idCot').val(localStorage.getItem('idCot'));
 	    	$('#downloadCotizacion').submit();
     	}
@@ -307,6 +284,8 @@ var po='';
     	let precio = [];
     	var archivos = [];
     	var miObjeto = {};
+    	// se agrega cada uno de los elementos a un array segun corresponda
+    	// para posteriormente crear un objeto, esto para crear los registro
     	$(".idCi").each(function(){
     	    ids.push($(this).attr('data-id'))
     	});
@@ -330,50 +309,23 @@ var po='';
     	    	banPrecio = false
     	    precio.push($(this).val())
     	});
-    	// $('.fileItem').each(function() {
-     //        var archivoInput = $(this)[0];
-     //        // Verifica si se seleccionó un archivo
-     //        if (archivoInput.files.length > 0) {
-     //            var archivo = archivoInput.files[0];
-     //            archivos.push(archivo);
-     //        }
-     //        else
-     //        {
-     //        	archivos.push('null');
-     //        }
-     //    });
+    	
         arc=archivos;
     	
-		// console.log(miObjeto);
-		// $('#pdfCll').rules('add', {required: true});
-		// $('#pdfDj').rules('add', {required: true});
-		// $('#pdfCci').rules('add', {required: true});
-		// $('#pdfAnexo5').rules('add', {required: true});
-
     	if($('#fvcotpro').valid()==false)
     	{return;}
-    	// console.log(banMarca)
+    	// se verifica si se ingreso las marcas, modelos y precios de cada item
     	if(banMarca && banModelo && banPrecio)
     	{
     		var fileInputs = document.getElementsByClassName('fileItem');
-    		// var archivoInput;
+    		
     		var nombreArchivo='no tiene';
+    		// se crea el objeto con los arrays anteiormente mencionado
     		for (var i = 0; i < $(".marca").length; i++) 
 	    	{
 			    if (fileInputs[i].files.length > 0) 
-			    {
-			        nombreArchivo = fileInputs[i].files[0].name;
-			    }
-                // miObjeto.push(
-                //     {
-                //         id: ids[i],
-                //         garantia: garantia[i],
-                //         marca: marca[i],
-                //         modelo: modelo[i],
-                //         precio: precio[i],
-                //         archivo: nombreArchivo,
-                //     }
-                // );
+			    {	nombreArchivo = fileInputs[i].files[0].name;}
+                
 			  	miObjeto["item" + i] = {
 			  		id: ids[i],
 				    garantia: garantia[i],
@@ -385,28 +337,22 @@ var po='';
 			  	nombreArchivo='no tiene';
 			}
 			obj=miObjeto;
-
+			// en caso tengan archivos los items se guarda en un array dentro del objeto formdata
 			var formData = new FormData($("#fvcotpro")[0]);
-			// -----------------------
+			
 			for (var i = 0; i < archivos.length; i++) {
 	            formData.append('archivos[]', archivos[i]);
 	        }
 	        var j=0;
+
 	        $('.fileItem').each(function() {
 	            if ($(this)[0].files.length > 0) {
-	                // var archivo = archivoInput.files[0];
-	                // archivos.push(archivo);
-	                console.log('guardo el archivo----> '+j);
 	                formData.append('archivos[]', $(this)[0].files[0]);
 	            }
-	            // else
-	            // {
-	            // 	console.log('no hay nada');
-	            // 	formData.append('archivos[]', 'no hay nada');
-	            // }
 	            j++;
 	        });
-			// -----------------------
+			// se serializa los valores de los items q se encuentran en el array de miObjeto
+			// como tambien se agrega mas datos al objeto del formulario
 			formData.append('items',JSON.stringify(miObjeto));
 			formData.append('idCot',localStorage.getItem('idCot'));
 			formData.append('total',$('.total').html());
@@ -424,8 +370,6 @@ var po='';
 		        contentType: false, 
 	            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
 	            success: function(r){
-	            	// console.log('entro aki esto estoy evaluando');
-	             //    console.log(r.estado);
 	                estado=r.estado;
 	                if (r.estado)
 		            {
@@ -462,7 +406,8 @@ var po='';
     		msjError("Ingrese todos los datos de los items.");
     	}
     }
-    
+	// carga los datos del proveedor y algunos datos de la cotizacion, 
+	// al cual el proveedor eligio para postular
     function loadData()
     {
     	$('#mCotizacion').modal('show');
@@ -473,12 +418,8 @@ var po='';
             method: 'post',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function(r){
-                // console.log('-------showProCot-------');
-                // console.log(r.cot.tipo);
                 tipoCotizacion=r.cot.tipo;
-                // console.log('-------showProCot-------');
 
-                // showDataCotizacion(r);
                 $('.nombreRazon').val(r.pro.tipoPersona=="PERSONA NATURAL"?
                 	r.pro.nombre+' '+r.pro.apellidoPaterno+' '+r.pro.apellidoMaterno:r.pro.razonSocial);
                 $('.concepto').val(r.cot.concepto);
@@ -493,6 +434,7 @@ var po='';
             }
         });
     }
+    // esta funcion nos ayuda a habilitar la tabla de los items para los casos que la cotizacion sea de bienes o servicios
     function flexTable()
     {
         let head1 = '<th class="align-middle" width="30%">Nombre</th>'+
@@ -517,6 +459,9 @@ var po='';
         $('.headTable').html(tipoCotizacion=='Bienes'?head1:head2);
         $('.footTable').html(tipoCotizacion=='Bienes'?foot1:foot2);
     }
+    // carga los items de la cotizacion, crea cada fila de la tabla con los 
+    // inputs para registrar ya sea la garantia, marca, modelo y precios, 
+    // como tambien los archivos de cada uno, estos archivos son opcionales
     function loadItemsCotizacion()
 	{
 	    jQuery.ajax({
@@ -526,9 +471,6 @@ var po='';
 	        dataType: 'json',
 	        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
 	        success: function (r) {
-	        	// console.log('-------loadSegunCotizacion-------');
-	         //    console.log(r);
-	         //    console.log('-------loadSegunCotizacion-------');
 	            let idFila = '';
 	            var html = '';
                 let segunTipo = '';
@@ -546,10 +488,6 @@ var po='';
 	                    '<td class="text-center umItem"><span class="font-weight-bold badge badge-light um'+idFila+'">'+ novDato(r.data[i].nombreUm) + '</td>' +
 	                    '<td class="text-center cantItem cant'+r.data[i].idItm+'">' + novDato(r.data[i].cantidad) + '</td>' +
                         segunTipo +
-
-	                    // '<td class="text-center">' + '<input type="text" class="form-control garantia px-1">' + '</td>' +
-	                    // '<td class="text-center">' + '<input type="text" class="form-control marca px-1">' + '</td>' +
-	                    // '<td class="text-center">' + '<input type="text" class="form-control modelo px-1">' + '</td>' +
 
 	                    '<td class="text-center">' + 
 							'<input type="text" class="form-control precio px-1" onblur="calcSubTotal(this,'+r.data[i].idItm+');">' +
@@ -569,16 +507,19 @@ var po='';
 	            $('#listItems').html(html);
 	        },
 	        error: function (xhr, status, error) {
-	            alert('salio un error');
+	            msgError("Algo salio mal, porfavor contactese con el Administrador.");
 	        }
 	    });
 	}
 	function changeNameFile(elem)
 	{
 		var fileName = $(elem).val().split('\\').pop();
-    	// console.log(fileName);
     	$(elem).parent().find('label').html(fileName);
 	}
+	// calculammos el subtotal de cada item
+	// para el caso de bienes se multiplica la cantidad por el precio unitario
+	// y para el caso de servicio vendria a ser el mmismo
+	// este subtotal sera util para el calculo del total
 	function calcSubTotal(ele,id)
 	{
         if(tipoCotizacion=='Bienes')
@@ -587,6 +528,8 @@ var po='';
             $('.st'+id).val($(ele).val());
 		calcTotal();
 	}
+	// con esta funcion sumamos los subtotal de cada item y esto vendria a ser
+	// el total de la cotizacion
 	function calcTotal()
 	{
 		let total = 0;

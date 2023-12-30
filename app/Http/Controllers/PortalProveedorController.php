@@ -17,7 +17,8 @@ class PortalProveedorController extends Controller
 {
     public function actGuardar(Request $r)
     {
-        // dd($r->all());
+        // seta funcion es cuando el proveedor se registra a la plataforma desde fuera o sin necesidad de ingresar a la plataforma
+        // primero se verifica la existencia de duplicidad del numero de ruc del proveedor como tambien el correo
         $proveedorBuscado = TProveedor::where('numeroDocumento',$r->ruc)->orWhere('correo',$r->correo)->first();
         if($proveedorBuscado!=null)
         {
@@ -29,7 +30,7 @@ class PortalProveedorController extends Controller
 
         $r->merge(['usuario' => $r->ruc]);
         $r->merge(['numeroDocumento' => $r->ruc]);
-        // $r->merge(['password' => Hash::make($r->numeroDocumento)]);
+        
         $password = Str::random(8);
         $r->merge(['idPro' => Str::uuid()]);
         $r->merge(['password' => Hash::make($password)]);
@@ -42,25 +43,12 @@ class PortalProveedorController extends Controller
         else
             $nombre = $r->razonSocial;
         $datosProveedor = ['usuario' => $r->ruc, 'password' => $password, 'nombre' => $nombre];
-    	// DB::beginTransaction();
-    	// if(TProveedor::create($r->all()))
-    	// {
-     //        $destinatario = 'kevins.choque@gmail.com';
-     //        Mail::to($destinatario)->send(new EmailProveedor($datosProveedor));
-
-    	// 	DB::commit();
-    	// 	return response()->json(['estado' => true, 'message' => 'Su usuario y contraseñase se le envio a su correo '.$r->correo.'.']);
-    	// }
-    	// else
-    	// {
-    	// 	DB::rollBack();
-    	// 	return response()->json(['estado' => false, 'message' => 'Error al registrar al proveedor.']);
-    	// }
 
         try 
         {
             DB::beginTransaction();
             TProveedor::create($r->all());
+            // una vez guardado el registro se envia las credenciales del usuario al correo q ingreso
             Mail::to('kevins.choque@gmail.com')->send(new EmailProveedor($datosProveedor));
             DB::commit();
             return response()->json(['estado' => true, 'message' => 'Su usuario y contraseñase se le envio a su correo '.$r->correo.'.']);

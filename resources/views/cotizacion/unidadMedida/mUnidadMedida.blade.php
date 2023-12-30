@@ -1,4 +1,3 @@
-<!-- modal mUnidadMedida -->
 <div class="modal fade" id="mUnidadMedida" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-xs modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -13,7 +12,6 @@
     				<div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
-                                <!-- <label class="m-0">Unidad de medida:</label> -->
                                 <select name="unidadMedida" id="unidadMedida" class="form-control select2" style="width: 100%;">
                                     <option disabled selected value="0">Seleccionar unidad de medida</option>
                                 </select>

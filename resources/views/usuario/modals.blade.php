@@ -65,15 +65,6 @@
                             <input type="password" class="form-control input" id="password" name="password">
                         </div>
                     </div>
-                    <!-- <div class="form-group col-lg-6">
-                        <label for="" class="m-0">Estado: <span class="text-danger">*</span></label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
-                            </div>
-                            <input type="text" class="form-control" id="estado" name="estado">
-                        </div>
-                    </div> -->
                     <div class="form-group col-lg-6">
                         <label for="" class="m-0">Tipo de usuario: <span class="text-danger">*</span></label>
                         <div class="input-group">
@@ -115,7 +106,6 @@
         </div>
     </div>
 </div>
-<!-- modal modalEditar -->
 <div class="modal fade" id="modalEditar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -189,7 +179,6 @@
                                     <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
                                 </div>
                                 <input type="text" class="form-control soloNumeros input" id="celular" name="celular" maxlength="9">
-                                <!-- <input type="text" class="form-control" data-inputmask="&quot;mask&quot;: &quot;999-999-9999&quot;" data-mask="" inputmode="text"> -->
                             </div>
                         </div>
                         <div class="form-group col-lg-6">
@@ -240,11 +229,12 @@
 <script>  
 var idUsu = '';
 $(document).ready( function () {
+    // personalizamos una validacion para q SOLO SE PUEDA ACEPTAR LETRAS
     $.validator.addMethod("lettersOnly", function(value, element) {
       return this.optional(element) || /^[A-Za-z]+$/.test(value);
     }, "Este campo debe contener solo letras.");
+    // inicializacion del formulario fvusuario con sus reglas correspondientes
     initFv('fvusuario',rules());
-    // initValidate();
 });
 $('.guardar').on('click',function(){
     guardar();
@@ -252,23 +242,12 @@ $('.guardar').on('click',function(){
 $('.guardarCambios').on('click',function(){
     guardarCambios();
 });
-// function data(tipo)
-// {
-//     // segun la accion enviara datos de editar o registrar
-//     let segunAccion=tipo?'':'e';
-//     return {
-//         nombre:$('#'+segunAccion+'nombre').val(),
-//         observacion:$('#'+segunAccion+'observacion').val(),
-//     }
-// }
 function guardar()
 {
     if($('#fvusuario').valid()==false)
     {return;}
     var formData = new FormData($("#fvusuario")[0]);
-    // formData.append('tipo', 'cotizador'); 
     $('.guardar').prop('disabled',true); 
-    // $('.overlayRegistros').css("display","flex");
     jQuery.ajax(
     { 
         url: "{{ url('usuario/guardar') }}",
@@ -287,7 +266,6 @@ function guardar()
                 fillRegistros();
             }
             cleanFv('fvusuario');
-            // console.log(r);
             $('.guardar').prop('disabled',false);
             $('#modalRegistrar').modal('hide');
             msjRee(r);
@@ -371,12 +349,4 @@ function guardarCambios()
         }
     });
 }
-
-// $("#formValidateEdit").validate({
-//     errorClass: "text-danger font-italic font-weight-normal",
-//     ignore: ".ignore",
-//     rules: {
-//         enombre: "required",
-//     },
-// });
 </script>

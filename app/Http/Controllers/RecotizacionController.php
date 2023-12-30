@@ -13,22 +13,20 @@ use App\Models\TCotizacion;
 
 class RecotizacionController extends Controller
 {
-    // public function actGuardar_b(Request $r)
-    // {
-    // 	dd('llego hasta aki');
-    // }
     public function actGuardar(Request $r)
     {
+        // solo se puede recotizar cuando una cotizacion a finalizado
         $tCot = TCotizacion::where('idCot',$r->idCot)->where('estadoCotizacion','3')->first();
         if($tCot==null)
-        {
-            return response()->json(['estado' => false, 'message' => 'La cotizacion no fue PUBLICADO.']);
-        }
+        {   return response()->json(['estado' => false, 'message' => 'La cotizacion no fue PUBLICADO.']);}
+        // se inicializa la transaccion
         DB::beginTransaction();
+        // toda recotizacion contendra un archivo
         if ($r->hasFile('file')) 
         {
             $archivo = $r->file('file');
             $nombreArchivo = time() . '_' . str_replace(' ', '',$archivo->getClientOriginalName());
+            // nos muestra si se guardo exitosamente el file, y despues guarda el registro de recotizacion con el nombre del archivo q se guardo
             if (Storage::put('public/recotizaciones/'.$r->idCot.'/' . $nombreArchivo, file_get_contents($archivo))) 
             {
                 $r->merge(['idRec' => Str::uuid()]);

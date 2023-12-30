@@ -5,7 +5,7 @@
         <div class="row mb-2">
             <div class="col-sm-6"><h1 class="m-0">Cotizaciones Activas</h1></div>
             <div class="col-sm-6">
-                <!-- <a href="{{url('cotizacion/ver')}}" class="btn btn-success float-right"><i class="fa fa-list"></i> Cotizaciones</a> -->
+                
                 <ol class="breadcrumb float-sm-right" style="display: none;">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
                     <li class="breadcrumb-item active">Dashboard v3</li>
@@ -16,7 +16,7 @@
 </div>
 @endsection
 @section('contentPanelAdmin')
-<!-- <h1>{{Session::get('proveedor')->banco}}</h1> -->
+
 @if(is_null(Session::get('proveedor')->tipoPersona)
     || is_null(Session::get('proveedor')->numeroDocumento)
     || is_null(Session::get('proveedor')->direccion)
@@ -29,15 +29,6 @@
 <script>
     $(document).ready( function () {
         $('.overlayPagina').css("display","none");
-        console.log("------------------------------");
-        console.log("{{Session::get('proveedor')->idPro}}")
-        console.log("{{Session::get('proveedor')->tipoPersona}}")
-        console.log("{{Session::get('proveedor')->numeroDocumento}}")
-        console.log("{{Session::get('proveedor')->tipoPersona}}")
-        console.log("{{Session::get('proveedor')->tipoPersona}}")
-        console.log("{{Session::get('proveedor')->banco}}")
-        console.log("{{Session::get('proveedor')->cci}}")
-        console.log("------------------------------");
         Swal.fire({
             title: "COTIZACION",
             text: "Es necesario que complete sus datos personales.",
@@ -153,6 +144,8 @@
 <script>
 localStorage.setItem("sba",5);
 var tablaDeRegistros;
+// variable que se usa como bandera para activar el overlay de los
+// cards, para simular la carga y traida de datos
 var flip=0;
 $(document).ready( function () {
     tablaDeRegistros=$('.contenedorRegistros').html();
@@ -162,6 +155,8 @@ $(document).ready( function () {
 });
 $('.searchCot').on('click',function(){searchCot();});
 $('.clean').on('click',function(){clean();});
+// esta funcion nos trae las cotizaciones que se encuentran en 
+// EN PROCESO O RECOTIZANDO, con estado activo (1)
 function fillRegistros()
 {
     $('.contenedorRegistros').css('display','block');
@@ -171,9 +166,6 @@ function fillRegistros()
         method: 'get',
         success: function(r)
         {
-            // console.log('r.data');
-            // console.log(r.data);
-            // console.log('r.data');
             var html = '';
             for (var i = 0; i < r.data.length; i++) 
             {
@@ -196,11 +188,14 @@ function fillRegistros()
                 }
             }
             $('#data').html(html);
+            // con esta funcion inicializamos el objeto datatable, enviando el id de la tabla
             initDatatable('registros');
             $('.overlayRegistros').css('display','none');
         }
     });
 }
+// nos ayuda a crear los registros de la tabla de cotizaciones, acorde a los filtros que ingresamos
+// la variable q se pasa es todo el objeto de respuesta
 function changeRegistros(r)
 {
     var html = '';
@@ -224,6 +219,7 @@ function changeRegistros(r)
     initDatatable('registros');
     $('.overlayRegistros').css('display','none');
 }
+// funcion q realiza la busqueda segun los datos ingresados
 function searchCot()
 {
     if($('#fvbuscot').valid()==false)
@@ -248,10 +244,11 @@ function searchCot()
             construirTabla();
             changeRegistros(r);
             $('.searchCot').prop('disabled',false); 
-            // msjRee(r);
         }
     });
 }
+// esta funcion se llama cuando queremos cotizar un registro
+// nos redirecciona a otra vista
 function cotizar(id)
 {
 	localStorage.setItem("idCot",id);

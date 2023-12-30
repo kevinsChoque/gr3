@@ -38,19 +38,6 @@
 	                            <input type="text" class="form-control inpItem" id="descripcion" name="descripcion">
 	                        </div>
 	                    </div>
-	                    <!-- <div class="form-group col-lg-6">
-	                        <label for="" class="m-0">Estado: <span class="text-danger">*</span></label>
-	                        <div class="input-group">
-	                            <div class="input-group-prepend">
-	                                <span class="input-group-text font-weight-bold"><i class="fa fa-eye"></i></span>
-	                            </div>
-	                            <select name="estado" id="estado" class="form-control">
-	                            	<option disabled>Seleccione una opcion</option>
-	                            	<option value="1" selected>Activo</option>
-	                            	<option value="0">Inactivo</option>
-	                            </select>
-	                        </div>
-	                    </div> -->
     				</div>
             	</form>
             </div>
@@ -63,6 +50,7 @@
 </div>
 <script>	
 $(document).ready( function () {
+    // inicializamos el formulario con la respectivas reglas de validacion (rulesItem)
     initValidateItem();
 });
 $('.guardarItem').on('click',function(){
@@ -71,18 +59,9 @@ $('.guardarItem').on('click',function(){
 function rulesItem()
 {
     return {
-        nombre: {
-            required: true,
-        },
-        clasificador: {
-            required: true,
-        },
-        descripcion: {
-            required: true,
-        },
-        // estado: {
-        //     required: true,
-        // },
+        nombre: {required: true,},
+        clasificador: {required: true,},
+        descripcion: {required: true,},
     };
 }
 function initValidateItem()
@@ -103,13 +82,12 @@ function initValidateItem()
         }
     });
 }
+funcion para guardar el registro en la tabla de los items
 function guardarItem()
 {
     if($('#fvitem').valid()==false)
     {return;}
     var formData = new FormData($("#fvitem")[0]);
-    // formData.append('id', idDocumento); 
-    // formData.append('file', $('#archivo')[0].files.length>0?'true':'false');
     $('.guardarItem').prop('disabled',true); 
     jQuery.ajax({
         url: "{{ url('item/guardar') }}",
@@ -139,6 +117,5 @@ function limpiarFormItem()
 {
 	cleanFv('fvitem');
     $('.inpItem').val('');
-    // $('#estado').val('1');
 }
 </script>

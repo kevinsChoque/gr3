@@ -154,8 +154,6 @@
                                 <select name="estadoCotizacion" id="estadoCotizacion" class="form-control" disabled>
                                     <option disabled>Seleccione opcion</option>
                                     <option value="1" selected>En proceso</option>
-                                    <!-- <option value="2">Finalizada</option> -->
-                                    <!-- <option value="3">Borrador</option> -->
                                 </select>
                             </div>
                         </div>
@@ -164,7 +162,6 @@
                 </div>
                 <div class="card-footer py-1 border-transparent">
                     <button type="button" class="btn btn-success float-right guardar ml-2"><i class="fa fa-save"></i> Guardar Cotizacion</button>
-                    <!-- <button type="button" class="btn btn-light float-right" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button> -->
                 </div>
             </div>
         </div>
@@ -178,9 +175,12 @@ $(document).ready( function () {
         return this.optional(element) || value.toLowerCase().endsWith(".pdf");
     }, "Solo se permiten archivos PDF");
     loadPage();
+    // se inicializa el formulario con el jquery validate
+    // conjuntamente con sus reglas de validacion
     initFv('fvcotizacion',rules());
     $('.overlayPagina').css("display","none");
     $('.overlayRegistros').css("display","none");
+    // se inicializa la inicializacion de las fecha y hora con las validadciones
     $('#ifechaCotizacion').datetimepicker({format: 'YYYY-MM-DD',minDate: moment(),daysOfWeekDisabled: [0, 6], });
     $('#ifechaFinalizacion').datetimepicker({format: 'YYYY-MM-DD',minDate: moment()});
     $('#ihoraCotizacion').datetimepicker({format: 'LT'});
@@ -188,6 +188,7 @@ $(document).ready( function () {
 });
 $('.inputDate').on('click',function(){$(this).parent().find('.input-group-prepend').click();});
 $('.guardar').on('click',function(){guardar();});
+// esta funcion ingresa por defecto llena la fecha de cotizacion con la fecha actual
 function loadPage()
 {
     var fechaActual = new Date();
@@ -210,12 +211,15 @@ function rules()
         estado: {required: true,},
     };
 }
+// esta funcion se ejecuta cuando realizamos click en el boton de guardar
 function guardar()
 {
+    // validamos el formulario deacuerdo a las reglas de validaion q anteiormente declaramos
     if($('#fvcotizacion').valid()==false)
     {return;}
+    // capturamos los datos del formulario para enviarlo en ajax
     var formData = new FormData($("#fvcotizacion")[0]);
-    // formData.append('file', $('#archivo')[0].files.length>0?'true':'false');
+    
     $('.guardar').prop('disabled',true); 
     $('.overlayRegistros').css("display","flex");
     jQuery.ajax({
@@ -227,6 +231,7 @@ function guardar()
         contentType: false, 
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
+            // una vez guardado el registro nos mostrara un mensaje para enviarnos a la lista de cotizaiones
             if (r.estado) 
                 redirectUrlMsj("{{url('cotizacion/ver')}}",r.message);
             else 

@@ -69,9 +69,8 @@
                                         <div class="row">
                                             <div class="col-lg-6">
                                                 <div class="alert alert-info">
-                                                    <!-- <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button> -->
+                                                    
                                                     <h5 class="font-weight-bold font-italic"><i class="icon fas fa-info"></i> La cotizacion debe de contener los archivos en el siguiente orden:</h5>
-                                                    <!-- <p class="m-0 font-italic">La cotizacion debe de contener los archivos en el siguiente orden</p> -->
                                                     <ol class="mb-0 font-weight-bold">
                                                         <li>Cotizacion Llenada</li>
                                                         <li>Declaracion Jurada</li>

@@ -6,31 +6,26 @@
     <title>GOBIERNO REGIONAL DE APURIMAC</title>
     <link rel="icon" href="{{asset('img/admin/funcionarios/icono.jpg')}}" type="image/x-icon">
     <!-- jQuery -->
-<script src="{{asset('adminlte3/plugins/jquery/jquery.min.js')}}"></script>
-    <!-- Google Font: Source Sans Pro -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <script src="{{asset('adminlte3/plugins/jquery/jquery.min.js')}}"></script>
+    <!-- fuente Source Sans Pro -->
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"> -->
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="{{asset('adminlte3/plugins/fontawesome-free/css/all.min.css')}}">
-    <!-- Theme style -->
+    <!-- estilos del tema -->
     <link rel="stylesheet" href="{{asset('adminlte3/dist/css/adminlte.min.css')}}">
+    <!-- helpers -->
     <script src="{{asset('js/helper.js')}}"></script>
+    <!-- estilos de spiner -->
     <link rel="stylesheet" href="{{asset('css/spinersAdmin.css')}}">
+    <!-- sweet alert de bootstrap -->
     <link rel="stylesheet" href="{{asset('adminlte3/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
     <script src="{{asset('adminlte3/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
-<link rel="stylesheet" href="{{asset('cdn/jquery.dataTables.min.css')}}">
-    <!-- ---------------------- -->
+    <!-- datatable -->
+    <link rel="stylesheet" href="{{asset('cdn/jquery.dataTables.min.css')}}">
+    <!-- datapicker para fechas -->
     <link rel="stylesheet" href="{{asset('adminlte3/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
-<link rel="stylesheet" href="{{asset('adminlte3/plugins/daterangepicker/daterangepicker.css')}}">
+    <link rel="stylesheet" href="{{asset('adminlte3/plugins/daterangepicker/daterangepicker.css')}}">
 </head>
-<!--
-`body` tag options:
-
-  Apply one or more of the following classes to to the body tag
-  to get the desired effect
-
-  * sidebar-collapse
-  * sidebar-mini
--->
 <body class="hold-transition sidebar-mini">
 	<div class="container-fluid my-5" style="display: none;">
 		<div class="row align-middle justify-content-center">
@@ -48,7 +43,6 @@
         <nav class="navbar navbar-expand-lg">
             <a class="navbar-brand" href="#">
                 <img src="{{asset('img/panelAdm/logoFile.png')}}" style="width: 50px;">
-                <!-- <p>cascasc <br>vd</p> -->
                 <span class="m-0">GOBIERNO REGIONAL </span>
                 <span class="m-0 font-weight-bold font-italic"> APURIMAC</span>
             </a>
@@ -68,15 +62,6 @@
                 <h2 class="text-center" style="color: #858ea1;margin: 10px 0 30px 0;font-size: 24px;">Gobierno Regional de Apurimac</h2>
             </div>
             <div class="col-lg-7 p-4">
-                <!-- <div class="form-group">
-                    <div class="input-group">
-                        <input type="text" class="form-control soloNumeros input" id="numeroCotizacion" name="numeroCotizacion">
-                        <div class="input-group-append">
-                            <span class="input-group-text font-weight-bold"><i class="fa fa-search"></i></span>
-                            <span class="input-group-text font-weight-bold"> BUSCAR</span>
-                        </div>
-                    </div>
-                </div> -->
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -84,8 +69,6 @@
                         </div>
                         <input type="text" class="form-control" placeholder="Numero de cotizacion o concepto" id="cadena" name="cadena">
                         <div class="input-group-append">
-                            <!-- <span class="input-group-text"><i class="fa fa-search"></i></span> -->
-                            <!-- <span class="input-group-text font-weight-bold"> BUSCAR</span> -->
                             <button class="btn btn-success font-weight-bold buscarCotizacion" type="button">BUSCAR</button>
                         </div>
                     </div>
@@ -179,13 +162,10 @@
 <script src="{{asset('adminlte3/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- AdminLTE -->
 <script src="{{asset('adminlte3/dist/js/adminlte.js')}}"></script>
+<!-- datatable -->
 <script src="{{asset('cdn/jquery.dataTables.min.js')}}"></script>
-
-<!-- jquery validate -->
-<!-- transJQV -->
-<!-- --------------------------------datepicker-------------------- -->
+<!-- moment q trabaja conjuntamente con datapiker -->
 <script src="{{asset('adminlte3/plugins/moment/moment.min.js')}}"></script>
-
 <script src="{{asset('adminlte3/plugins/daterangepicker/daterangepicker.js')}}"></script>
 <script src="{{asset('adminlte3/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 <script>
@@ -194,18 +174,18 @@
         $('#ifechaCotizacion').datetimepicker({format: 'YYYY-MM-DD'});
         $('#ifechaFinalizacion').datetimepicker({format: 'YYYY-MM-DD'});
         tablaDeRegistros=$('.contenedorRegistros').html();
-        // initFv('fvbuscot',rules());
         fillRegistros();
         $('.overlayPagina').css("display","none");
-        // $('.overlayRegistros').css("display","none");
     });
+    // para que nos despliegue la fecha cuando agamos click en cualquier punto del input
     $('.inputDate').on('click',function(){
         $(this).parent().find('.input-group-prepend').click();
     });
     $('.buscarCotizacion').on('click',function(){
         buscarCotizacion();
-
     });
+    // busca la cotizacion, segun loas datos ingresados en el formulario fvsearch
+    // para poder buscar no es necesario validar
     function buscarCotizacion()
     {
         var formData = new FormData($("#fvsearch")[0]);
@@ -219,32 +199,22 @@
             contentType: false, 
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
-                // limpiarForm();
-                // $('.guardar').prop('disabled',false);
-                
                 construirTabla();
-                console.log(r);
                 var html = '';
                 let ban = true;
                 let colorNc = '';
                 for (var i = 0; i < r.data.length; i++) 
                 {
-                    // colorNc = ban?'#f1f1f1':'#fafafa';
                     html += '<tr>' +
                         '<td class="text-left align-middle font-weight-bold" style="background-color:'+colorNc+'">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
                         '<td class="text-center font-weight-bold align-middle">' + novDato(r.data[i].tipo) + '</td>' +
-                        // ocultarText
-                        // '<td class="align-middle"><p class="m-0 text-uppercase">' + novDato(r.data[i].concepto) + '</p></td>' +
-                        // '<td class="align-middle"><p style="white-space: pre-line;margin-bottom: 0px;font-weight: 400;">SERVICIO DE ESTUDIO DE MECANICA DE SUELOS SEGUN TERMINOS DE REFERENCIA RECOTIZACION POR NO CUMPLIR CON LOS TERMINOS DE REFERENCIA</p></td>'+
-                        // -----
+                        
                         '<td class="align-middle">'+
                             '<p style="white-space: pre-line;margin-bottom: 0px;font-weight: 400;" class="text-uppercase">' + novDato(r.data[i].concepto) + '</p>'+
                             '<label style="font-size: 12px;font-weight:normal;"><strong>Dependencia: </strong> Gobierno Regional de Apurímac </label>'+
                             '<label style="font-size: 12px;font-weight:normal;" class="float-right"><strong>Fecha Publicación:</strong> 20/12/2023</label>'+
                         '</td>'+
                         '<td class="align-middle text-left">' + 
-                        // '<td class="text-left">INICIO:<br>' + 
-                            // '<span><i class="fa fa-calendar-alt"></i> '+novDato(r.data[i].fechaCotizacion) +'<br><i class="fa fa-clock"></i> '+novDato(r.data[i].horaCotizacion) + '<span><br>FIN:<br>' +
                             '<span><i class="fa fa-calendar-alt"></i> '+novDato(r.data[i].fechaFinalizacion) +'<br><i class="fa fa-clock"></i> '+novDato(r.data[i].horaFinalizacion) + '<span><br>' +
                         '</td>' +
                         '<td class="text-center align-middle">' + 
@@ -252,12 +222,9 @@
                             '<button type="button" class="btn btn-sm btn-success btn-flat w-100" title="Editar registro" onclick="cotizar(\''+r.data[i].idCot+'\');"><i class="far fa-envelope"></i> Emviar Cotizacion</button>'+
                         '</td>' +
                     '</tr>';
-                    // ban=ban?false:true;
                 }
                 $('#data').html(html);
-                // initDatatable('registros');
                 initDt('registros');
-                
                 $('.overlayRegistros').css('display','none');
             },
             error: function (xhr, status, error) {
@@ -265,6 +232,7 @@
             }
         });
     }
+    // nos muestra las cotizaciones que estan PUBLICADA O RECOTIZANDO
     function fillRegistros()
     {
         $('.contenedorRegistros').css('display','block');
@@ -274,28 +242,20 @@
             method: 'get',
             success: function(r)
             {
-                console.log(r);
                 var html = '';
                 let ban = true;
                 let colorNc = '';
                 for (var i = 0; i < r.data.length; i++) 
                 {
-                    // colorNc = ban?'#f1f1f1':'#fafafa';
                     html += '<tr>' +
                         '<td class="text-left align-middle font-weight-bold" style="background-color:'+colorNc+'">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
                         '<td class="text-center font-weight-bold align-middle">' + novDato(r.data[i].tipo) + '</td>' +
-                        // ocultarText
-                        // '<td class="align-middle"><p class="m-0 text-uppercase">' + novDato(r.data[i].concepto) + '</p></td>' +
-                        // '<td class="align-middle"><p style="white-space: pre-line;margin-bottom: 0px;font-weight: 400;">SERVICIO DE ESTUDIO DE MECANICA DE SUELOS SEGUN TERMINOS DE REFERENCIA RECOTIZACION POR NO CUMPLIR CON LOS TERMINOS DE REFERENCIA</p></td>'+
-                        // -----
                         '<td class="align-middle">'+
                             '<p style="white-space: pre-line;margin-bottom: 0px;font-weight: 400;" class="text-uppercase">' + novDato(r.data[i].concepto) + '</p>'+
                             '<label style="font-size: 12px;font-weight:normal;"><strong>Dependencia: </strong> Gobierno Regional de Apurímac </label>'+
                             '<label style="font-size: 12px;font-weight:normal;" class="float-right"><strong>Fecha Publicación:</strong> 20/12/2023</label>'+
                         '</td>'+
                         '<td class="align-middle text-left">' + 
-                        // '<td class="text-left">INICIO:<br>' + 
-                            // '<span><i class="fa fa-calendar-alt"></i> '+novDato(r.data[i].fechaCotizacion) +'<br><i class="fa fa-clock"></i> '+novDato(r.data[i].horaCotizacion) + '<span><br>FIN:<br>' +
                             '<span><i class="fa fa-calendar-alt"></i> '+novDato(r.data[i].fechaFinalizacion) +'<br><i class="fa fa-clock"></i> '+novDato(r.data[i].horaFinalizacion) + '<span><br>' +
                         '</td>' +
                         '<td class="text-center align-middle">' + 
@@ -303,16 +263,15 @@
                             '<button type="button" class="btn btn-sm btn-success btn-flat w-100" title="Editar registro" onclick="cotizar(\''+r.data[i].idCot+'\');"><i class="far fa-envelope"></i> Emviar Cotizacion</button>'+
                         '</td>' +
                     '</tr>';
-                    // ban=ban?false:true;
                 }
                 $('#data').html(html);
-                // initDatatable('registros');
+                // para inicializar la tabla como objeto de tipo datatable
                 initDt('registros');
-                
                 $('.overlayRegistros').css('display','none');
             }
         });
     }
+    // funcion para inicializar datatable
     function initDt(id)
     {
         $('#'+id).DataTable( {
@@ -322,7 +281,6 @@
             "ordering": false,
             "lengthChange": false,
             "lengthMenu": [[5, 10,25, -1], [5, 10,25, "Todos"]],   
-            // "order": [[ 1, 'desc' ]],
             "language": {
                 "info": "Mostrando la pagina _PAGE_ de _PAGES_. (Total: _MAX_)",
                 "search":"",
@@ -339,7 +297,7 @@
             },
         } );
     }
-
+    // para poder ver y postular a lacotizacion nos muestra un mensaje, donde nos muestra q es necesario loguearse
     function cotizar()
     {
         Swal.fire({
@@ -358,6 +316,7 @@
             }
         });
     }
+    // construye la tabla con nuevos datos
     function construirTabla()
     {
         $('.contenedorRegistros>div').remove();

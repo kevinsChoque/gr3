@@ -14,28 +14,28 @@ class PaProveedorController extends Controller
 {
     public function actGuardar(Request $r)
     {
+        // guarda los datos faltantes del proveedor
     	$tPro = Session::get('proveedor');
     	$tPro = TProveedor::find($tPro->idPro);
+        // verificamos si cambio el ruc del proveedor
+        // como tambien si se repite en la tabla
         if($r->numeroDocumento!=$tPro->numeroDocumento)
         {
             $existeNumeroDocumento = TProveedor::where('numeroDocumento', $r->numeroDocumento)->first();
             if($existeNumeroDocumento!=null)
                 return response()->json(['estado' => false, 'message' => 'El numero del documento RUC: '.$r->numeroDocumento.' ya fue registrado con otro proveedor.']);
         }
+        // verificamos si la contraseña es la misma o cambio
+        // si es la misma la cambiamos o caso contrario continua con la misma
         if($r->password!=null)
-        {
-            $r->merge(['password' => Hash::make($r->password)]);
-        }
+        {   $r->merge(['password' => Hash::make($r->password)]);}
         else
-        {
-        	$r->merge(['password' => $tPro->password]);
-        }
-        // dd($r->password!=null);
+        {   $r->merge(['password' => $tPro->password]);}
         $r->merge(['fa' => Carbon::now()]);
+        // seteamos los datos actualizados
         $tPro->fill($r->all());
         if($tPro->save())
         {
-            // dd($tPro);
         	session(['proveedor' => $tPro]);
             return response()->json(['estado' => true, 'message' => 'Operacion exitosa.']);
         }
