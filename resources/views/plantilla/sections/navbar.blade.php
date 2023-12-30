@@ -12,11 +12,6 @@
                     Session::get('proveedor')->usuario:
                     '--';
             }})
-            ({{
-                Session::has('proveedor')?
-                    Session::get('proveedor')->idPro:
-                    '--';
-            }})
             {{
                 Session::has('proveedor')?
                     Session::get('proveedor')->tipoPersona=="PERSONA JURIDICA"?

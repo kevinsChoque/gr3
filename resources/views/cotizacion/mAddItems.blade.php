@@ -186,6 +186,7 @@ function addItem()
         return;
     }
     $('.addItem').prop('disabled',true); 
+    $('.overlayPagina').css("display","flex");
     jQuery.ajax({
         url: "{{ url('cotxitm/guardar') }}",
         method: 'POST', 
@@ -219,22 +220,26 @@ function addItem()
             else 
                 msjRee(r);
             $('.addItem').prop('disabled',false);
+            $('.overlayPagina').css("display","none");
         },
         error: function (xhr, status, error) {
             msjError("Algo salio mal, porfavor contactese con el Administrador.");
+            $('.overlayPagina').css("display","none");
         }
     });
 }
 function loadCotizacionMai(id)
 {
+    // alert('loadCotizacionMai -'+id);
     // llena los datos en el modal, datos que son de la cotizacion
     jQuery.ajax({
-        url: "{{ url('cotizacion/show') }}",
+        url: "{{ url('cotizacion/verCotizacion') }}",
         method: 'POST', 
         data: {id:id},
         dataType: 'json',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
+            console.log(r)
             var estadoCot = r.data.estadoCotizacion=='1'?'Activo':
                 r.data.estadoCotizacion=='2'?'Finalizado':'Borrador';
             let estateCotizacion = estadoCotizacion(r.data.estadoCotizacion);
@@ -250,14 +255,14 @@ function loadCotizacionMai(id)
             $('.archivo').html(r.data.archivo);
             $('.estadoCotizacion').html(estateCotizacion);
             var dir = $('.fileCotizacion').attr('href');
-            
+            let path = "{{ route('ver-archivo') }}";
             $('.fileCotizacion').html('<i class="fa fa-file-pdf fa-lg"></i>');
-            $('.fileCotizacion').attr('href',dir+'/'+r.data.archivo);
+            $('.fileCotizacion').attr('href',path+'/'+r.data.archivo);
             $('.overlayRegistros').css("display","none");
             numero = r.data.numeroCotizacion;
         },
         error: function (xhr, status, error) {
-            alert('salio un error');
+            msjError('Algo salio mal, porfavor contactese con el Administrador');
         }
     });
 }

@@ -30,7 +30,36 @@ use App\Http\Controllers\FormatosController;
 use App\Http\Middleware\MDAdministrador;
 Route::middleware([MDAdministrador::class])->group(function () {
 	Route::get('home/home',[HomeController::class, 'actionHome']);
+	// usuario
+	Route::get('usuario', function () {return view('usuario.usuario');});
+	Route::post('usuario/guardar',[UsuarioController::class, 'actGuardar']);
+	Route::get('usuario/listar',[UsuarioController::class, 'actListar']);
+	Route::post('usuario/eliminar',[UsuarioController::class, 'actEliminar']);
+	Route::post('usuario/editar',[UsuarioController::class, 'actEditar']);
+	Route::post('usuario/guardarCambios',[UsuarioController::class, 'actGuardarCambios']);
+	// proveedor
+	Route::get('proveedor', function () {return view('proveedor.proveedor');});
+	Route::post('proveedor/guardar',[ProveedorController::class, 'actGuardar']);
+	Route::get('proveedor/listar',[ProveedorController::class, 'actListar']);
+	Route::post('proveedor/eliminar',[ProveedorController::class, 'actEliminar']);
+	Route::post('proveedor/editar',[ProveedorController::class, 'actEditar']);
+	Route::post('proveedor/guardarCambios',[ProveedorController::class, 'actGuardarCambios']);
+	// cotizacion
+	Route::get('cotizacion/registrar', function () {return view('cotizacion.registrar');});
+	Route::get('cotizacion/ver', function () {return view('cotizacion.ver');});
+	Route::get('cotizacion/editar', function () {return view('cotizacion.editar');});
+	Route::get('cotizacion/addItems', function () {return view('cotizacion.addItems');});
+	Route::post('cotizacion/guardar',[CotizacionController::class, 'actGurdar']);
+	Route::get('cotizacion/listar',[CotizacionController::class, 'actListar']);
+	Route::post('cotizacion/eliminar',[CotizacionController::class, 'actEliminar']);
+	Route::post('cotizacion/show',[CotizacionController::class, 'actShow']);
+	Route::post('cotizacion/guardarCambios',[CotizacionController::class, 'actGuardarCambios']);
+	Route::post('cotizacion/changeEstadoCotizacion',[CotizacionController::class, 'actChangeEstadoCotizacion']);
+	Route::post('cotizacion/showCotizacion',[CotizacionController::class, 'actShowCotizacion']);
+	Route::post('cotizacion/verCotizacion',[CotizacionController::class, 'actVerCotizacion']);
+	
 });
+Route::get('cotizacion/archivo/{nombreArchivo?}',[CotizacionController::class, 'verArchivo'])->name('ver-archivo');
 // portal
 Route::get('/',[PortalController::class, 'actionPortal']);
 // login
@@ -41,25 +70,26 @@ Route::post('login/siginpro',[LoginController::class, 'siginpro']);
 Route::get('login/logout',[LoginController::class, 'logout']);
 Route::get('loginProveedor/logoutPro',[LoginController::class, 'logoutPro']);
 // proveedor
-Route::get('proveedor', function () {return view('proveedor.proveedor');});
-Route::post('proveedor/guardar',[ProveedorController::class, 'actGuardar']);
-Route::get('proveedor/listar',[ProveedorController::class, 'actListar']);
-Route::post('proveedor/eliminar',[ProveedorController::class, 'actEliminar']);
-Route::post('proveedor/editar',[ProveedorController::class, 'actEditar']);
-Route::post('proveedor/guardarCambios',[ProveedorController::class, 'actGuardarCambios']);
+// Route::get('proveedor', function () {return view('proveedor.proveedor');});
+// Route::post('proveedor/guardar',[ProveedorController::class, 'actGuardar']);
+// Route::get('proveedor/listar',[ProveedorController::class, 'actListar']);
+// Route::post('proveedor/eliminar',[ProveedorController::class, 'actEliminar']);
+// Route::post('proveedor/editar',[ProveedorController::class, 'actEditar']);
+// Route::post('proveedor/guardarCambios',[ProveedorController::class, 'actGuardarCambios']);
 // cotizacion
-Route::get('cotizacion/registrar', function () {return view('cotizacion.registrar');});
-Route::get('cotizacion/ver', function () {return view('cotizacion.ver');});
-Route::get('cotizacion/editar', function () {return view('cotizacion.editar');});
-Route::get('cotizacion/addItems', function () {return view('cotizacion.addItems');});
-Route::post('cotizacion/guardar',[CotizacionController::class, 'actGurdar']);
-Route::get('cotizacion/listar',[CotizacionController::class, 'actListar']);
-Route::post('cotizacion/eliminar',[CotizacionController::class, 'actEliminar']);
-Route::post('cotizacion/show',[CotizacionController::class, 'actShow']);
-Route::post('cotizacion/guardarCambios',[CotizacionController::class, 'actGuardarCambios']);
-Route::post('cotizacion/changeEstadoCotizacion',[CotizacionController::class, 'actChangeEstadoCotizacion']);
-Route::post('cotizacion/showCotizacion',[CotizacionController::class, 'actShowCotizacion']);
-Route::get('cotizacion/archivo/{nombreArchivo?}',[CotizacionController::class, 'verArchivo'])->name('ver-archivo');
+// Route::get('cotizacion/registrar', function () {return view('cotizacion.registrar');});
+// Route::get('cotizacion/ver', function () {return view('cotizacion.ver');});
+// Route::get('cotizacion/editar', function () {return view('cotizacion.editar');});
+// Route::get('cotizacion/addItems', function () {return view('cotizacion.addItems');});
+// Route::post('cotizacion/guardar',[CotizacionController::class, 'actGurdar']);
+// Route::get('cotizacion/listar',[CotizacionController::class, 'actListar']);
+// Route::post('cotizacion/eliminar',[CotizacionController::class, 'actEliminar']);
+// Route::post('cotizacion/show',[CotizacionController::class, 'actShow']);
+// Route::post('cotizacion/guardarCambios',[CotizacionController::class, 'actGuardarCambios']);
+// Route::post('cotizacion/changeEstadoCotizacion',[CotizacionController::class, 'actChangeEstadoCotizacion']);
+// Route::post('cotizacion/showCotizacion',[CotizacionController::class, 'actShowCotizacion']);
+// Route::post('cotizacion/verCotizacion',[CotizacionController::class, 'actVerCotizacion']);
+// Route::get('cotizacion/archivo/{nombreArchivo?}',[CotizacionController::class, 'verArchivo'])->name('ver-archivo');
 // items
 Route::post('item/guardar',[ItemController::class, 'actGurdar']);
 Route::get('item/listar',[ItemController::class, 'actListar']);
@@ -72,12 +102,12 @@ Route::post('cotxitm/loadSegunCotizacion',[CotxitmController::class, 'actLoadSeg
 // unidad de medida
 Route::get('unidadMedida/listar',[UnidadMedidaController::class, 'actListar']);
 // usuario
-Route::get('usuario', function () {return view('usuario.usuario');});
-Route::post('usuario/guardar',[UsuarioController::class, 'actGuardar']);
-Route::get('usuario/listar',[UsuarioController::class, 'actListar']);
-Route::post('usuario/eliminar',[UsuarioController::class, 'actEliminar']);
-Route::post('usuario/editar',[UsuarioController::class, 'actEditar']);
-Route::post('usuario/guardarCambios',[UsuarioController::class, 'actGuardarCambios']);
+// Route::get('usuario', function () {return view('usuario.usuario');});
+// Route::post('usuario/guardar',[UsuarioController::class, 'actGuardar']);
+// Route::get('usuario/listar',[UsuarioController::class, 'actListar']);
+// Route::post('usuario/eliminar',[UsuarioController::class, 'actEliminar']);
+// Route::post('usuario/editar',[UsuarioController::class, 'actEditar']);
+// Route::post('usuario/guardarCambios',[UsuarioController::class, 'actGuardarCambios']);
 // suspension
 Route::post('suspension/guardar',[SuspensionController::class, 'actGuardar']);
 // recotizacion
@@ -116,6 +146,8 @@ Route::get('panelAdm/paProveedor/formatos', function () {return view('panelAdm.p
 Route::get('panelAdm/paProveedor/changePassword', function () {return view('panelAdm.proveedor.changePassword');});
 Route::post('panelAdm/paProveedor/guardar',[PaProveedorController::class, 'actGuardar']);
 Route::post('panelAdm/paProveedor/savePassword',[PaProveedorController::class, 'actSavePassword']);
+
+Route::post('panelAdm/paProveedor/editar',[PaProveedorController::class, 'actEditar']);
 // detalle de las cotizaciones que envian
 Route::get('panelAdm/detalleprocot/{nombreArchivo?}',[DetalleprocotController::class, 'verArchivo'])->name('detalle-archivo');
 // archivos de cotizacion

@@ -94,6 +94,7 @@ class CotizacionController extends Controller
     }
     public function actShow(Request $r)
     {
+        // dd($r->all());
         /*
         *   se envia el json con el registro de la cotizacion y su detalle de items
         *   para la visualizacion y llenado de cantidad y unidad de medida
@@ -126,6 +127,12 @@ class CotizacionController extends Controller
             'cotizacion.estadoCotizacion',
         )
         ->first();
+        // dd($registro);
+        return response()->json(["data"=>$registro]);
+    }
+    public function actVerCotizacion(Request $r)
+    {
+        $registro = TCotizacion::find($r->id);
         return response()->json(["data"=>$registro]);
     }
     public function actGuardarCambios(Request $r)

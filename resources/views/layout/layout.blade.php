@@ -47,6 +47,16 @@
                 </div>
             </div>
             @yield('pageTitle')
+<!-- --------------- -->
+@if(!Session::has('usuario'))
+<small>-</small>
+<script>
+    // window.location.href = "{{url('login/login')}}";
+</script>
+@else
+<small>.</small>
+@endif
+<!-- --------------- -->
             <div class="content">
                 <div class="container-fluid">
                     <div class="row">

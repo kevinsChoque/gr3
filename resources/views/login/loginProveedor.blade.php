@@ -4,6 +4,8 @@
   	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<title>GOBIERNO REGIONAL DE APURIMAC</title>
+    <!-- icono de la pagina -->
+    <link rel="icon" href="{{asset('img/admin/funcionarios/icono.jpg')}}" type="image/x-icon">
 	<!-- Google Font: Source Sans Pro -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 	<!-- Font Awesome -->
@@ -28,19 +30,10 @@
 	        </div>
 	    </div>
 	</div>
-        <!-- align-items: center;
-    background-color: #e9ecef;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    height: 100vh;
-    -ms-flex-pack: center;
-    justify-content: center; -->
 	<div class="container-fluid" style="display: flex;flex-direction: column;height: 100vh;justify-content: center;width: 63%;">
 	  	<div class="card">
 		    <div class="card-header text-center" style="display: none;">
-		      	<a href="#" class="h1"><b>Cotizaciones </b>Apurimac</a>
+		      	<a href="{{asset('/')}}" class="h1"><b>Cotizaciones </b>Apurimac</a>
 		    </div>
 	    	<div class="card-body">
                 <div class="row">
@@ -52,7 +45,7 @@
                         <div class="row justify-content-center">
                             <form id="fvlogin">
                             <h6 class="login-box-msg text-left">Instructivo para el proceso del Registro de Cotizaciones Descargar.</h6>
-                            <h3 class="text-center font-weight-bold">COTIZACIONES EN LINEA</h3>
+                            <h3 class="text-center font-weight-bold"><a href="{{asset('/')}}">COTIZACIONES EN LINEA</a></h3>
                             <p class="text-left">Bienvenido, ingrese con su cuenta.</p>
                             <div class="form-group">
                                 <div class="input-group">
@@ -83,14 +76,14 @@
                                     <button class="btn btn-primary sig-in w-100"><i class="fa fa-key"></i> Ingresar</button>
                                 </div>
                             </div>
-                            <!-- <p class="text-left">Si no se recuerda la clave, presione aquí</p> -->
+                            
                             <br>
                             <div class="alert alert-info py-2">
                                 <p class="m-0 text-center font-weight-bold">SI NO TIENE UNA CUENTA PRESIONE <a href="{{url('portal/proveedor/registrar')}}">AQUI</a>.</p>
                             </div>
                             </form>
                         </div>
-                        <!-- <p class="mb-0"><a href="#" class="text-center">Registrarse</a></p> -->
+                        
                     </div>
                 </div>
 	    		
@@ -112,18 +105,10 @@
         initFv('fvlogin',rules());
         $('.overlayPagina').css("display","none");
     } );
-    // function ingresar()
-    // {
-    // 	window.location.href = "{{url('home/home')}}";
-    // }
-    
-    // $('.entrar').on('click',function(){
-    // 	alert('enviar data desde entrar')
-    // });
     $('.sig-in').on('click',function(){
         if($('#fvlogin').valid()==false)
         {return;}
-        // alert('paso la validacion')
+       
         var formData = new FormData($("#fvlogin")[0]);
         $('.sig-in').prop('disabled',true); 
         $('.overlayPagina').css("display","flex");
@@ -137,34 +122,26 @@
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
                 if (r.estado) 
-                {
-                    // window.location.href = "{{url('panelAdm/home/home')}}";
                     window.location.href = "{{url('panelAdm/paCotizacion/cotizacionesActivas')}}";
-                }
                 else 
                 {
                 	$('.overlayPagina').css("display","none");
                 	$('.sig-in').prop('disabled',false);
-                    msjRee(r); 
+                    msgRee(r); 
                 }
             },
             error: function (xhr, status, error) {
                 $('.overlayPagina').css("display","none");
                 $('.sig-in').prop('disabled',false);
-                msjSimple(false,'Ocurrio un problema, porfavor contactese con el administrador');
+                msgSimple(false,'Ocurrio un problema, porfavor contactese con el administrador');
             }
         });
     });
     function rules()
     {
         return {
-            usuario: {
-                required: true,
-            },
-            password: {
-                required: true,
-            },
-            
+            usuario: {required: true,},
+            password: {required: true,},
         };
     }
     function initValidate()

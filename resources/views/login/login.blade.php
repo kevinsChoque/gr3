@@ -4,6 +4,8 @@
   	<meta charset="utf-8">
   	<meta name="viewport" content="width=device-width, initial-scale=1">
   	<title>GOBIERNO REGIONAL DE APURIMAC</title>
+    <!-- icono de la pagina -->
+    <link rel="icon" href="{{asset('img/admin/funcionarios/icono.jpg')}}" type="image/x-icon">
 	<!-- Google Font: Source Sans Pro -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 	<!-- Font Awesome -->
@@ -18,7 +20,7 @@
     <link rel="stylesheet" href="{{asset('adminlte3/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
     <script src="{{asset('adminlte3/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
     <!-- helper -->
-    <script src="{{asset('js/helper.js')}}"></script>
+    <!-- <script src="{{asset('js/helper.js')}}"></script> -->
 </head>
 <body class="hold-transition login-page">
 	<div class="overlayPagina">
@@ -31,10 +33,9 @@
 	<div class="login-box">
 	  	<div class="card card-outline card-primary">
 		    <div class="card-header text-center">
-		      	<a href="#" class="h1"><b>Cotizaciones </b>Apurimac</a>
+		      	<a href="{{asset('/')}}" class="h1"><b>Cotizaciones </b>Apurimac</a>
 		    </div>
 	    	<div class="card-body">
-	    		<!-- <input type="text" id="d1"> -->
 	    		<form id="fvlogin">
 	    		<p class="login-box-msg">Bienvenido, ingrese con su cuenta.</p>
 	    		<div class="form-group">
@@ -45,7 +46,6 @@
                         <input type="text" class="form-control input" id="usuario" name="usuario">
                     </div>
                 </div>
-	    		<!-- <input type="text" id="d2"> -->
 	    		<div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -54,7 +54,7 @@
                         <input type="password" class="form-control input" id="password" name="password">
                     </div>
                 </div>
-	    		<!-- <button class="btn btn-success entrar"><i class="fa fa-user"></i> ingresar</button> -->
+	    		
 	    		<div class="row">
 		          	<div class="col-8">
 			            <div class="icheck-primary" style="visibility: hidden;">
@@ -67,35 +67,6 @@
 		          	<button class="btn btn-primary sig-in"><i class="fa fa-user"></i> ingresar</button>
 		        </div>
 		        </form>
-		        <!-- <p class="mb-0"><a href="#" class="text-center">Registrarse</a></p> -->
-	    		<!-- <hr> -->
-	      		<!-- <p class="login-box-msg">Bienvenido, ingrese con su cuenta.</p> -->
-	      		<!-- <form id="fvlogin">
-			        <div class="input-group mb-3">
-			          	<input type="text" class="form-control" placeholder="usuario">
-			         	<div class="input-group-append">
-				            <div class="input-group-text"><span class="fas fa-user"></span></div>
-			          	</div>
-			        </div>
-			        <div class="input-group mb-3">
-			          	<input type="password" class="form-control" placeholder="Password">
-			          	<div class="input-group-append">
-				            <div class="input-group-text"><span class="fas fa-lock"></span></div>
-			          	</div>
-			        </div>
-			        <div class="row">
-			          	<div class="col-8">
-				            <div class="icheck-primary">
-				              	<input type="checkbox" id="remember">
-				              	<label for="remember">
-				                	Remember Me
-				              	</label>
-				            </div>
-			          	</div>
-			          	<div class="col-4"><button class="btn btn-primary btn-block sig-in">Ingresar</button></div>
-			        </div>
-	      		</form> -->
-	      		<!-- <p class="mb-0"><a href="#" class="text-center">Registrarse</a></p> -->
 	    	</div>
 	  	</div>
 	</div>
@@ -103,24 +74,18 @@
 <script src="{{asset('adminlte3/plugins/jquery/jquery.min.js')}}"></script>
 <!-- validate -->
 <script src="{{asset('adminlte3/plugins/jquery-validation/jquery.validate.min.js')}}"></script>
-
 <!-- Bootstrap 4 -->
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte3/dist/js/adminlte.min.js')}}"></script>
+<!-- helper -->
+<script src="{{asset('js/helper.js')}}"></script>
 <script>
 	$(document).ready( function () {
 		initValidate();
         $('.overlayPagina').css("display","none");
     } );
-    // function ingresar()
-    // {
-    // 	window.location.href = "{{url('home/home')}}";
-    // }
     
-    // $('.entrar').on('click',function(){
-    // 	alert('enviar data desde entrar')
-    // });
     $('.sig-in').on('click',function(){
         if($('#fvlogin').valid()==false)
         {return;}
@@ -155,13 +120,8 @@
     function rules()
     {
         return {
-            usuario: {
-                required: true,
-            },
-            password: {
-                required: true,
-            },
-            
+            usuario: {required: true,},
+            password: {required: true,},
         };
     }
     function initValidate()

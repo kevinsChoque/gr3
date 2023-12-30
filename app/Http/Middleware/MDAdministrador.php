@@ -29,6 +29,10 @@ class MDAdministrador
             return redirect('login/login');
         }
         $response = $next($request);
+        // Deshabilitar la caché en la respuesta
+        $response->headers->set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', 'Sat, 01 Jan 2000 00:00:00 GMT');
         return $response;
     }
 }

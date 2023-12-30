@@ -24,11 +24,6 @@
                     Session::get('usuario')->usuario:
                     '--';
             }})
-            ({{
-                Session::has('usuario')?
-                    Session::get('usuario')->idUsu:
-                    '--';
-            }})
             {{
                 Session::has('usuario')?
                     Session::get('usuario')->nombre.' '.Session::get('usuario')->apellidoPaterno.' '.Session::get('usuario')->apellidoMaterno:

@@ -78,10 +78,10 @@ class UsuarioController extends Controller
                 return response()->json(['estado' => false, 'message' => 'El usuario : '.$r->usuario.' ya fue registrado.']); 
         }
         // se verifica si cambio la contraseña, si lo iso reemplaza la anterior caso contrario continua con la misma
-        if($r->password!=null)
-        {
+        if($r->password!==null)
             $r->merge(['password' => Hash::make($r->password)]);
-        }
+        else
+            $r->merge(['password' => $tUse->password]);
         // seteamos el request con la fecha de actualizacion y procedemos a guardar
         $r->merge(['fa' => Carbon::now()]);
         $tUse->fill($r->all());

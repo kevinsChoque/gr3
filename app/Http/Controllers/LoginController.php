@@ -36,12 +36,12 @@ class LoginController extends Controller
     public function siginpro(Request $r)
     {
         $tPro = TProveedor::where('usuario',$r->usuario)->first();
-        // validacion del proveedor para ver si esta inactivo o eliminado
-        if($tPro->estado=='0' || $tPro->estadoProveedor=='0')
-        {   return response()->json(['estado' => false, 'message' => 'El proveedor '.$r->usuario.' no cuenta con acceso al sistema.']);}
         // validacion del proveedor para ver si existe
         if($tPro==null)
         {   return response()->json(['estado' => false, 'message' => 'El usuario '.$r->usuario.' no se encuentra registrado.']);}
+        // validacion del proveedor para ver si esta inactivo o eliminado
+        if($tPro->estado=='0' || $tPro->estadoProveedor=='0')
+        {   return response()->json(['estado' => false, 'message' => 'El proveedor '.$r->usuario.' no cuenta con acceso al sistema.']);}
         // validacion del proveedor para ver si la contraseña es la correcta
         if(!Hash::check($r->password, $tPro->password)) 
         {   return response()->json(['estado' => false, 'message' => 'La contraseña es incorrecta.']);}

@@ -201,7 +201,7 @@
     {
         jQuery.ajax(
         { 
-            url: "{{ url('proveedor/editar') }}",
+            url: "{{ url('panelAdm/paProveedor/editar') }}",
             data: {id:"{{Session::get('proveedor')->idPro}}"},
             method: 'post',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},

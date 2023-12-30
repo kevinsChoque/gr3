@@ -82,7 +82,7 @@ function initValidateItem()
         }
     });
 }
-funcion para guardar el registro en la tabla de los items
+// funcion para guardar el registro en la tabla de los items
 function guardarItem()
 {
     if($('#fvitem').valid()==false)

@@ -134,9 +134,10 @@ function showDataCotizacion(r)
     $('.concepto').html(r.cot.concepto);
     $('.descripcion').html(r.cot.descripcion);
     $('.estadoCotizacion').html(estateCotizacion);
+    let path = "{{ route('ver-archivo') }}";
     let dir = $('.fileCotizacion').attr('href');
     $('.fileCotizacion').html('<i class="fa fa-file-pdf fa-lg"></i>');
-    $('.fileCotizacion').attr('href',dir+'/'+r.cot.archivo);
+    $('.fileCotizacion').attr('href',path+'/'+r.cot.archivo);
     let preVisualizador = "<embed src='{{asset('/cotizacion/archivo')}}/"+r.cot.archivo+"' id='pdfViewer' class='w-100 h-100'>";//este es el que ase embebida del documento con push
     $('#pdfViewer').attr('src',dir+'/'+r.cot.archivo);
     // var estees = "<embed src='http://localhost/grc/public/cotizacion/archivo/1699541524_Cotizaciones(1).pdf' id='pdfViewer' class='w-100 h-100'>";

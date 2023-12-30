@@ -56,4 +56,9 @@ class PaProveedorController extends Controller
         else
             return response()->json(['estado' => false, 'message' => 'Ocurrio un error.']);
     }
+    public function actEditar(Request $r)
+    {
+        $registro = TProveedor::find($r->id);
+        return response()->json(["data"=>$registro]);
+    }
 }

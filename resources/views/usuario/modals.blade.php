@@ -235,6 +235,7 @@ $(document).ready( function () {
     }, "Este campo debe contener solo letras.");
     // inicializacion del formulario fvusuario con sus reglas correspondientes
     initFv('fvusuario',rules());
+    initFv('efvusuario',erules());
 });
 $('.guardar').on('click',function(){
     guardar();
@@ -291,6 +292,18 @@ function rules()
         apellidoMaterno: {required: true,lettersOnly: true},
         usuario: {required: true,},
         password: {required: true,},
+        tipo: {required: true,},
+        celular: {required: true,minlength: 9}
+    };
+}
+function erules()
+{
+    return {
+        dni: {required: true,digits: true,minlength: 8},
+        nombre: {required: true,lettersOnly: true},
+        apellidoPaterno: {required: true,lettersOnly: true},
+        apellidoMaterno: {required: true,lettersOnly: true},
+        usuario: {required: true,},
         tipo: {required: true,},
         celular: {required: true,minlength: 9}
     };

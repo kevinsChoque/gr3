@@ -179,32 +179,37 @@
     function loadCotizacion(id)
     {
         jQuery.ajax({
-            url: "{{ url('cotizacion/show') }}",
+            url: "{{ url('cotizacion/verCotizacion') }}",
+            // url: "{{ url('cotizacion/show') }}",
             method: 'POST', 
             data: {id:id},
             dataType: 'json',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
+                // console.log(r);
                 $('#idCot').val(r.data.idCot);
                 $('#numeroCotizacion').val(r.data.numeroCotizacion);
                 $('#tipo').val(r.data.tipo);
                 $('#documento').val(r.data.documento);
                 $('#fechaCotizacion').val(r.data.fechaCotizacion);
                 $('#horaCotizacion').val(r.data.horaCotizacion);
-                console.log(r.data.fechaFinalizacion);
+                
                 $('#fechaFinalizacion').val(r.data.fechaFinalizacion);
                 $('#horaFinalizacion').val(r.data.horaFinalizacion);
                 $('#concepto').val(r.data.concepto);
                 $('#descripcion').val(r.data.descripcion);
                 $('#file').val(r.data.file);
                 $('#estadoCotizacion').val(r.data.estadoCotizacion);
-                var dir = $('.fileCotizacion').attr('href');
-                $('.fileCotizacion').attr('href',dir+'/'+r.data.archivo);
+                // $('.fileCotizacion').attr('href');
+                let direccion = $('.fileCotizacion').attr('href');
+                let path = "{{ route('ver-archivo') }}";
+                $('.fileCotizacion').attr('href',path+'/'+r.data.archivo);
+                // $('.fileCotizacion').attr('href',direccion+'/'+r.data.archivo);
                 $('.overlayRegistros').css("display","none");
                 $('#mEditar').modal('show');
             },
             error: function (xhr, status, error) {
-                alert('salio un error');
+                msgRee('Algo salio mal, porfavor contactese con el Administrador');
             }
         });
     }

@@ -185,6 +185,7 @@ function editar(id)
 }
 function addItems(id)
 {
+    // alert(id)
     idCot = id;
     $('#mAddItems').modal('show');
     loadCotizacionMai(id);
