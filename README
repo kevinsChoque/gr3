@@ -1,0 +1,36 @@
+*********************************************************
+    ***************** BASE DE DATOS ******************
+*********************************************************
+- La base de datos se encuentra en gr/BASE DE DATOS/gr_cotizaciones_review.sql
+- La bd tiene que ser creada con el cotegamiento utf8-spanish-ci
+- conexion: La conexion se encuentra en el archivo gr/.env
+
+- Version php: 8.1
+
+*********************************************************
+    ***************** INDICACIONES ******************
+*********************************************************
+- El usuario administrador tiene acceso a la creacion de usuarios tipo administrador y cotizador
+- Las credenciales del usuario adminnistrador son
+
+- USUARIO PRINCIPAL: admin
+- CLAVE: admin
+
+*********************************************************
+    ***************** CLONAR ******************
+*********************************************************
+Para realizar la clonacion es necesario seguir los siguiente comandos
+- git clone --repositorio--
+- git php artisan key:generate
+- composer update
+
+*********************************************************
+    ***************** EMAIL ******************
+*********************************************************
+- Para la configuracion de envio de correos se ingresa al archivo gr/.env
+- Este archivo contendra las credenciales como se muestra a continuacion
+MAIL_USERNAME=gobierno.regional.apurimac.cra@gmail.com
+MAIL_PASSWORD=fzzjnyuxirqnsfbj
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="gobierno.regional.apurimac.cra@gmail.com"
+

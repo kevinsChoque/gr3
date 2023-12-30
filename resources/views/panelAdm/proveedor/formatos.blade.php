@@ -192,8 +192,8 @@
     $(document).ready( function () {
         $('.overlayPagina').css("display","none");
         showDj();
-        // $('.overlayRegistros').css("display","none");
     });
+    // esta funcion es para orevisualizar el pdf del cci
     function showCci()
     {
         $('.banerPdf').css('display','flex');
@@ -203,10 +203,9 @@
             url: "{{route('saveCciDel')}}",
             method: 'get',
             success: function(r) {
-                console.log(r);
                 var dir = "{{route('formatos-file')}}/"+r.pdf;
                 $('#pdfViewer').attr('src',dir);
-                // $('.banerPdf').remove();
+                
                 $('.banerPdf').css('display','none');
                 $('.contentPreview').css('display','block');
                 $('.overlayRegistros').css("display","none");
@@ -216,6 +215,7 @@
             }
         });
     }
+    // esta funcion es para previsualizar la declaracion jurada
     function showDj()
     {
         $('.banerPdf').css('display','flex');
@@ -225,10 +225,9 @@
             url: "{{route('saveDjDel')}}",
             method: 'get',
             success: function(r) {
-                console.log(r);
                 var dir = "{{route('formatos-file')}}/"+r.pdf;
                 $('#pdfViewer').attr('src',dir);
-                // $('.banerPdf').remove();
+                
                 $('.banerPdf').css('display','none');
                 $('.contentPreview').css('display','block');
                 $('.overlayRegistros').css("display","none");
@@ -238,6 +237,7 @@
             }
         });
     }
+    // esta funcion es para previsualizar el anexo 5
     function showAnexo5()
     {
         $('.banerPdf').css('display','flex');
@@ -247,10 +247,9 @@
             url: "{{route('saveAnexo5Del')}}",
             method: 'get',
             success: function(r) {
-                console.log(r);
                 var dir = "{{route('formatos-file')}}/"+r.pdf;
                 $('#pdfViewer').attr('src',dir);
-                // $('.banerPdf').remove();
+                
                 $('.banerPdf').css('display','none');
                 $('.contentPreview').css('display','block');
                 $('.overlayRegistros').css("display","none");

@@ -5,7 +5,6 @@
         <div class="row mb-2">
             <div class="col-sm-6"><h1 class="m-0"></h1></div>
             <div class="col-sm-6">
-                <!-- <a href="{{url('panelAdm/paProveedor/changePassword')}}" class="btn btn-success float-right"><i class="fa fa-lock"></i> Cambiar contraseña</a> -->
                 <button type="button" class="btn btn-success float-right" data-toggle="modal" data-target="#modalChangePassword">
                     <i class="fa fa-lock"></i> Cambiar contraseña
                 </button>
@@ -43,14 +42,12 @@
     </div>
 </div>
 @endif
-<!-- <section class="content"> -->
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-3">
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
                     <div class="text-center">
-                        <!-- <img class="profile-user-img img-fluid img-circle" src="https://adminlte.io/themes/v3/dist/img/user4-128x128.jpg" alt="User profile picture"> -->
                         <img class="profile-user-img img-fluid img-circle" src="{{asset('img/panelAdm/iconoProveedor.jpg')}}" alt="User profile picture">
                     </div>
                     <h3 class="profile-username text-center nombreProveedor">--</h3>
@@ -66,7 +63,6 @@
                             <p class="text-muted text-center">Cabe señalar que su usuario sera su RUC</p>
                         </li>
                     </ul>
-                    <!-- <a href="#" class="btn btn-primary btn-block"><b>Cambiar Contraseña</b></a> -->
                     <button type="button" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modalChangePassword">
                         <i class="fa fa-lock"></i> Cambiar Contraseña
                     </button>
@@ -74,9 +70,6 @@
             </div>
         </div>
         <div class="col-md-9">
-                <!-- <div class="overlay overlayRegistros">
-                    <i class="fas fa-3x fa-sync-alt fa-spin"></i>
-                </div> -->
             <div class="invoice p-3 mb-3">
                 <div class="row">
                     <div class="col-12">
@@ -161,35 +154,22 @@
                         </div>
                     </div>
                 </div>
-                <!-- Mensaje text -->
+                
                 <div class="col-12">
                     <hr>
                 </div>
                 <div class="row no-print">
                     <div class="col-12">
-                        <!-- <button href="invoice-print.html" rel="noopener" target="_blank" class="btn btn-default">
-                            <i class="fas fa-print"></i> Imprimir
-                        </button> -->
                         <button class="btn btn-success float-right actualizarDatos">
                             <i class="fa fa-edit"></i> Actualizar Datos
                         </button>
-                        <!-- <button type="button" class="btn btn-primary float-right" style="margin-right: 5px;">
-                            <i class="fas fa-download"></i> Generate PDF
-                        </button> -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- </section> -->
-<!-- ---------------------------------------------------------------- -->
-<!-- ---------------------------------------------------------------- -->
-<!-- ---------------------------------------------------------------- -->
-<!-- ---------------------------------------------------------------- -->
-<!-- ---------------------------------------------------------------- -->
-<!-- ---------------------------------------------------------------- -->
-
+<!-- se incluye los modales de cambio de contraseña y actualizacion de datos -->
 @include('panelAdm.proveedor.mChangePassword')
 @include('panelAdm.proveedor.mActualizarDatos')
 <script>
@@ -202,9 +182,6 @@
         }, "Este campo debe contener solo letras.");
         $('.containerDelete').remove(); //esto se eliminara despues que limpie todo
         fillProveedor();
-        // initFv('fvproveedor',rules());
-
-        // $('.overlayRegistros').css("display","none");
     });
     $('.tipoPersona').on('change',function(){
         changeTipoPersona($(this).val());
@@ -218,9 +195,10 @@
         fillProveedor();
         $('#modalActualizarDatos').modal('show');
     }
+    // nos muestra los datos del proveedor
+    // como tambien los datos que faltan actualizar
     function fillProveedor()
     {
-        // {{Session::get('proveedor')->idPro}}
         jQuery.ajax(
         { 
             url: "{{ url('proveedor/editar') }}",
@@ -228,24 +206,18 @@
             method: 'post',
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function(r){
-                console.log(r);
                 cleanFv('fvproveedor');
                 idPro = r.data.idPro;
                 $('#fvproveedor #tipoPersona').val(r.data.tipoPersona===null?'0':r.data.tipoPersona);
                 $('#fvproveedor #numeroDocumento').val(r.data.numeroDocumento);
                 $('#fvproveedor #direccion').val(r.data.direccion);
                 $('#fvproveedor #activo').val(r.data.activo===null?'2':r.data.activo);
-                console.log('-----habido------------------------');
-                console.log(r.data.habido);
-                console.log('-----habido------------------------');
                 $('#fvproveedor #habido').val(r.data.habido===null?'2':r.data.habido);
                 $('#fvproveedor #correo').val(r.data.correo);
                 $('#fvproveedor #celular').val(r.data.celular);
                 $('#fvproveedor #usuario').val(r.data.usuario);
                 $('#fvproveedor #banco').val(r.data.banco);
                 $('#fvproveedor #cci').val(r.data.cci);
-                // --------------------
-
                 
                 $('.rucProveedor').html('RUC: '+r.data.numeroDocumento);
                 $('.usuarioProveedor').html(r.data.numeroDocumento);
@@ -261,17 +233,11 @@
 
                 fecha = new Date(r.data.fr);
                 fechaFormat = `${fecha.getDate()} de ${obtenerNombreMes(fecha.getMonth() + 1)} de ${fecha.getFullYear()}`;
-                console.log(fechaFormat);
-                // <i class="fa fa-calendar-alt"></i> 
+                
                 $('.fechaRegistro').html('Fecha Registro: '+fechaFormat);
-                // amPersona
-                // estadoSunat
-                // --------------------
 
                 if(r.data.tipoPersona=='PERSONA JURIDICA')
                 {
-                    // --------------
-                    
                     $('.nombreProveedor').html(r.data.razonSocial);
                     $('.dniPersona').html(dataIncompleta(novDato(r.data.dniRep)));
                     $('.nombrePersona').html(dataIncompleta(novDato(r.data.nombreRep)));
@@ -279,13 +245,12 @@
                     $('.apPersona').html(dataIncompleta(novDato(r.data.apellidoPaternoRep)));
                     $('.amPersona').html(dataIncompleta(novDato(r.data.apellidoMaternoRep)));
                     
-                    // --------------
                     $('#fvproveedor .razonSocial').rules('add', {required: true});
                     $('#fvproveedor .nombre').rules('remove', 'required');
                     $('#fvproveedor .apellidoPaterno').rules('remove', 'required');
                     $('#fvproveedor .apellidoMaterno').rules('remove', 'required');
                     $('#fvproveedor .pn').val('');
-                    // --
+                    
                     $('#fvproveedor .razonSocial').val(r.data.razonSocial);
                     $('#fvproveedor #dniRep').val(r.data.dniRep);
                     $('#fvproveedor #nombreRep').val(r.data.nombreRep);
@@ -298,8 +263,6 @@
                 }
                 else
                 {
-                    // --------------
-                    
                     $('.nombreProveedor').html(
                         r.data.nombre+' '+
                         r.data.apellidoPaterno+' '+
@@ -310,13 +273,13 @@
                     $('.direccionPersona').html(dataIncompleta(novDato(r.data.direccion)));
                     $('.apPersona').html(dataIncompleta(novDato(r.data.apellidoPaterno)));
                     $('.amPersona').html(dataIncompleta(novDato(r.data.apellidoMaterno)));
-                    // -------------
+                    
                     $('#fvproveedor .nombre').rules('add', {required: true});
                     $('#fvproveedor .apellidoPaterno').rules('add', {required: true});
                     $('#fvproveedor .apellidoMaterno').rules('add', {required: true});
                     $('#fvproveedor .razonSocial').rules('remove', 'required');
                     $('#fvproveedor .pj').val('');
-                    // --
+                    
                     $('#fvproveedor .nombre').val(r.data.nombre);
                     $('#fvproveedor .apellidoPaterno').val(r.data.apellidoPaterno);
                     $('#fvproveedor .apellidoMaterno').val(r.data.apellidoMaterno);
@@ -325,7 +288,6 @@
                     $('.dataRepresentante').css('display','none');
                 }
                 $('.overlayPagina').css("display","none");
-                // $('.overlayRegistros').css("display","none");
             }
         });
     }
@@ -333,8 +295,5 @@
     {
         return data == '--'?'<span class="badge badge-warning">Incompleto</span>':data;
     }
-    
-    
-    
 </script>
 @endsection

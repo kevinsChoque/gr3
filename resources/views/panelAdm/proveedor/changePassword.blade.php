@@ -19,7 +19,6 @@
 <div class="container-fluid">
     <div class="card">
         <div class="overlay overlayRegistros">
-            <!-- <div class="spinner"></div> -->
             <i class="fas fa-3x fa-sync-alt fa-spin"></i>
         </div>
     	<div class="card-body">
@@ -45,12 +44,6 @@
                     </div>
                 </div>
     		</div>
-            <!-- <div class="col-lg-12">
-                <div class="callout callout-info">
-                    <h5>Debe de tomar en cuenta!</h5>
-                    <p>La .</p>
-                </div>
-            </div>  --> 
             </form>
     	</div>
         <div class="card-footer py-1 border-transparent">
@@ -62,6 +55,7 @@
     localStorage.setItem("sba",3);
     var flip=0;
     $(document).ready( function () {
+        // validacion personalizada para verificar la igualdad de las contraseñas
         $.validator.addMethod("equalToPassword", function (value, element) {
             return value === $("#password").val();
         }, "Las contraseñas no coinciden");
@@ -77,21 +71,15 @@
         return {
             password: {required: true,minlength: 8},
             repassword: {required: true,minlength: 8,equalToPassword: true},
-            // dniRep: {digits: true,minlength: 8},
-            // nombreRep: {lettersOnly: true},
-            // apellidoPaternoRep: {lettersOnly: true},
-            // apellidoMaternoRep: {lettersOnly: true},
-            // cci: {required: true,minlength: 20},
-            // celular: {required: true,minlength: 9}
         };
     }
+    // funcio para guardar los datos del proveedor
     function save()
     {
-        // alert('cascs')
         if($('#fvproveedor').valid()==false)
         {return;}
         var formData = new FormData($("#fvproveedor")[0]);
-        // alert('paso la val')
+        
         $('.save').prop('disabled',true);
         $( ".overlayRegistros" ).toggle( flip++ % 2 === 0 );
         jQuery.ajax(

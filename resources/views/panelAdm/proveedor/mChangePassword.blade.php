@@ -42,6 +42,7 @@
     localStorage.setItem("sba",3);
     var flip=0;
     $(document).ready( function () {
+        // validacion personalizada para verificar la igualdad de las contraseñas
         $.validator.addMethod("equalToPassword", function (value, element) {
             return value === $("#password").val();
         }, "Las contraseñas no coinciden");
@@ -57,15 +58,15 @@
             repassword: {required: true,minlength: 8,equalToPassword: true},
         };
     }
+    // funcio para guardar los datos del proveedor
     function saveChangePassword()
     {
-        // alert('entro a contra');
         if($('#fvchangepassword').valid()==false)
         {return;}
-    // alert('llego hasta aki')
+    
         var formData = new FormData($("#fvchangepassword")[0]);
         $('.saveChangePassword').prop('disabled',true);
-        // $( ".overlayRegistros" ).toggle( flip++ % 2 === 0 );
+        
         jQuery.ajax(
         { 
             url: "{{ url('panelAdm/paProveedor/savePassword') }}",
@@ -76,11 +77,9 @@
             contentType: false, 
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function(r){
-                console.log(r);
-                // $( ".overlayRegistros" ).toggle( flip++ % 2 === 0 );
                 $('#modalChangePassword').modal('hide');
                 $('.saveChangePassword').prop('disabled',false);
-                // msjRee(r);
+                
                 msgRee(r);
             }
         });

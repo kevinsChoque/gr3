@@ -110,15 +110,6 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <!-- <div class="form-group col-lg-4">
-                                            <label class="m-0">Usuario: <span class="text-danger">*</span></label>
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
-                                                </div>
-                                                <input type="text" class="form-control input" id="usuario" name="usuario" disabled>
-                                            </div>
-                                        </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -188,7 +179,7 @@
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
                                                 </div>
-                                                <!-- <input type="text" class="form-control input" id="banco" name="banco"> -->
+                                                
                                                 <select class="form-control input" id="banco" name="banco">
                                                     <option disabled selected>Seleccione el banco</option>
                                                     <option value="BCP">Banco de Crédito del Perú (BCP)</option>
@@ -243,16 +234,12 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class="col-lg-12">
-                            <button type="button" class="btn btn-success float-right save"><i class="fa fa-save"></i> Guardar datos</button>
-                        </div> -->
                     </div>
                     </form>
                 </div>
             </div>
             <div class="modal-footer py-1 border-transparent">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Cancelar</button>
-                <!-- <button type="button" class="btn btn-success float-right saveChangePassword"><i class="fa fa-lock"></i> Cambiar contraseña</button> -->
                 <button type="button" class="btn btn-success float-right save"><i class="fa fa-save"></i> Guardar datos</button>
             </div>
         </div>
@@ -260,14 +247,13 @@
 </div>
 <script>
 $(document).ready( function () {
+    // valida personalizada solo para letras
     $.validator.addMethod("lettersOnly", function(value, element) {
         return this.optional(element) || /^[A-Za-z]+$/.test(value);
     }, "Este campo debe contener solo letras.");
-    $('.containerDelete').remove(); //esto se eliminara despues que limpie todo
-    // fillProveedor();
+    $('.containerDelete').remove(); 
+    
     initFv('fvproveedor',rules());
-    // $('.overlayPagina').css("display","none");
-    // $('.overlayRegistros').css("display","none");
 });
 function rules()
 {
@@ -294,12 +280,13 @@ $('.save').on('click',function(){
 $('.tipoPersona').on('change',function(){
     changeTipoPersona($(this).val());
 });
+// se guarda los datos
 function save()
 {
     if($('#fvproveedor').valid()==false)
     {return;}
     var formData = new FormData($("#fvproveedor")[0]);
-    // alert('paso la val')
+    
     $('.save').prop('disabled',true);
     $( ".overlayRegistros" ).toggle( flip++ % 2 === 0 );
     $('.overlayPagina').css("display","none");
@@ -313,19 +300,16 @@ function save()
         contentType: false, 
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function(r){
-            console.log(r);
-            // $( ".overlayRegistros" ).toggle( flip++ % 2 === 0 );
             $('#modalActualizarDatos').modal('hide');
-            // limpiarForm();
+            
             $('.save').prop('disabled',false);
-            // msjRee(r);
-            // $('.overlayPagina').css("display","flex");
+            
             msgRee(r);
             fillProveedor();
-            
         }
     });
 }
+// segun el tipo de persona habilita las cajas de texto
 function changeTipoPersona()
 {
     if($('.tipoPersona').val()=='PERSONA NATURAL')
@@ -352,6 +336,5 @@ function changeTipoPersona()
         $('.pj').parent().parent().css('display','block');
         $('.dataRepresentante').css('display','block');
     }
-
 }
 </script>

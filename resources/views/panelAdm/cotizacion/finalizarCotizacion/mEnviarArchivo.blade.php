@@ -79,13 +79,6 @@
                                                     </ol>
                                                 </div>
                                             </div>
-                                            <!-- <div class="col-lg-6">
-                                                <div class="alert text-center boxFile h-100" style="border: 4px dashed #000;background: #ebeff5;">
-                                                    <h5 class="font-italic font-weight-bold m-auto nameFile">ARCHIVO DE COTIZACION</h5>
-                                                    <p class="m-auto"><i class="fa fa-upload fa-lg"></i></p>
-                                                </div>
-                                                <input type="file" id="pdfAll" class="pdfFile" style="display: none;">
-                                            </div> -->
                                             <div class="col-lg-6">
                                                 <div class="alert text-center boxFile h-100 d-flex flex-column justify-content-center" style="border: 4px dashed #000;background: #ebeff5;">
                                                     <h5 class="font-italic font-weight-bold m-auto nameFile">ARCHIVO DE COTIZACION</h5>
@@ -94,7 +87,6 @@
                                                 </div>
                                                 <input type="file" id="pdfAll" class="pdfFile" style="display: none;" data-name="ARCHIVO DE COTIZACION">
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
@@ -134,7 +126,7 @@
 <script>	
     var soloPdf='false';
 $(document).ready( function () {
-    // initValidateItem();
+    
     initFv('fvsend',rules());
 });
 $('.sendCotPro').on('click',function(){
@@ -143,6 +135,7 @@ $('.sendCotPro').on('click',function(){
 $('.boxFile').on('click',function(){
     $(this).parent().find('input.pdfFile').click();
 });
+// con la funcion verificamos si archivo es pdf, caso contrario no sera posible cargarlo
 $('.pdfFile').on('change',function(){
     let nameFile = $(this).val().split('\\').pop();
     if (/\.(pdf)$/i.test(nameFile))
@@ -150,7 +143,6 @@ $('.pdfFile').on('change',function(){
         $(this).parent().find('.nameFile').html($(this).attr('data-name')+': '+nameFile);
         $(this).parent().find('i').removeClass('fa fa-upload fa-lg');
         $(this).parent().find('i').addClass('fa fa-file-pdf fa-lg');
-        // $(this).parent().find('.boxFile').css('background','#dc3545 !important');
         $(this).parent().find('.boxFile').css('border','4px solid #000');
     }
     else
@@ -161,21 +153,15 @@ $('.pdfFile').on('change',function(){
 
 });
 $('.pdfFile').on('change',function(){
-    // showBtnSend()
-    // alert('otro change');
     activarBotonSend();
 });
-// $("#mSend").on("hidden.bs.modal", function () {
-//     alert('se cerro el modal');
-//     $('.file').val('');
-//     $('.sendCotPro').css('display','none');
-// });
 
 $('.opcSeleccionado').on('click',function(){
-    // alert($(this).attr('data-selected'));
     soloPdf = $(this).attr('data-selected')=='segundo'?'true':'false';
     activarBotonSend();
 });
+// funcion que verifica si se cargaron todos los archivos dependiendo si carga uno por uno
+// o carga en un solo archivo, de esta manera habilitar el boton de envio
 function activarBotonSend()
 {
     if(soloPdf=='true')
@@ -219,10 +205,10 @@ function rules()
     //     file: {required: true,},
     // };
 }
+// funcion que envia los archivos dentro del objeto formdata,
+// se envia todos los arhcivos
 function sendCotPro()
 {
-    // if($('#fvsend').valid()==false)
-    // {return;}
     var formData = new FormData($("#fvsend")[0]);
     formData.append('idCrp', idCrp); 
     formData.append('soloPdf', soloPdf); 
@@ -232,8 +218,6 @@ function sendCotPro()
     formData.append('pdfA5', $('#pdfA5')[0].files[0]);
     formData.append('pdfAll', $('#pdfAll')[0].files[0]);
     
-    // formData.append('file', $('#archivo')[0].files.length>0?'true':'false');
-    // $('.sendCotPro').prop('disabled',true); 
     jQuery.ajax({
         url: "{{ url('panelAdm/paCotRecPro/subirArchivo') }}",
         method: 'POST', 
@@ -245,16 +229,11 @@ function sendCotPro()
         success: function (r) {
             if (r.estado) 
             {
-                // limpiarFormSend();
-
-
-                // procedure(r);
                 construirTabla();
                 fillRegistros();
                 $('#mSend').modal('hide');
             } 
             msjRee(r);
-            // $('.sendCotPro').prop('disabled',false); 
         },
         error: function (xhr, status, error) {
             msjSimple(false,'Algo salio mal, porfavor contactese con el Administrador.');

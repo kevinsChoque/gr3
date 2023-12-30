@@ -1,17 +1,4 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-</head>
-<body>
-	<h1>enviando credenciales</h1>
-	<p>{{$datosProveedor['usuario']}}</p>
-	<p>{{$datosProveedor['password']}}</p>
-</body>
-</html>
- -->
+
  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 
@@ -1441,27 +1428,15 @@ body.outlook p {
                                       </tr>
                                     </tbody>
                                   </table>
-                                  <!-- http://placehold.it/250x250  -->
+                                  
                                   <center data-parsed=""> <img src="https://yt3.googleusercontent.com/ytc/AIf8zZS-WsAJAJslpYPmd8KmipfPYoD5GBydlxvgZN35gA=s900-c-k-c0x00ffffff-no-rj" align="center" class="float-center" style="width: 250px;height: 250px;"> </center>
-                                  <!-- <table class="spacer">
-                                    <tbody>
-                                      <tr>
-                                        <td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td>
-                                      </tr>
-                                    </tbody>
-                                  </table> -->
+                                  
                                   <h1 style="color: black !important;">GOBIERNO REGIONAL DE APURIMAC</h1>
                                   <hr>
                                   <h4 style="text-align: left !important;width: 580px !important;padding-left: 20px !important;padding-right: 20px !important;color: #6b6b6b !important;">Hola {{$datosProveedor['nombre']}}</h4>
                                   <h4 style="text-align: justify !important;width: 580px !important;padding-left: 50px !important;padding-right: 50px !important;color: #6b6b6b !important;">Ya puedes acceder al PANEL DE COTIZACIONES DEL GOBIERNO REGIONAL DE APURIMAC. A continuación, te indicamos tus credenciales de acceso:</h4>
-                                  <!-- <table class="spacer">
-                                    <tbody>
-                                      <tr>
-                                        <td height="16px" style="font-size:16px;line-height:16px;">&#xA0;</td>
-                                      </tr>
-                                    </tbody>
-                                  </table> -->
-                                  <!-- <p class="text-center" style="text-align: left !important;width: 580px !important;color: #6b6b6b !important;">• Enlace: <strong>ENLACE</strong></p> -->
+                                  
+                                  
                                   <p class="text-center" style="text-align: left !important;width: 580px !important;color: #6b6b6b !important;padding-left: 50px !important;padding-right: 50px !important;">• Usuario : <strong style="color: black !important;">{{$datosProveedor['usuario']}}</strong></p>
                                   <p class="text-center" style="text-align: left !important;width: 580px !important;color: #6b6b6b !important;padding-left: 50px !important;padding-right: 50px !important;">• Contraseña: <strong style="color: black !important;">{{$datosProveedor['password']}}</strong></p>
                                   	<p style="text-align: left !important;display: none !important;
@@ -1486,33 +1461,7 @@ body.outlook p {
 
 										Oficina de unidad informatica. 
                                   	</p>
-                                  <!-- <p><a href="#" align="center" class="float-center" style="text-align: center !important;
-										width: 100% !important;
-										padding-left: 0 !important;
-										padding-right: 0;padding: 10px 20px 10px 20px !important;
-										font-size: 20px !important;">Reset Password</a>
-									</p> -->
-                                  <!-- <table class="button large expand">
-                                    <tr>
-                                      <td>
-                                        <table>
-                                          <tr>
-                                            <td>
-                                              	<center data-parsed=""><a href="#" align="center" class="float-center" style="text-align: center !important;
-    												width: 100% !important;
-    												padding-left: 0 !important;
-    												padding-right: 0;padding: 10px 20px 10px 20px !important;
-    												font-size: 20px !important;">Reset Password</a>
-    											</center>
-                                            </td>
-                                          </tr>
-                                        </table>
-                                      </td>
-                                      <td class="expander"></td>
-                                    </tr>
-                                  </table> -->
-                                  <!-- <hr>
-                                  <p><small>You're getting this email because you've signed up for email updates. If you want to opt-out of future emails, <a href="#">unsubscribe here</a>.</small></p> -->
+                                  
                                 </th>
                                 <th class="expander"></th>
                               </tr>
