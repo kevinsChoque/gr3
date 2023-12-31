@@ -8,9 +8,6 @@ use App\Jobs\CambiarEstadoCotizacion;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * Define the application's command schedule.
-     */
     protected function schedule(Schedule $schedule): void
     {
         // php artisan schedule:work

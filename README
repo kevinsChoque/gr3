@@ -34,3 +34,16 @@ MAIL_PASSWORD=fzzjnyuxirqnsfbj
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS="gobierno.regional.apurimac.cra@gmail.com"
 
+*********************************************************
+    ***************** COMANDO PARA CORRER EL HILO ******************
+*********************************************************
+El hilo nos sirve para verificar la fecha de finalizacion de la cotizacion,
+una vez finalize la fecha de la cotizacion, el hilo finalizara la cotizacion
+cambiando el campo estadoCotizacion en 3, los siguientes comandos nos sirve para 
+poner en run el hilo o tarea:
+- cd /
+- cd xampp/htdocs/grc(el nombre del proyecto)
+- php artisan schedule:work
+- para finalizar el hilo se realiza control + el boton C
+Para poder correr el hilo es necesario contar con composer, de preferencia en
+su ultima version.

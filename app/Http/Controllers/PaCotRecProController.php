@@ -116,6 +116,7 @@ class PaCotRecProController extends Controller
     }
     public function actSearch(Request $r)
     {
+        // dd($r->all());
         // se realiza la busqueda deacuerdo a los datos que envia de mis cotizaciones
         // estos son las cotizaciones a las cual realizo la postulacion el proveedor
         // q realizo el inicio de sesion
@@ -127,10 +128,7 @@ class PaCotRecProController extends Controller
         if(!is_null($r->tipo) && $r->tipo!=0)
         {$tipo=" AND c.tipo = '".$r->tipo."' ";}
         $p = Session::get('proveedor');
-        $sql = "SELECT c.*, p.fr AS frCrp, p.estadoCrp, p.idCrp, p.total 
-            FROM cotrecpro p
-            LEFT JOIN cotizacion c ON c.idCot = p.idCot 
-            WHERE p.idPro = ".$p->idPro.$anio.$mes.$tipo." ORDER BY p.idCrp DESC";
+        $sql = "SELECT c.*, p.fr AS frCrp, p.estadoCrp, p.idCrp, p.total FROM cotrecpro p LEFT JOIN cotizacion c ON c.idCot = p.idCot WHERE p.idPro = '".$p->idPro."' ".$anio.$mes.$tipo." ORDER BY p.idCrp DESC";
         $registros=DB::select($sql);
         return response()->json(["data"=>$registros]);
     }
