@@ -27,12 +27,7 @@ class VerifyDate extends Command
      */
     public function handle()
     {
-        // $r = TCotizacion::find(25);
-        // $r->descripcion = 'csa';
-        // $r->save();
-
         $cotizacionesVencidas = TCotizacion::where('fechaFinalizacion', '<', Carbon::now()->toDateString())->get();
-
         foreach ($cotizacionesVencidas as $cotizacion) 
         {
             $cotizacion->estadoCotizacion = '3';

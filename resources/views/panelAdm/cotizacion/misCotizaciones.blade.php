@@ -229,7 +229,31 @@ function fillRegistros()
 function showArchivos(id)
 {
     idCrp = id;
-    $('#mArchivos').modal('show');
+    // $('#mArchivos').modal('show');
+    // $('#tEntrega').val('6');
+    // $('#tValidez').val('66');
+    // $('#tGarantia').val('666');
+    // $('#idCot').val(id);
+    jQuery.ajax(
+    { 
+        url: "{{ url('panelAdm/cotProLlenada/show') }}",
+        method: 'post',
+        data: {idCrp:id},
+        dataType: 'json',
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function(r){
+            console.log(r)
+            $('#tEntrega').val(r.data.timeEntrega);
+            $('#tValidez').val(r.data.timeValidez);
+            $('#tGarantia').val(r.data.timeGarantia);
+            $('#idCot').val(id);
+            $('#mArchivos').modal('show');
+        },
+        error: function (xhr, status, error) {
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
+            // $('.guardar').prop('disabled',false);
+        }
+    });
 }
 function mSend(id)
 {

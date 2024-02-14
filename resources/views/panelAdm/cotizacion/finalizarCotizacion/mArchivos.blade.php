@@ -12,9 +12,21 @@
     				<div class="row">
                         <div class="col-lg-6 col-12">
                             <div class="info-box">
-                                <a href="{{route('cotizacion-llenada')}}" target="_blank" class="info-box-icon bg-light shadow">
+                                
+                                <!-- <a href="{{route('cotizacion-llenada')}}" target="_blank" class="info-box-icon bg-light shadow">
+                                    <i class="fa fa-download"></i>
+                                </a> -->
+                                <!-- cotProLlenada
+                                paCotRecPro -->
+                                <!-- <a href="{{ url('panelAdm/cotProLlenada/generarCot') }}" target="_blank" class="info-box-icon bg-light shadow">
+                                    <i class="fa fa-download"></i>
+                                </a> -->
+                                <a href="#" target="_blank" class="info-box-icon bg-light shadow showCp">
                                     <i class="fa fa-download"></i>
                                 </a>
+                                <!-- <a href="{{ url('generarFilePdf') }}" target="_blank" class="info-box-icon bg-light shadow">
+                                    <i class="fa fa-download"></i>
+                                </a> -->
                                 <div class="info-box-content">
                                     <span class="info-box-text">Descargar</span>
                                     <span class="info-box-number">Cotizacion Llenada</span>
@@ -63,6 +75,16 @@
         </div>
     </div>
 </div>
+<form id="downloadCotizacion" action="{{ url('panelAdm/cotProLlenada/generarCot') }}" method="POST" target="_blank">
+    @csrf
+    <input type="hidden" id="data" name="data">
+    <input type="hidden" id="tEntrega" name="tEntrega">
+    <input type="hidden" id="tValidez" name="tValidez">
+    <input type="hidden" id="tGarantia" name="tGarantia">
+    <input type="hidden" id="idCot" name="idCot">
+</form>
 <script>	
-
+$('.showCp').on('click',function(){
+    $('#downloadCotizacion').submit();
+})
 </script>

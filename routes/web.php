@@ -26,6 +26,7 @@ use App\Http\Controllers\FilesCotizacionController;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\CotLlenadaController;
 use App\Http\Controllers\FormatosController;
+use App\Http\Controllers\CotProLlenadaController;
 // middleware
 use App\Http\Middleware\MDAdministrador;
 Route::middleware([MDAdministrador::class])->group(function () {
@@ -138,7 +139,8 @@ Route::post('panelAdm/paCotRecPro/guardar',[PaCotRecProController::class, 'actGu
 Route::post('panelAdm/paCotRecPro/listar',[PaCotRecProController::class, 'actListar']);
 Route::post('panelAdm/paCotRecPro/search',[PaCotRecProController::class, 'actSearch']);
 Route::post('panelAdm/paCotRecPro/subirArchivo',[PaCotRecProController::class, 'actSubirArchivo']);
-Route::post('panelAdm/paCotRecPro/generarCot',[PaCotRecProController::class, 'actGenerarCot']);
+Route::post('panelAdm/paCotRecPro/generarCot',[PaCotRecProController::class, 'actGenerarCot']);//this rut
+Route::get('generarFilePdf',[PaCotRecProController::class, 'actGenerarCot']);
 Route::get('panelAdm/paCotRecPro/{idPro?}/{idCrp?}/{nombreArchivo?}',[PaCotRecProController::class, 'verArchivo'])->name('cotRecPro-archivo');
 // proveedor
 Route::get('panelAdm/paProveedor/datos', function () {return view('panelAdm.proveedor.datos');});
@@ -168,4 +170,8 @@ Route::get('homeAdmin/datos',[HomeAdminController::class, 'actDatos']);
 Route::get('homeAdmin/montoCotSegunTipoMes',[HomeAdminController::class, 'actMontoCotSegunTipoMes']);
 Route::get('homeAdmin/cantCotEstadoMes',[HomeAdminController::class, 'actCantCotEstadoMes']);
 
+// new cot llenada
+
+Route::post('panelAdm/cotProLlenada/generarCot',[CotProLlenadaController::class, 'actGenerarCot']);
+Route::post('panelAdm/cotProLlenada/show',[CotProLlenadaController::class, 'actShow']);
 

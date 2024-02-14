@@ -10,31 +10,10 @@ class Kernel extends ConsoleKernel
 {
     protected function schedule(Schedule $schedule): void
     {
-        // php artisan schedule:work
-
-        // $schedule->command('inspire')->hourly();
-
-        // $schedule->command('inspire')->everyTenSeconds();
-        echo('kernel');
-        // CambiarEstadoCotizacion::dispatch();
-        // $schedule->job(new CambiarEstadoCotizacion())->everyFiveSeconds();
-
-
-
-
-
-
-        // --------------------
-        // este es test, se usa para no esperar mucho
+        echo('start thread');
         $schedule->command('app:verify-date')->everyFiveSeconds();
-        // este es el oficial
-        // $schedule->command('app:verify-date')->everyThirtyMinutes();
-        echo('--- end');
+        echo('end thread');
     }
-
-    /**
-     * Register the commands for the application.
-     */
     protected function commands(): void
     {
         $this->load(__DIR__.'/Commands');

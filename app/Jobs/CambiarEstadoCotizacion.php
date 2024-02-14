@@ -14,30 +14,13 @@ class CambiarEstadoCotizacion implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
     public function __construct()
     {
-        //
     }
-
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
-        // echo('llego aki');
         $r = TCotizacion::find(25);
-        $r->descripcion = 'csa';
+        // $r->descripcion = 'test';
         $r->save();
-        
-        // $cotizacionesVencidas = TCotizacion::where('fechaFinalizacion', '<', now())->get();
-
-        // foreach ($cotizacionesVencidas as $cotizacion) 
-        // {
-        //     $cotizacion->estadoCotizacion = '3';
-        //     $cotizacion->save();
-        // }    
     }
 }
