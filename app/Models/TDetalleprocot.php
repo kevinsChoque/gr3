@@ -21,5 +21,6 @@ class TDetalleprocot extends Model
         'modelo', 
         'precio',
         'archivo',
+        'archivoPdf',
     ];
 }

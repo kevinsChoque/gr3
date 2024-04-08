@@ -17,6 +17,7 @@ class TSuspension extends Model
         'motivo',
         'obs', 
         'archivo',
+        'archivoPdf',
         'fechaInicio', 
         'fechaFinalizacion',
         'estadoSuspension',

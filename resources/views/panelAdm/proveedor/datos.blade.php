@@ -169,7 +169,6 @@
         </div>
     </div>
 </div>
-<!-- se incluye los modales de cambio de contraseña y actualizacion de datos -->
 @include('panelAdm.proveedor.mChangePassword')
 @include('panelAdm.proveedor.mActualizarDatos')
 <script>

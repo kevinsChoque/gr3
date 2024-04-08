@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -32,6 +33,7 @@ class PaCotRecProController extends Controller
 
     protected $totalCotizacion=0;
 
+    
 	public function saveDetalleProCot($r,$idCrp)
     {
         // funcion para guardar los detalles de la postulacion que se esta enviando
@@ -42,10 +44,10 @@ class PaCotRecProController extends Controller
             $tDpc->idDpc=Str::uuid();
             $tDpc->idCrp=$idCrp;
             $tDpc->idItm=$item['id'];
-            $tDpc->garantia=$item['garantia'];
-            $tDpc->marca=$item['marca'];
-            $tDpc->modelo=$item['modelo'];
-            $tDpc->precio=$item['precio'];
+            $tDpc->garantia=$item['garantia']==""?"":$this->encryp_mount($item['garantia']);
+            $tDpc->marca=$item['marca']==""?"":$this->encryp_mount($item['marca']);
+            $tDpc->modelo=$item['modelo']==""?"":$this->encryp_mount($item['modelo']);
+            $tDpc->precio=$item['precio']==""?"":$this->encryp_mount($item['precio']);
             if($item['archivo']!='no tiene')
             {
                 $tDpc->archivo=$idCrp.'_'.$i.'.pdf';
@@ -60,12 +62,17 @@ class PaCotRecProController extends Controller
     }
     public function actGuardar(Request $r)
     {
+        // dd(json_decode($r->items,true)['item0']['garantia']=="");
+        // dd($r->all());
         $tPro = Session::get('proveedor');
         $nombreOferta = $r->idCot.'_'.$tPro->idPro.'.pdf';
         $tRec = TRecotizacion::where('idCot',$r->idCot)->where('estadoRecotizacion','1')->first();
         if($tRec!=null)
         {   $r->merge(['idRec' => $tRec->idRec]);}
         $r->merge(['idCrp' => Str::uuid()]);
+        $r->merge(['timeEntrega' => $this->encryp_mount($r->timeEntrega)]);
+        $r->merge(['timeValidez' => $this->encryp_mount($r->timeValidez)]);
+        $r->merge(['total' => $this->encryp_mount($r->total)]);
         $r->merge(['archivo' => $nombreOferta]);
         $r->merge(['idPro' => $tPro->idPro]);
         $r->merge(['estadoCrp' => '0']);
@@ -89,6 +96,10 @@ class PaCotRecProController extends Controller
                         $ruta = Storage::putFileAs('public/ofertas/'.$tPro->idPro.'/'.$tCrp->idCrp.'/', $archivo, $nombreArchivo);
                     }
                 }
+                $r['hidPro'] = $tPro->idPro;
+                $r['hidCot'] = $r->idCot;
+                $r['hnumeroCotizacion'] = " <b>(".TCotizacion::find($r->idCot)->numeroCotizacion.")</b>";
+                $this->historial($r);
                 DB::commit();
                 return response()->json(['estado' => true, 'message' => 'El siguiente paso es para enviar los archivos, sin estos archivos no podra culminar con la COTIZACION y no se tomara en cuenta la postulacion.']);
             }
@@ -112,6 +123,18 @@ class PaCotRecProController extends Controller
             ->where('cotrecpro.idPro', $tPro->idPro)
             ->orderBy('cotrecpro.idCrp', 'desc')
             ->get();
+        // dd($registros);
+        // echo($registros[0]->total);
+        // $registros[0]->total="cambiado";
+        // dd($registros[0]->total);
+
+        $totalRegistros = count($registros);
+        for ($i = 0; $i < $totalRegistros; $i++) 
+        {   
+            $registros[$i]->total = $this->encryp_mount($registros[$i]->total);
+            // $registros[$i]->timeEntrega = $this->encryp_mount($registros[$i]->timeEntrega);
+            // $registros[$i]->timeValidez = $this->encryp_mount($registros[$i]->timeValidez);
+        }
         return response()->json(["data"=>$registros]);
     }
     public function actSearch(Request $r)
@@ -136,6 +159,13 @@ class PaCotRecProController extends Controller
     {
         // se inicializa la transaccion
     	DB::beginTransaction();
+        // verificar si existe especificaciones tednicas
+        $fichasTecnicas = TDetalleprocot::where('idCrp',$r->idCrp)->whereNotNull('archivo')->get();
+        $tCrp = TCotrecpro::find($r->idCrp);
+        $p = Session::get('proveedor');
+        $pdf = new Fpdi();
+        // dd(storage_path(),count($fichasTecnicas),$fichasTecnicas);
+
         /*
         *   si $r->soloPdf=='true' entonces significa q el proveedor envio la cotizacion en un solo archivo
         *   en donde esta la cotizacion llenada, anexo 5, declaracion jurada, cci
@@ -147,32 +177,64 @@ class PaCotRecProController extends Controller
             // verificamos si se envio el archivo
         	if ($r->hasFile('pdfAll')) 
         	{
-        		$archivo = $r->file('pdfAll');
-                $nombreArchivo = time() . '_' . str_replace(' ', '',$archivo->getClientOriginalName());
-                $p = Session::get('proveedor');
-                if (Storage::put('public/ofertas/'.$p->idPro.'/'.$r->idCrp.'/' . $nombreArchivo, file_get_contents($archivo))) 
-    	        {
-                    // actualizamos la postulacion de la cotizacion como enviado
-                    $r->merge(['estadoCrp' => '1']);
-    	        	$r->merge(['archivo' => $nombreArchivo]);
-    	        	$tCrp = TCotrecpro::find($r->idCrp);
-    	        	$tCrp->fill($r->all());
-            		if($tCrp->save())
-    	        	{
-    	        		DB::commit();
-    	        		return response()->json(['estado' => true, 'message' => 'Se envio la cotizacion exitosamente.']);
-    	        	}
-    	        	else
-    	        	{
-    	        		DB::rollBack();
-    	        		return response()->json(['estado' => false, 'message' => 'Error al registrar el envio de la cotizacion.']);
-    	        	}
-    	        } 
-    	        else 
-    	        {
-    	        	DB::rollBack();
-    	        	return response()->json(['estado' => false, 'message' => 'Error al guardar el archivo de cotizacion']);
-    	        }
+                // existencia de especificaciones tecnicas
+                if(count($fichasTecnicas)!=0)
+                {
+                    $pdfall = $r->file('pdfAll');
+                    $pdf->setSourceFile($pdfall->path());
+                    for ($pagina = 1; $pagina <= $pdf->setSourceFile($pdfall->path()); $pagina++) {
+                        $tplIdx = $pdf->importPage($pagina);
+                        $pdf->AddPage();
+                        $pdf->useTemplate($tplIdx);
+                    }
+                    // juntaremos con las especificaciones tecnicas
+                    $archivosEnDirectorio = File::files(storage_path('app/public/ofertas/'.$p->idPro.'/'.$r->idCrp));
+                    foreach ($archivosEnDirectorio as $archivo) 
+                    {
+                        $rutaArchivo = $archivo->getPathname();
+                        
+                        $pdf->setSourceFile($rutaArchivo);
+                        for ($pagina = 1; $pagina <= $pdf->setSourceFile($rutaArchivo); $pagina++) {
+                            $tplIdx = $pdf->importPage($pagina);
+                            $pdf->AddPage();
+                            $pdf->useTemplate($tplIdx);
+                        }
+                    }
+                    $tempFilePath = tempnam(sys_get_temp_dir(), 'combined_pdf');
+                    $pdf->Output($tempFilePath, 'F');
+
+                    $contenido_pdf = File::get($tempFilePath);
+                    $base64_pdf = base64_encode($contenido_pdf);
+                    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(env('ALG')));
+
+                    $encriptado = openssl_encrypt($base64_pdf, env('ALG'), env('KEY'), 0, $iv);
+                    $cadenaCifrada = base64_encode($iv . $encriptado);
+
+                    $r->merge(['archivoPdf' => $cadenaCifrada]);
+                }
+                else
+                {
+                    $r->merge(['archivoPdf' => $this->deepFile($r->file('pdfAll'))]);
+                }
+                // $p = Session::get('proveedor');
+                // actualizamos la postulacion de la cotizacion como enviado
+                $r->merge(['estadoCrp' => '1']);
+                // $tCrp = TCotrecpro::find($r->idCrp);
+                $tCrp->fill($r->all());
+                if($tCrp->save())
+                {
+                    $r['hidPro'] = $p->idPro;
+                    $r['hidCot'] = $tCrp->idCot;
+                    $r['hnumeroCotizacion'] = " <b>(".TCotizacion::find($tCrp->idCot)->numeroCotizacion.")</b>";
+                    $this->historial($r);
+                    DB::commit();
+                    return response()->json(['estado' => true, 'message' => 'Se envio la cotizacion exitosamente.']);
+                }
+                else
+                {
+                    DB::rollBack();
+                    return response()->json(['estado' => false, 'message' => 'Error al registrar el envio de la cotizacion.']);
+                }
             }
             DB::rollBack();
             return response()->json(['estado' => false, 'message' => 'Ingrese un archivo de cotización.']);
@@ -180,13 +242,13 @@ class PaCotRecProController extends Controller
         else
         {
             // creamos el nombre q tendra la union de los archivos
-            $nombreArchivo = time() . '.pdf';
-            $p = Session::get('proveedor');
+            // $nombreArchivo = time() . '.pdf';
+            // $p = Session::get('proveedor');
             $pdfcll = $r->file('pdfCll');
-            $pdfdj = $r->file('pdfDj');
+            // $pdfdj = $r->file('pdfDj');
             $pdfcci = $r->file('pdfCci');
             $pdfanexo = $r->file('pdfA5');
-            $pdf = new Fpdi();
+            
             // Combinar pdfcll
             $pdf->setSourceFile($pdfcll->path());
             for ($pagina = 1; $pagina <= $pdf->setSourceFile($pdfcll->path()); $pagina++) {
@@ -195,12 +257,12 @@ class PaCotRecProController extends Controller
                 $pdf->useTemplate($tplIdx);
             }
             // Combinar pdfdj
-            $pdf->setSourceFile($pdfdj->path());
-            for ($pagina = 1; $pagina <= $pdf->setSourceFile($pdfdj->path()); $pagina++) {
-                $tplIdx = $pdf->importPage($pagina);
-                $pdf->AddPage();
-                $pdf->useTemplate($tplIdx);
-            }
+            // $pdf->setSourceFile($pdfdj->path());
+            // for ($pagina = 1; $pagina <= $pdf->setSourceFile($pdfdj->path()); $pagina++) {
+            //     $tplIdx = $pdf->importPage($pagina);
+            //     $pdf->AddPage();
+            //     $pdf->useTemplate($tplIdx);
+            // }
             // Combinar pdfcci
             $pdf->setSourceFile($pdfcci->path());
             for ($pagina = 1; $pagina <= $pdf->setSourceFile($pdfcci->path()); $pagina++) {
@@ -215,15 +277,52 @@ class PaCotRecProController extends Controller
                 $pdf->AddPage();
                 $pdf->useTemplate($tplIdx);
             }
+            // existencia de especificaciones tecnicas
+            if(count($fichasTecnicas)!=0)
+            {
+                // juntaremos con las especificaciones tecnicas
+                $archivosEnDirectorio = File::files(storage_path('app/public/ofertas/'.$p->idPro.'/'.$r->idCrp));
+                foreach ($archivosEnDirectorio as $archivo) 
+                {
+                    $rutaArchivo = $archivo->getPathname();
+                    
+                    $pdf->setSourceFile($rutaArchivo);
+                    for ($pagina = 1; $pagina <= $pdf->setSourceFile($rutaArchivo); $pagina++) {
+                        $tplIdx = $pdf->importPage($pagina);
+                        $pdf->AddPage();
+                        $pdf->useTemplate($tplIdx);
+                    }
+                }
+            }
             // se guarda en el path y se guarda el nombre del archivo en donde se junto los`pdfs
-            $joinPdf = storage_path('app/public/ofertas/'.$p->idPro.'/'.$r->idCrp.'/'.$nombreArchivo);
-            $pdf->Output($joinPdf, 'F');
+// ---------------------------------------
+            // Guardar el PDF combinado en un archivo temporal
+            $tempFilePath = tempnam(sys_get_temp_dir(), 'combined_pdf');
+            $pdf->Output($tempFilePath, 'F');
+
+            $contenido_pdf = File::get($tempFilePath);
+            $base64_pdf = base64_encode($contenido_pdf);
+            $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(env('ALG')));
+
+            $encriptado = openssl_encrypt($base64_pdf, env('ALG'), env('KEY'), 0, $iv);
+            $cadenaCifrada = base64_encode($iv . $encriptado);
+
+            // dd($base64_pdf);
+
+            // $joinPdf = storage_path('app/public/ofertas/'.$p->idPro.'/'.$r->idCrp.'/'.$nombreArchivo);
+            // $pdf->Output($joinPdf, 'F');
+            
             $r->merge(['estadoCrp' => '1']);
-            $r->merge(['archivo' => $nombreArchivo]);
-            $tCrp = TCotrecpro::find($r->idCrp);
+            $r->merge(['archivoPdf' => $cadenaCifrada]);
+            // $r->merge(['archivo' => $nombreArchivo]);
+            // $tCrp = TCotrecpro::find($r->idCrp);
             $tCrp->fill($r->all());
             if($tCrp->save())
             {
+                $r['hidPro'] = $p->idPro;
+                $r['hidCot'] = $tCrp->idCot;
+                $r['hnumeroCotizacion'] = " <b>(".TCotizacion::find($tCrp->idCot)->numeroCotizacion.")</b>";
+                $this->historial($r);
                 DB::commit();
                 return response()->json(['estado' => true, 'message' => 'Se envio la cotizacion exitosamente.']);
             }

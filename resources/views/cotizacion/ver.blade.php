@@ -99,12 +99,14 @@ function fillRegistros()
             let opciones = '';
             let opcRec = '';
             let segunEstado;
+            let opcAne = '';
             for (var i = 0; i < r.data.length; i++) 
             {
                 // solo se muestra estas opciones para lascotizaciones q estan EN PROCESO
                 if(r.data[i].estadoCotizacion=='1')
                 {
-                    opciones = '<button type="button" class="btn text-info" title="Agregar items" onclick="addItems(\''+r.data[i].idCot+'\');"><i class="fa fa-plus"></i></button>'+
+                    opciones = ''+
+                        // '<button type="button" class="btn text-info" title="Agregar items" onclick="addItems(\''+r.data[i].idCot+'\');"><i class="fa fa-plus"></i></button>'+
                         '<button type="button" class="btn text-info" title="Editar registro" onclick="editar(\''+r.data[i].idCot+'\');"><i class="fa fa-edit"></i></button>'+
                         '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar(\''+r.data[i].idCot+'\');"><i class="fa fa-trash"></i></button>';
                 }
@@ -112,6 +114,12 @@ function fillRegistros()
                 if(r.data[i].estadoCotizacion == '3')
                 {
                     opcRec = '<button type="button" class="btn text-info" onclick="showRecotizar(\''+r.data[i].idCot+'\')" title="Recotizar"><i class="fa fa-calendar-alt"></i></button>';
+                }
+                console.log(r.data[i].anexoPdf!==null);
+
+                if(r.data[i].anexoPdf!==null)
+                {
+                    opcAne = '<button type="button" class="btn text-info" onclick="showAnexos(\''+r.data[i].idCot+'\')" title="Ver anexos"><i class="fa fa-file"></i></button>';
                 }
                 let deleteColor = r.data[i].estado==0?'background: rgba(157,23,22,.5)':'';
                 opciones = r.data[i].estado==0?'':opciones;
@@ -129,13 +137,15 @@ function fillRegistros()
                     '<td class="align-middle text-center">' + 
                         '<div class="btn-group btn-group-sm" role="group">'+
                             '<button type="button" class="btn text-info" title="Ver cotizacion" onclick="showCotizacion(\''+r.data[i].idCot+'\')"><i class="fa fa-eye"></i></button>'+
-                            '<button type="button" class="btn text-info" title="Ver archivo" onclick="showFile(\''+r.data[i].archivo+'\')"><i class="fa fa-file-pdf"></i></button>'+
+                            '<button type="button" class="btn text-info" title="Ver archivo" onclick="showFile(\''+r.data[i].idCot+'\')"><i class="fa fa-file-pdf"></i></button>'+
+                            opcAne +
                             opcRec +
                             opciones +
                         '</div>'+
                     '</td></tr>';
                 opciones='';
                 opcRec='';
+                opcAne='';
             }
             $('#data').html(html);
             initDatatable('registros');
@@ -148,10 +158,40 @@ function segunEstadoCotizacion(cot)
     let opcion = cot.estadoCotizacion == '5' || cot.estadoCotizacion == '2' || cot.estadoCotizacion == '3' ? '':'<button class="btn text-info" onclick="changeEstadoCot(\''+cot.idCot+'\','+cot.numeroCotizacion+')"><i class="fa fa-edit"></i></button>';
     return estadoCotizacion(cot.estadoCotizacion) + opcion;
 }
-function showFile(archivo)
+function showFile(idCot)
 {
-    window.open("{{ route('ver-archivo') }}/" + archivo, "_blank");
+    // window.open("{{ route('ver-archivo') }}/" + archivo, "_blank");
+    jQuery.ajax({
+        url: "{{ url('cotizacion/verFile') }}",
+        method: 'post', 
+        data: {idCot:idCot},
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function (r) {
+            // console.log(r);
+            abrirArchivoBase64EnNuevaPestana(r.file,"application/pdf");
+        },
+        error: function (xhr, status, error) {
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
+        }
+    });
 }
+function showAnexos(idCot)
+{
+    jQuery.ajax({
+        url: "{{ url('cotizacion/verFileAnexo') }}",
+        method: 'post', 
+        data: {idCot:idCot},
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function (r) {
+            // console.log(r);
+            abrirArchivoBase64EnNuevaPestana(r.file,"application/pdf");
+        },
+        error: function (xhr, status, error) {
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
+        }
+    });
+}
+
 function showCotizacion(id)
 {
     $('#mCotizacion').modal('show');

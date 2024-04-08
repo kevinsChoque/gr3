@@ -15,6 +15,7 @@ class TCotizacion extends Model
     protected $fillable = [
         'idCot', 
         'idUsu',
+        'meta',
         'numeroCotizacion', 
         'tipo', 
         'unidadEjecutora',
@@ -26,6 +27,8 @@ class TCotizacion extends Model
         'concepto',
         'descripcion',
         'archivo',
+        'archivoPdf',
+        'anexoPdf',
         'estadoCotizacion',
         'estado',
         'fr',

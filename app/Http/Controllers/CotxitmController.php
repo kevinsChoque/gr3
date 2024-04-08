@@ -69,15 +69,19 @@ class CotxitmController extends Controller
     }
     public function actLoadSegunCotizacion(Request $r)
     {
-        // no muestra los items segun al id de la cotizacion
-        $registros = TItem::select('item.*','cotxitm.*','unidadmedida.nombre as nombreUm')
-            ->join('cotxitm', 'cotxitm.idItm', '=', 'item.idItm')
-            ->leftjoin('unidadmedida', 'unidadmedida.idUm', '=', 'cotxitm.idUm')
-            ->where('cotxitm.idCot',$r->idCot)
-            ->where('cotxitm.estado','1')
-            ->orderBy('cotxitm.idCi', 'asc')
+        $registros = TCotxitm::where('idCot',$r->idCot)
+            ->orderBy('fr', 'asc')
             ->get();
-        return response()->json(["data"=>$registros]);
+        return response()->json(['estado' => true,"data"=>$registros]);
+        // no muestra los items segun al id de la cotizacion
+        // $registros = TItem::select('item.*','cotxitm.*','unidadmedida.nombre as nombreUm')
+        //     ->join('cotxitm', 'cotxitm.idItm', '=', 'item.idItm')
+        //     ->leftjoin('unidadmedida', 'unidadmedida.idUm', '=', 'cotxitm.idUm')
+        //     ->where('cotxitm.idCot',$r->idCot)
+        //     ->where('cotxitm.estado','1')
+        //     ->orderBy('cotxitm.idCi', 'asc')
+        //     ->get();
+        // return response()->json(["data"=>$registros]);
     }
     
     

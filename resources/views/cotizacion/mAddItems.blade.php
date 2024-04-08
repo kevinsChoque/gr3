@@ -44,7 +44,8 @@
                     </div> 
                     <div class="col-lg-3">
                         <p class="text-sm">Archivo:
-                            <a href="{{ route('ver-archivo') }}" class="d-block fileCotizacion font-weight-bold" target="_blank">-</a>
+                            <!-- <a href="{{ route('ver-archivo') }}" class="d-block fileCotizacion font-weight-bold" target="_blank">-</a> -->
+                            <button class="showDeepFileAddItem d-block font-weight-bold text-primary" style="border: 0;"><i class="fa fa-file-pdf fa-lg"></i></button>
                         </p>
                     </div> 
                     <div class="col-lg-3">
@@ -121,6 +122,9 @@ $('.addItem').on('click',function(){
 $('.changeEstadoCotMai').on('click',function(){
     changeEstadoCotMai();
 });
+$('.showDeepFileAddItem').on('click',function(){
+    showFile(idM);
+})
 function changeEstadoCotMai()
 {
     // confirmamos el cambo de estado de EN PROCESO A PUBLICADO
@@ -240,6 +244,7 @@ function loadCotizacionMai(id)
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
             console.log(r)
+            idM = r.data.idCot;
             var estadoCot = r.data.estadoCotizacion=='1'?'Activo':
                 r.data.estadoCotizacion=='2'?'Finalizado':'Borrador';
             let estateCotizacion = estadoCotizacion(r.data.estadoCotizacion);

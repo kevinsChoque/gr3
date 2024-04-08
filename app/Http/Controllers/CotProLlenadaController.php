@@ -37,22 +37,24 @@ class CotProLlenadaController extends Controller
     {
     	$registro = TCotrecpro::where('idCrp',$r->idCrp)->first();
 		// dd($registro);
+        $registro->timeEntrega = $this->encryp_mount($registro->timeEntrega);
+        $registro->timeValidez = $this->encryp_mount($registro->timeValidez);
         return response()->json(["data"=>$registro]);
     }
     public function actGenerarCot(Request $r)
     {
         $p = Session::get('proveedor');
-		$items = TDetalleprocot::select('detalleprocot.*','cotxitm.*','item.*','unidadmedida.nombre as um','cotxitm.cantidad as cant')
+		$items = TDetalleprocot::select('detalleprocot.*','cotxitm.*','cotxitm.cantidad as cant')
 			->join('cotxitm', 'cotxitm.idCi', '=', 'detalleprocot.idItm')
-			->join('item', 'item.idItm', '=', 'cotxitm.idItm')
-			->leftjoin('unidadmedida', 'unidadmedida.idUm', '=', 'cotxitm.idUm')
 			->where('detalleprocot.idCrp',$r->idCot)
             ->get();
+        // dd($items[0]->garantia);
 
-		$cotizacion = TCotizacion::select('cotizacion.fechaCotizacion')
+		$cotizacion = TCotizacion::select('cotizacion.fechaCotizacion','cotizacion.numeroCotizacion','cotrecpro.obs')
 			->join('cotrecpro', 'cotrecpro.idCot', '=', 'cotizacion.idCot')
 			->where('cotrecpro.idCrp',$r->idCot)
             ->first();
+
         // $items = json_decode($r->data,true);
         $this->razoSocial = strtoupper($p->tipoPersona="PERSONA NATURAL"?
             $p->nombre.' '.$p->apellidoPaterno.' '.$p->apellidoMaterno:
@@ -99,14 +101,15 @@ class CotProLlenadaController extends Controller
         $pdf->SetFont('Arial','',10);
         $pdf->text(181,18,utf8_decode($diaA.'/'.$mesA.'/'.$anioA));
         $pdf->text(166,18,utf8_decode($anioA));
-        $pdf->ln(12);
+        $pdf->ln(6);
         // ------titulo
         $pdf->SetFont('Arial','B',12);
         $pdf->Cell(190,6,utf8_decode('SOLICITUD DE COTIZACION'),$marco,1,'C');
-        $pdf->ln(9);
+        $pdf->ln(6);
         // ------primera seccion
         $pdf->SetFont('Arial','',9);
-        $pdf->Rect(10, 46, 190, 35, 'D');
+        // $pdf->Rect(10, 46, 190, 35, 'D');
+        $pdf->Rect(10, 36, 190, 38, 'D');
         $pdf->Cell(3,$tam+2,'',$marco,0,'L');
         $pdf->Cell(30,$tam+2,utf8_decode('RAZON SOCIAL:'),$marco,0,'L');
         $pdf->Cell(70,$tam+2,utf8_decode('________________________________________'),$marco,0,'L');
@@ -134,18 +137,26 @@ class CotProLlenadaController extends Controller
         $pdf->Cell(3,$tam+2,'',$marco,1,'L');
 
         $pdf->Cell(3,$tam+2,'',$marco,0,'L');
-        $pdf->MultiCell(184,$tam+2, utf8_decode('Por medio de la presente sirvase cotizar los siguientes items correspondientes al cuadro de contrataciones Nro. 844 de fecha'), $marco, 'J');
+        $pdf->MultiCell(184,$tam+2, utf8_decode('Por medio de la presente sirvase cotizar los siguientes items correspondientes al cuadro de contrataciones Nro. 844 de fecha:'), $marco, 'J');
 
         $pdf->Cell(3,$tam+2,'',$marco,0,'L');
         $pdf->SetFont('Arial','B',9);
         $pdf->Cell(18,$tam+2,utf8_decode($this->fechaCotizacion),$marco,1,'L');
-        $pdf->ln(3);
+
+        $pdf->ln(1.8);
+        $pdf->Rect(10, 73, 190, 10, 'D');
+        $obs = $cotizacion->obs;
+        // $obs = $cotizacion->obs.'Por medio de la presente sirvase cotizar los siguientes items correspondientes al cuadro de contrataciones Nro. 844 de fecha: ___ Por medio de la presente sirvase cotizar los siguientes items correspondientes ala';
+        $pdf->MultiCell(190, 5, utf8_decode('OBSERVACION: '.$obs), 0);
+        // $pdf->text(120,69,strlen($obs));
+        if(strlen($obs)<106)
+        {$pdf->ln(5.4);}
         // datos del proveedor
-        $pdf->text(45,51,utf8_decode($this->razoSocial));
-        $pdf->text(140,51,utf8_decode($this->numeroDocumento));
-        $pdf->text(45,56.6,utf8_decode($this->direccion));
-        $pdf->text(115,56.6,utf8_decode($this->celular));
-        $pdf->text(154,56.6,utf8_decode($this->correo));
+        $pdf->text(45,42,utf8_decode($this->razoSocial));
+        $pdf->text(140,42,utf8_decode($this->numeroDocumento));
+        $pdf->text(45,47.6,utf8_decode($this->direccion));
+        $pdf->text(115,47.6,utf8_decode($this->celular));
+        $pdf->text(154,47.6,utf8_decode($this->correo));
         // diseño la tabla de los items
         $pdf->Rect(10, 84, 10, 129.6, 'D');
         $pdf->Rect(20, 84, 15, 129.6, 'D');
@@ -191,6 +202,9 @@ class CotProLlenadaController extends Controller
                 break;
             }
             $tam = $tam*$mul;
+            $precio = $this->encryp_mount($items[$i]['precio']);
+            $marca = empty($items[$i]['marca']) ? '-' : $this->encryp_mount($items[$i]['marca']);
+            $modelo = empty($items[$i]['modelo']) ? '-' : $this->encryp_mount($items[$i]['modelo']);
             $xPosition = $pdf->GetX();
             $yPosition = $pdf->GetY();
             $pdf->Cell(10,$tam,utf8_decode($i),$ssmarco,0,'C');
@@ -199,10 +213,10 @@ class CotProLlenadaController extends Controller
             $pdf->MultiCell(75, $tam2, utf8_decode($items[$i]['nombre'].strlen($items[$i]['nombre'])),$ssmarco);
             $pdf->SetY($yPosition);
             $pdf->SetX($xPosition+115);
-            $pdf->Cell(15,$tam,utf8_decode($items[$i]['marca']),$ssmarco,0,'C');
-            $pdf->Cell(20,$tam,utf8_decode($items[$i]['modelo']),$ssmarco,0,'C');
-            $pdf->Cell(20,$tam,number_format($items[$i]['precio'],2),$ssmarco,0,'C');
-            $st = $items[$i]['cant']*$items[$i]['precio'];
+            $pdf->Cell(15,$tam,utf8_decode($marca),$ssmarco,0,'C');
+            $pdf->Cell(20,$tam,utf8_decode($modelo),$ssmarco,0,'C');
+            $pdf->Cell(20,$tam,number_format($precio,2),$ssmarco,0,'C');
+            $st = $items[$i]['cant']*$precio;
             $this->totalCotizacion = $this->totalCotizacion + $st;
             $pdf->Cell(20,$tam,'S/. '.number_format($st,2),$ssmarco,1,'C');
         }
@@ -214,22 +228,27 @@ class CotProLlenadaController extends Controller
         $pdf->Rect(180, 213.6, 20, 6.6, 'D');
         $pdf->text(166,218,utf8_decode('Total'));
         $pdf->text(184,218,'S/. '.number_format($this->totalCotizacion,2));
-        $pdf->text(14,222.3,utf8_decode('La cotizaciones deben estar dirigidas a GOBIERNO REGIONAL DE APURIMAC - SEDE CENTRAL'));
-        $pdf->text(14,226,utf8_decode('en la siguiente direccion: JR. PUNO Nª 107 Telefono: 083-321022'));
-        $pdf->text(14,229.7,utf8_decode('Condicion de compra'));
-        $pdf->text(14,233.4,utf8_decode('- Forma de Pago: CCI'));
-        $pdf->text(14,237.1,utf8_decode('- Garantia: '.$garantia));
-        $pdf->text(14,240.8,utf8_decode('- La Cotizacion debe incluir el I.G.V.:'));
-        $pdf->text(14,244.5,utf8_decode('- Plazo de entrega / Ejecucion de Servicio: '.$entrega));
-        $pdf->text(14,248.2,utf8_decode('- Tipo de Moneda:'));
-        $pdf->text(14,251.9,utf8_decode('- Validez de la cotizacion: '.$validez));
-        $pdf->text(14,255.6,utf8_decode('- Remitir junto con su cotizacion la Declaracion Jurada y Pacto de Integridad, debidamente firmadas y selladas.'));
-        $pdf->text(14,259.3,utf8_decode('- Indicar su razon social, domicilio fiscal y numero de RUC:'));
-        
-        $pdf->text(84,277,utf8_decode('____________________________'));
-        $pdf->text(93,280.3,utf8_decode('Area de Loguistica'));
+            // $modelo = $this->encryp_mount($items[$i]['modelo']);
+        // $pdf->text(14,222.3,utf8_decode('cascascsacascsacascsacsacsac cascascsacascsacascsacsacsac cascascsacascsaca'));
+        // $pdf->Cell(190,$tam,'cascascsacascsacascsacsacsac cascascsacascsacascsacsacsac cascascsacascsaca scsacsacsac cascascsacascsaca scsacsacsac cascascsacascsaca',1,1,'C');
+        $pdf->Ln(93);
 
-        $pdf->Output();
+        $pdf->text(14,226,utf8_decode('La cotizaciones deben estar dirigidas a GOBIERNO REGIONAL DE APURIMAC - SEDE CENTRAL'));
+        $pdf->text(14,229.7,utf8_decode('en la siguiente direccion: JR. PUNO Nª 107 Telefono: 083-321022'));
+        $pdf->text(14,233.4,utf8_decode('Condicion de compra'));
+        $pdf->text(14,237.1,utf8_decode('- Forma de Pago: CCI'));
+        $pdf->text(14,240.8,utf8_decode('- Garantia: '.$garantia));
+        $pdf->text(14,244.5,utf8_decode('- La Cotizacion debe incluir el I.G.V.:'));
+        $pdf->text(14,248.2,utf8_decode('- Plazo de entrega / Ejecucion de Servicio: '.$entrega));
+        $pdf->text(14,251.9,utf8_decode('- Tipo de Moneda:'));
+        $pdf->text(14,255.6,utf8_decode('- Validez de la cotizacion: '.$validez));
+        $pdf->text(14,259.3,utf8_decode('- Remitir junto con su cotizacion la Declaracion Jurada y Pacto de Integridad, debidamente firmadas y selladas.'));
+        $pdf->text(14,263,utf8_decode('- Indicar su razon social, domicilio fiscal y numero de RUC:'));
+        
+        $pdf->text(84,280,utf8_decode('____________________________'));
+        $pdf->text(93,283.3,utf8_decode('Area de Loguistica'));
+
+        $pdf->Output('I', 'COTIZACION NUMERO: '.$cotizacion->numeroCotizacion.'.pdf');
         exit;
     }
     function cot($pdf,$lispar)

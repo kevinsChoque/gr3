@@ -141,7 +141,7 @@
                                 <thead class="thead-light">
                                     <tr>
                                         <th class="align-middle text-center text-uppercase" data-priority="2" width="10%">NRO <br> COTIZACION</th>
-                                        <th class="align-middle text-center text-uppercase" data-priority="1" width="10%">TIPO</th>
+                                        <!-- <th class="align-middle text-center text-uppercase" data-priority="1" width="10%">TIPO</th> -->
                                         <th class="align-middle text-center text-uppercase" data-priority="3" width="55%">DESCRIPCION COTIZACION</th>
                                         <th class="align-middle text-center text-uppercase" data-priority="4" width="5%">FECHA DE <br> ENTREGA Y <br> ACTO PUBLICO</th>
                                         <th class="align-middle text-center text-uppercase" data-priority="1" width="20%">OPCIONES</th>
@@ -206,8 +206,8 @@
                 for (var i = 0; i < r.data.length; i++) 
                 {
                     html += '<tr>' +
-                        '<td class="text-left align-middle font-weight-bold" style="background-color:'+colorNc+'">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
-                        '<td class="text-center font-weight-bold align-middle">' + novDato(r.data[i].tipo) + '</td>' +
+                        '<td class="text-center align-middle font-weight-bold" style="background-color:'+colorNc+'">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
+                        // '<td class="text-center font-weight-bold align-middle">' + novDato(r.data[i].tipo) + '</td>' +
                         
                         '<td class="align-middle">'+
                             '<p style="white-space: pre-line;margin-bottom: 0px;font-weight: 400;" class="text-uppercase">' + novDato(r.data[i].concepto) + '</p>'+
@@ -248,8 +248,8 @@
                 for (var i = 0; i < r.data.length; i++) 
                 {
                     html += '<tr>' +
-                        '<td class="text-left align-middle font-weight-bold" style="background-color:'+colorNc+'">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
-                        '<td class="text-center font-weight-bold align-middle">' + novDato(r.data[i].tipo) + '</td>' +
+                        '<td class="text-center align-middle font-weight-bold" style="background-color:'+colorNc+'">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
+                        // '<td class="text-center font-weight-bold align-middle">' + novDato(r.data[i].tipo) + '</td>' +
                         '<td class="align-middle">'+
                             '<p style="white-space: pre-line;margin-bottom: 0px;font-weight: 400;" class="text-uppercase">' + novDato(r.data[i].concepto) + '</p>'+
                             '<label style="font-size: 12px;font-weight:normal;"><strong>Dependencia: </strong> Gobierno Regional de Apurímac </label>'+

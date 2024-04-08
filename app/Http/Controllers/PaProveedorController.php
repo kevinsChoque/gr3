@@ -37,6 +37,8 @@ class PaProveedorController extends Controller
         if($tPro->save())
         {
         	session(['proveedor' => $tPro]);
+            $r['hidPro'] = $tPro->idPro;
+            $this->historial($r);
             return response()->json(['estado' => true, 'message' => 'Operacion exitosa.']);
         }
         else
@@ -51,6 +53,8 @@ class PaProveedorController extends Controller
         if($tPro->save())
         {
             session(['proveedor' => $tPro]);
+            $r['hidPro'] = $tPro->idPro;
+            $this->historial($r);
             return response()->json(['estado' => true, 'message' => 'Operacion exitosa.']);
         }
         else

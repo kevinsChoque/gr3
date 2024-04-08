@@ -11,7 +11,7 @@
 	<!-- Font Awesome -->
 	<link rel="stylesheet" href="{{asset('adminlte3/plugins/fontawesome-free/css/all.min.css')}}">
 	<!-- icheck bootstrap -->
-	<link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+	<!-- <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css"> -->
 	<!-- Theme style -->
 	<link rel="stylesheet" href="{{asset('adminlte3/dist/css/adminlte.min.css')}}">
 	<!-- spiner style -->
@@ -21,6 +21,7 @@
     <script src="{{asset('adminlte3/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
     <!-- helper -->
     <script src="{{asset('js/helper.js')}}"></script>
+    <script src="{{asset('adminlte3/plugins/jquery/jquery.min.js')}}"></script>
 </head>
 <body class="hold-transition login-page">
 	<div class="overlayPagina">
@@ -76,10 +77,12 @@
                                     <button class="btn btn-primary sig-in w-100"><i class="fa fa-key"></i> Ingresar</button>
                                 </div>
                             </div>
-                            
                             <br>
-                            <div class="alert alert-info py-2">
+                            <div class="alert alert-info py-2 mb-1">
                                 <p class="m-0 text-center font-weight-bold">SI NO TIENE UNA CUENTA PRESIONE <a href="{{url('portal/proveedor/registrar')}}">AQUI</a>.</p>
+                            </div>
+                            <div class="col-lg-12 text-center">
+                                <button type="button" class="btn btn-link font-weight-bold mRecuperar" data-toggle="modal" data-target="#exampleModal">¿Has olvidado la contraseña?</button>
                             </div>
                             </form>
                         </div>
@@ -90,6 +93,39 @@
 	    	</div>
 	  	</div>
 	</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Recuperar cuenta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+                <div class="modal-body">
+                    <div class="alert alert-info py-2 font-weight-bold">Ingrese correo asociado a la cuenta, para poder recuperar la contraseña.</div>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text font-weight-bold"><i class="fa fa-key"></i></span>
+                        </div>
+                        <input type="text" class="form-control" id="emailRecuperar" name="emailRecuperar" placeholder="Ingrese correo.">
+                    </div>
+                </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary recuperar">Enviar contraseña</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- <ul>
+        <li><strong>Motivo: </strong>cascsac</li>
+        <li><strong>Fecha de la suspension: </strong>cascsac</li>
+        <li><strong>Fecha de finalizacion de la suspension: </strong>cascsac</li>
+        <li><strong>Archivo: </strong><a href="javascript:void(0)" onclick="showSuspension();"></a></li>
+    </ul> -->
 <!-- jQuery -->
 <script src="{{asset('adminlte3/plugins/jquery/jquery.min.js')}}"></script>
 <!-- validate -->
@@ -99,12 +135,21 @@
 <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte3/dist/js/adminlte.min.js')}}"></script>
+<script src="{{asset('js/bootstrap.min.js')}}"></script>
 <script>
 	$(document).ready( function () {
 		initValidate();
         initFv('fvlogin',rules());
         $('.overlayPagina').css("display","none");
     } );
+    $('.mRecuperar').on('click',function(){
+        $('#exampleModal').modal('show')
+    });
+    $('.recuperar').on('click',function(){
+        recuperar();
+    });
+
+    var archivoPdf = '';
     $('.sig-in').on('click',function(){
         if($('#fvlogin').valid()==false)
         {return;}
@@ -121,13 +166,42 @@
             contentType: false, 
             headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
             success: function (r) {
-                if (r.estado) 
-                    window.location.href = "{{url('panelAdm/paCotizacion/cotizacionesActivas')}}";
-                else 
+                console.log(r)
+                if(r.tipo=='suspension')
                 {
-                	$('.overlayPagina').css("display","none");
-                	$('.sig-in').prop('disabled',false);
-                    msgRee(r); 
+                    archivoPdf = r.archivoPdf;
+                    Swal.fire({
+                        title: "<strong>"+r.message+"</strong>",
+                        icon: "warning",
+                        html: 
+                            `<ul style="text-align: left;">
+                                <li><strong>Motivo: </strong>`+r.sus.motivo+`</li>
+                                <li><strong>Fecha de la suspension: </strong>`+r.sus.fechaInicio+`</li>
+                                <li><strong>Fecha de finalizacion: </strong>`+r.sus.fechaFinalizacion+`</li>
+                                <li><strong>Archivo: </strong><a href="javascript:void(0)" onclick="showSuspension();"><b>Archivo</b></a></li>
+                            </ul>
+                        `,
+                        showCloseButton: true,
+                        showCancelButton: true,
+                        showConfirmButton: false,
+                        focusConfirm: false,
+                        // confirmButtonAriaLabel: "Thumbs up, great!",
+                        cancelButtonText: `Cerrar`,
+                        // cancelButtonAriaLabel: "Thumbs down"
+                    });
+                    $('.overlayPagina').css("display","none");
+                    $('.sig-in').prop('disabled',false);
+                }
+                else
+                {
+                    if (r.estado) 
+                        window.location.href = "{{url('panelAdm/paCotizacion/cotizacionesActivas')}}";
+                    else 
+                    {
+                    	$('.overlayPagina').css("display","none");
+                    	$('.sig-in').prop('disabled',false);
+                        msgRee(r); 
+                    }
                 }
             },
             error: function (xhr, status, error) {
@@ -137,6 +211,10 @@
             }
         });
     });
+    function showSuspension()
+    {
+        abrirArchivoBase64EnNuevaPestana(archivoPdf,"application/pdf");
+    }
     function rules()
     {
         return {
@@ -159,6 +237,26 @@
             unhighlight: function (element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
                 $(element).addClass('is-valid');
+            }
+        });
+    }
+    function recuperar()
+    {
+        $('.overlayPagina').css("display","flex");
+        jQuery.ajax({
+            url: "{{ url('login/recuperar') }}",
+            method: 'POST', 
+            data: {correo: $('#emailRecuperar').val()},
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function (r) {
+                console.log(r)
+                msgRee(r); 
+                $('.overlayPagina').css("display","none");
+            },
+            error: function (xhr, status, error) {
+                $('.overlayPagina').css("display","none");
+                msgSimple(false,'Ocurrio un problema, porfavor contactese con el administrador');
             }
         });
     }

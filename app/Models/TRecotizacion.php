@@ -17,6 +17,7 @@ class TRecotizacion extends Model
         'idCot',
         'motivo',
         'archivo', 
+        'archivoPdf',
         'fechaCotizacion', 
         'fechaFinalizacion',
         'estadoRecotizacion',

@@ -12,6 +12,11 @@ use App\Models\TProveedor;
 
 class ProveedorController extends Controller
 {
+    public function actProveedor(Request $r)
+    {
+        $this->historial($r);
+        return view('proveedor.proveedor');
+    }
     public function actGuardar(Request $r)
     {
         $existeNumeroDocumento = TProveedor::where('numeroDocumento',$r->numeroDocumento)->where('estado','1')->first();
@@ -28,8 +33,12 @@ class ProveedorController extends Controller
         $r->merge(['fr' => Carbon::now()]);
         // se inicializa la transaccion y guarda el registro
     	DB::beginTransaction();
-    	if(TProveedor::create($r->all()))
+        $tPro = TProveedor::create($r->all());
+    	if($tPro)
     	{
+            $r['hidPro'] = $tPro->idPro;
+            $r['hnombreProveedor'] = $this->razonSocialNombre($tPro);
+            $this->historial($r);
     		DB::commit();
     		return response()->json(['estado' => true, 'message' => 'Proveedor registrado correctamente.']);
     	}
@@ -71,7 +80,12 @@ class ProveedorController extends Controller
         $tPro = TProveedor::find($r->id);
         $tPro->estado = 0;
         if($tPro->save())
+        {
+            $r['hidPro'] = $r->id;
+            $r['hnombreProveedor'] = $this->razonSocialNombre($tPro);
+            $this->historial($r);
             return response()->json(["estado"=>true, "message"=>"Operacion exitosa."]);
+        }
         else
             return response()->json(["estado"=>false, "message"=>"No se pudo proceder.",]);
     }
@@ -94,7 +108,12 @@ class ProveedorController extends Controller
         $r->merge(['fa' => Carbon::now()]);
         $tPro->fill($r->all());
         if($tPro->save())
+        {
+            $r['hidPro'] = $tPro->idPro;
+            $r['hnombreProveedor'] = $this->razonSocialNombre($tPro);
+            $this->historial($r);
             return response()->json(['estado' => true, 'message' => 'Operacion exitosa.']);
+        }
         else
             return response()->json(['estado' => false, 'message' => 'Ocurrio un error.']);
     }

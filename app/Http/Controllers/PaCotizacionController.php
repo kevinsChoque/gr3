@@ -11,6 +11,25 @@ use App\Models\TProveedor;
 
 class PaCotizacionController extends Controller
 {
+    public function actMisCotizaciones(Request $r)
+    {
+        $r['hidPro'] = Session::get('proveedor')->idPro;
+        $this->historial($r);
+        return view('panelAdm.cotizacion.misCotizaciones');
+    }
+    public function actCotizacionesActivas(Request $r)
+    {
+        $r['hidPro'] = Session::get('proveedor')->idPro;
+        $this->historial($r);
+        return view('panelAdm.cotizacion.cotizacionesActivas');
+    }
+    // public function actCotizar(Request $r)
+    // {
+    //     $r['hidPro'] = Session::get('proveedor')->idPro;
+    //     $r['hnumeroCotizacion'] = " <b>(".$tCot->numeroCotizacion.")</b>";
+    //     $this->historial($r);
+    //     return view('panelAdm.cotizacion.cotizar');
+    // }
     public function actListar()
     {
         // envia solo las cotizaciones que solo estan en proceso o recotizando
@@ -113,6 +132,10 @@ class PaCotizacionController extends Controller
     	$tPro = Session::get('proveedor');
     	$tCot = TCotizacion::find($r->id);
     	$tPro = TProveedor::find($tPro->idPro);
+        $r['hidPro'] = $tPro->idPro;
+        $r['hidCot'] = $r->id;
+        $r['hnumeroCotizacion'] = " <b>(".$tCot->numeroCotizacion.")</b>";
+        $this->historial($r);
     	return response()->json(["cot"=>$tCot,"pro"=>$tPro]);
     }
 }

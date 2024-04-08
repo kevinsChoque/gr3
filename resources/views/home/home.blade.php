@@ -16,6 +16,24 @@
 </div>
 @endsection
 @section('content')
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css">
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.print.min.js"></script> -->
+
+
+
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <div class="container-fluid mt-3">
     <div class="row">
@@ -103,6 +121,92 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-12">
+            <div class="card">
+                <!-- <div class="overlay overlayFilterMeta" style="display: flex;">
+                    <div class="spinner"></div>
+                </div> -->
+                <div class="card-header pt-2 pb-1">
+                    <h3 class="card-title m-0 font-weight-bold"><i class="fa fa-chart-bar"></i> Cotizaciones</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="remove">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>      
+                <div class="card-body">
+                    <div class="row">
+                        <div class="form-group col-lg-3">
+                            <label class="m-0">META:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold"><i class="fa fa-hashtag"></i></span>
+                                </div>
+                                <input type="text" class="form-control soloNumeros" id="meta" name="meta" maxlength="6">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label class="m-0">Tipo de Cotizacion:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
+                                </div>
+                                <select name="tipo" id="tipo" class="form-control">
+                                    <option disabled>Seleccione opcion</option>
+                                    <option value="0" selected>TODOS</option>
+                                    <option value="Bienes">Bienes</option>
+                                    <option value="Servicios">Servicios</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label class="m-0">Estado de la Cotizacion:</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text font-weight-bold"><i class="fa fa-angle-right"></i></span>
+                                </div>
+                                <select name="estado" id="estado" class="form-control">
+                                    <option disabled>Seleccione opcion</option>
+                                    <option value="0" selected>TODOS LOS ESTADOS</option>
+                                    <option value="1">EN PROCESO</option>
+                                    <option value="2">PUBLICADO</option>
+                                    <option value="3">FINALIZADO</option>
+                                    <option value="5">RECOTIZANDO</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-3">
+                            <label class="m-0" style="visibility: hidden;">META:</label>
+                            <div class="input-group">
+                                <button class="btn btn-success w-100 filtrarCotizaciones"><i class="fa fa-search"></i> Buscar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 contenedorRegistros table-responsive" style="display: none;">
+                            <table id="registros" class="table table-hover table-striped table-bordered dt-responsive nowrap">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        @if(session()->get('usuario')->tipo=="administrador")
+                                        <th class="text-center" data-priority="1" width="10%">Personal</th>
+                                        @endif
+                                        <th class="text-center" data-priority="1">Meta</th>
+                                        <th class="text-center" data-priority="1">Numero</th>
+                                        <th class="text-center" data-priority="2">Concepto</th>
+                                        <th class="text-center" data-priority="3">Tipo</th>
+                                        <th class="text-center" data-priority="4">F.Finalizacion</th>
+                                        <th class="text-center" data-priority="4">Estado</th>
+                                        <!-- <th class="text-center" data-priority="1">Opc.</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody id="data">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>      
 </div>
 <script>
@@ -113,6 +217,7 @@
         $('.overlayRegistros').css("display","none");
         loadMontoCotSegunTipoMes();
         cantCotEstadoMes();
+        fillRegistros();
     });
     jQuery.ajax(
     { 
@@ -134,4 +239,5 @@
 </script>
 @include('home.admin.montoCotSegunTipoMes')
 @include('home.admin.cantCotEstadoMes')
+@include('home.admin.cotizacionesFiltradas')
 @endsection

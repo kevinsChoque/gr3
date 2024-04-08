@@ -33,7 +33,10 @@
     		<div class="row">
     			<div class="col-lg-12">
     				<div class="form-group row">
-						<label class="col-sm-2 col-form-label text-right"><a href="{{ route('ver-archivo') }}" target="_blank" class="btn text-info cotFile pb-3 pr-0"><i class="fa fa-file-pdf fa-lg"></i> </a> Cotizacion: <span class="text-danger">*</span></label>
+						<label class="col-sm-2 col-form-label text-right contentFiles">
+							<!-- <a href="{{ route('ver-archivo') }}" target="_blank" class="btn text-info cotFile pb-3 pr-0"><i class="fa fa-file-pdf fa-lg"></i> </a>  -->
+							Cotizacion: <span class="text-danger">*</span>
+						</label>
 						<div class="col-sm-9">
 							<input type="text" id="concepto" name="concepto" class="form-control concepto" disabled>
 						</div>
@@ -83,7 +86,12 @@
 					<div class="form-group row">
 						<label class="col-sm-4 col-form-label text-right">Tiempo de Entrega: <span class="text-danger">*</span></label>
 						<div class="col-sm-6">
-							<input type="text" id="timeEntrega" name="timeEntrega" class="form-control timeEntrega">
+							<div class="input-group mb-3">
+							  	<input type="text" id="timeEntrega" name="timeEntrega" class="form-control timeEntrega soloNumeros" maxlength="6">
+							  	<div class="input-group-append">
+							    	<span class="input-group-text">DIAS</span>
+							 	</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -91,7 +99,12 @@
 					<div class="form-group row">
 						<label class="col-sm-4 col-form-label text-right">Tiempo Validez: <span class="text-danger">*</span></label>
 						<div class="col-sm-6">
-							<input type="text" id="timeValidez" name="timeValidez" class="form-control timeValidez">
+							<div class="input-group mb-3">
+							  	<input type="text" id="timeValidez" name="timeValidez" class="form-control timeValidez soloNumeros" maxlength="6">
+							  	<div class="input-group-append">
+							    	<span class="input-group-text">DIAS</span>
+							 	</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -106,6 +119,25 @@
 							</select>
 						</div>
 					</div>
+				</div>
+				<div class="col-lg-12">
+    				<div class="form-group row">
+						<label class="col-sm-2 col-form-label text-right">
+							Observacion: <br>
+							<span class="badge badge-warning">Cant. de caracteres restantes: <br><strong class="cantCaracteres">200</strong></span>
+						</label>
+						<div class="col-sm-9">
+							<textarea id="obs" name="obs" class="form-control obs" cols="3"></textarea>
+						</div>
+					</div>
+				</div>
+    		</div>
+    		<div class="col-lg-12">
+    			<div class="alert alert-info alert-dismissible">
+					<h5><i class="icon fas fa-info"></i> ITEMS DE LA COTIZACION</h5>
+					Los datos con <strong class="text-danger">(*) </strong>asterisco, es informacion obligatoria para la cotizacion. <br>
+					Los datos de <strong>GARANTIA, MARCA, MODELO Y FICHA TECNICA DE CADA ITEM</strong> son opcionales. <br>
+					En caso de <strong>SERVICIO</strong> es necesario ingresar el precio.
 				</div>
     		</div>
     		<div class="row">
@@ -169,6 +201,15 @@
  	$('.downloadCotLle').on('click',function(){
  		downloadCotLle();
  	});
+ 	$('#obs').on('input', function() {
+    	var maxCaracteres = 200;
+    	$(this).val($(this).val().replace(/\s+/g, ' '));
+      	var caracteresRestantes = maxCaracteres - $(this).val().length;
+      	if (caracteresRestantes >= 0) 
+	        $('.cantCaracteres').text(caracteresRestantes);
+	    else 
+	        $(this).val($(this).val().substring(0, maxCaracteres));
+    });
 	var po='';
  	function downloadCotLle()
     {
@@ -315,7 +356,7 @@
     	if($('#fvcotpro').valid()==false)
     	{return;}
     	// se verifica si se ingreso las marcas, modelos y precios de cada item
-    	if(banMarca && banModelo && banPrecio)
+    	if(banPrecio)
     	{
     		var fileInputs = document.getElementsByClassName('fileItem');
     		
@@ -403,7 +444,7 @@
     	}
     	else
     	{
-    		msjError("Ingrese todos los datos de los items.");
+    		msjError("Ingrese los precios de cada Items.");
     	}
     }
 	// carga los datos del proveedor y algunos datos de la cotizacion, 
@@ -429,32 +470,75 @@
                 $('.correo').val(r.pro.correo);
                 var dir = $('.cotFile').attr('href');
                 $('.cotFile').attr('href',dir+'/'+r.cot.archivo);	
+                let iconosFiles = ''+
+                	'<a href="javascript:void(0)" class="btn text-info pb-3 pr-0" onclick="showFile(\''+r.cot.idCot+'\');" title="Ver cotizacion"><i class="fa fa-file-pdf fa-lg"></i> </a> ';
+                	
+
+                if(r.cot.anexoPdf!==null)
+                {
+                	iconosFiles += '<a href="javascript:void(0)" class="btn text-info pb-3 pr-0" onclick="showFileAnexos(\''+r.cot.idCot+'\');" title="Ver anexos de la cotizacion"><i class="fa fa-file fa-lg"></i></a>';
+                }
+                $('.contentFiles').prepend(iconosFiles);
+                // <a href="{{ route('ver-archivo') }}" target="_blank" class="btn text-info cotFile pb-3 pr-0"><i class="fa fa-file-pdf fa-lg"></i> </a>
                 flexTable();	
                 loadItemsCotizacion();		
             }
         });
     }
+    function showFile(idCot)
+	{
+	    jQuery.ajax({
+	        url: "{{ url('cotizacion/verFile') }}",
+	        method: 'post', 
+	        data: {idCot:idCot},
+	        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+	        success: function (r) {
+	            // console.log(r);
+	            abrirArchivoBase64EnNuevaPestana(r.file,"application/pdf");
+	        },
+	        error: function (xhr, status, error) {
+	            msjError("Algo salio mal, porfavor contactese con el Administrador.");
+	        }
+	    });
+	}
+	function showFileAnexos(idCot)
+	{
+	    jQuery.ajax({
+	        url: "{{ url('cotizacion/verFileAnexo') }}",
+	        method: 'post', 
+	        data: {idCot:idCot},
+	        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+	        success: function (r) {
+	            // console.log(r);
+	            abrirArchivoBase64EnNuevaPestana(r.file,"application/pdf");
+	        },
+	        error: function (xhr, status, error) {
+	            msjError("Algo salio mal, porfavor contactese con el Administrador.");
+	        }
+	    });
+	}
     // esta funcion nos ayuda a habilitar la tabla de los items para los casos que la cotizacion sea de bienes o servicios
     function flexTable()
     {
-        let head1 = '<th class="align-middle" width="30%">Nombre</th>'+
+        let head1 = '<th class="align-middle" width="27%">Nombre</th>'+
         '<th class="align-middle" width="5%">U.M</th>'+
         '<th class="align-middle" width="5%">Cant.</th>'+
-        '<th class="align-middle" width="10%">Garantia</th>'+
+        '<th class="align-middle" width="13%">Garantia</th>'+
         '<th class="align-middle" width="10%">marca</th>'+
         '<th class="align-middle" width="10%">modelo</th>'+
-        '<th class="align-middle" width="10%">Precio</th>'+
+        '<th class="align-middle" width="10%">Precio <strong class="text-danger">*</strong></th>'+
         '<th class="align-middle" width="7%">Subtotal</th>'+
         '<th class="align-middle" width="13%">Ficha tecnica</th>';
-        let head2 = '<th class="align-middle" width="40%">Nombre</th>'+
+        let head2 = '<th class="align-middle" width="35%">Nombre</th>'+
         '<th class="align-middle" width="5%">U.M</th>'+
         '<th class="align-middle" width="5%">Cant.</th>'+
-        '<th class="align-middle" width="15%">Precio</th>'+
+        '<th class="align-middle" width="13%">Garantia</th>'+
+        '<th class="align-middle" width="15%">Precio <strong class="text-danger">*</strong></th>'+
         '<th class="align-middle" width="12%">Subtotal</th>'+
-        '<th class="align-middle" width="23%">Ficha tecnica</th>';
+        '<th class="align-middle" width="15%">Ficha tecnica</th>';
         let foot1 = '<td colspan="7" class="text-right">TOTAL:</td>'+
                     '<td colspan="1" class="text-center shadow bg-info"><span class="total font-weight-bold"></span></td>';
-        let foot2 = '<td colspan="4" class="text-right">TOTAL:</td>'+
+        let foot2 = '<td colspan="5" class="text-right">TOTAL:</td>'+
                     '<td colspan="1" class="text-center shadow bg-info"><span class="total font-weight-bold"></span></td>';
         $('.headTable').html(tipoCotizacion=='Bienes'?head1:head2);
         $('.footTable').html(tipoCotizacion=='Bienes'?foot1:foot2);
@@ -471,6 +555,7 @@
 	        dataType: 'json',
 	        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
 	        success: function (r) {
+	        	console.log(r)
 	            let idFila = '';
 	            var html = '';
                 let segunTipo = '';
@@ -478,22 +563,29 @@
 	            {
                     if(tipoCotizacion!="Servicios")
                     {
-                        segunTipo = '<td class="text-center"><input type="text" class="form-control garantia px-1"></td>' +
-                        '<td class="text-center"><input type="text" class="form-control marca px-1"></td>' +
+                        segunTipo = '<td class="text-center"><input type="text" class="form-control marca px-1" onkeyup="marcaOnly(this)"></td>' +
                         '<td class="text-center"><input type="text" class="form-control modelo px-1"></td>';
                     }
-	                idFila = localStorage.getItem('idCot')+r.data[i].idItm;
+	                // idFila = localStorage.getItem('idCot')+r.data[i].idItm;
+	                idFila = localStorage.getItem('idCot')+i;
 	                html += '<tr class="itemsCotizacion fila'+idFila+'">' +
-	                    '<td class="font-weight-bold idCi nombreItem" data-id="'+novDato(r.data[i].idCi)+'">' + novDato(r.data[i].nombre) +'</td>' +
-	                    '<td class="text-center umItem"><span class="font-weight-bold badge badge-light um'+idFila+'">'+ novDato(r.data[i].nombreUm) + '</td>' +
-	                    '<td class="text-center cantItem cant'+r.data[i].idItm+'">' + novDato(r.data[i].cantidad) + '</td>' +
+	                    '<td class="font-weight-bold align-middle idCi nombreItem" data-id="'+novDato(r.data[i].idCi)+'">' + novDato(r.data[i].nombre) +'</td>' +
+	                    '<td class="text-center align-middle umItem"><span class="font-weight-bold badge badge-light um'+idFila+'">'+ novDato(r.data[i].um) + '</td>' +
+	                    '<td class="text-center align-middle cantItem cant'+i+'">' + novDato(r.data[i].cantidad) + '</td>' +
+	                    '<td class="text-center">'+
+	                    	'<div class="input-group mb-3">'+
+							  	'<input type="text" class="form-control garantia soloNumeros" maxlength="2">'+
+							  	'<div class="input-group-append">'+
+							    	'<span class="input-group-text">MESES</span>'+
+							 	'</div>'+
+							'</div>'+
+	                    '</td>'+
                         segunTipo +
-
 	                    '<td class="text-center">' + 
-							'<input type="text" class="form-control precio px-1" onblur="calcSubTotal(this,'+r.data[i].idItm+');">' +
+							'<input type="text" class="form-control precio px-1" onblur="calcSubTotal(this,'+i+');">' +
 	                    '</td>' +
 	                    '<td class="text-center">' + 
-	                    	'<input type="text" class="form-control text-center subtotal st'+r.data[i].idItm+'" value="0" disabled>' +
+	                    	'<input type="text" class="form-control text-center subtotal st'+i+'" value="0" disabled>' +
 	                    '</td>' +
 	                    '<td>' + 
 		                    '<div class="custom-file">'+
@@ -505,12 +597,18 @@
 	            }
 	            calcTotal();
 	            $('#listItems').html(html);
+	            $('.marca').each(function(){
+		            var valor = $(this).val();
+		            console.log(valor);
+		        });
 	        },
 	        error: function (xhr, status, error) {
 	            msgError("Algo salio mal, porfavor contactese con el Administrador.");
 	        }
 	    });
 	}
+	function marcaOnly(ele)
+	{	$(ele).val($(ele).val().replace(/\s/g, ''));}
 	function changeNameFile(elem)
 	{
 		var fileName = $(elem).val().split('\\').pop();

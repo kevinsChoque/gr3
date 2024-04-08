@@ -3,12 +3,12 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header py-1 border-transparent" style="background-color: rgba(0, 0, 0, 0.03);">
-                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-user-doctor"></i> Enviar Archivo</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-paper-plane"></i> Enviar Archivos de la Cotizacion</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body pb-0">
                 <div class="row">
                     <form id="fvsend">
                     <div class="col-12 col-sm-12">
@@ -31,7 +31,13 @@
                                 <div class="tab-content" id="custom-tabs-four-tabContent">
                                     <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
                                         <div class="row">
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-12">
+                                                <div class="callout callout-info py-2">
+                                                    <h5 class="m-0">Informacion importante!</h5>
+                                                    <p>El tamaño maximo de los archivos es <strong class="text-danger font-weight-bold" style="font-size: 1.3rem">50MB</strong>.</p>
+                                                </div>
+                                            </div>      
+                                            <div class="col-lg-6 m-auto">
                                                 <div class="alert text-center boxFile" style="border: 4px dashed #000;background: #ebeff5;cursor: pointer;">
                                                     <h5 class="font-italic font-weight-bold m-auto nameFile">Subir Cotizacion LLenada</h5>
                                                     <p class="font-italic m-0 msgClick">Realiza click aki, para subir el archivo</p>
@@ -39,15 +45,15 @@
                                                 </div>
                                                 <input type="file" id="pdfCll" class="pdfFile" style="display: none;" data-name="Cotizacion LLenada">
                                             </div>
-                                            <div class="col-lg-6">
+                                            <!-- <div class="col-lg-6">
                                                 <div class="alert text-center boxFile" style="border: 4px dashed #000;background: #ebeff5;">
                                                     <h5 class="font-italic font-weight-bold m-auto nameFile">Subir Declaracion Jurada</h5>
                                                     <p class="font-italic m-0 msgClick">Realiza click aki, para subir el archivo</p>
                                                     <p class="m-auto"><i class="fa fa-upload fa-lg"></i></p>
                                                 </div>
                                                 <input type="file" id="pdfDj" class="pdfFile" style="display: none;" data-name="Declaracion Jurada">
-                                            </div>
-                                            <div class="col-lg-6">
+                                            </div> -->
+                                            <div class="col-lg-6 m-auto">
                                                 <div class="alert text-center boxFile" style="border: 4px dashed #000;background: #ebeff5;">
                                                     <h5 class="font-italic font-weight-bold m-auto nameFile">Subir CCI</h5>
                                                     <p class="font-italic m-0 msgClick">Realiza click aki, para subir el archivo</p>
@@ -55,7 +61,7 @@
                                                 </div>
                                                 <input type="file" id="pdfCci" class="pdfFile" style="display: none;" data-name="CCI">
                                             </div>
-                                            <div class="col-lg-6">
+                                            <div class="col-lg-6 m-auto">
                                                 <div class="alert text-center boxFile" style="border: 4px dashed #000;background: #ebeff5;">
                                                     <h5 class="font-italic font-weight-bold m-auto nameFile">Subir Anexo 5</h5>
                                                     <p class="font-italic m-0 msgClick">Realiza click aki, para subir el archivo</p>
@@ -67,13 +73,19 @@
                                     </div>
                                     <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
                                         <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="callout callout-info py-2">
+                                                    <h5 class="m-0">Informacion importante!</h5>
+                                                    <p>El tamaño maximo de los archivos es <strong class="text-danger font-weight-bold" style="font-size: 1.3rem">50MB</strong>, en caso no sea suficiente se le recomienda subir los documentos(archivos) uno por uno desde <span class="bg-primary font-weight-bold px-2 border shadow">SUBIR ARCHIVOS POR INDIVIDUAL</span></p>
+                                                </div>
+                                            </div>  
                                             <div class="col-lg-6">
                                                 <div class="alert alert-info">
                                                     
                                                     <h5 class="font-weight-bold font-italic"><i class="icon fas fa-info"></i> La cotizacion debe de contener los archivos en el siguiente orden:</h5>
                                                     <ol class="mb-0 font-weight-bold">
                                                         <li>Cotizacion Llenada</li>
-                                                        <li>Declaracion Jurada</li>
+                                                        <!-- <li>Declaracion Jurada</li> -->
                                                         <li>CCI (Cuenta corriente interbancaria)</li>
                                                         <li>Anexo 5</li>
                                                     </ol>
@@ -137,20 +149,31 @@ $('.boxFile').on('click',function(){
 });
 // con la funcion verificamos si archivo es pdf, caso contrario no sera posible cargarlo
 $('.pdfFile').on('change',function(){
+    const file = this.files[0];
     let nameFile = $(this).val().split('\\').pop();
-    if (/\.(pdf)$/i.test(nameFile))
+    if (file) 
     {
-        $(this).parent().find('.nameFile').html($(this).attr('data-name')+': '+nameFile);
-        $(this).parent().find('i').removeClass('fa fa-upload fa-lg');
-        $(this).parent().find('i').addClass('fa fa-file-pdf fa-lg');
-        $(this).parent().find('.boxFile').css('border','4px solid #000');
+        const fileMB = file.size / (1024 * 1024);
+        if (fileMB > 5) {
+            $(this).val('');
+            msgRee({estado:false,message:"El archivo excede el tamaño maximo de 50MB."});
+        } else 
+        {
+            console.log('Tamaño del archivo:', fileMB.toFixed(2), 'MB');
+            if (/\.(pdf)$/i.test(nameFile))
+            {
+                $(this).parent().find('.nameFile').html($(this).attr('data-name')+': '+nameFile);
+                $(this).parent().find('i').removeClass('fa fa-upload fa-lg');
+                $(this).parent().find('i').addClass('fa fa-file-pdf fa-lg');
+                $(this).parent().find('.boxFile').css('border','4px solid #000');
+            }
+            else
+            {
+                $(this).val('');
+                msgRee({estado:false,message:"Selecciona un archivo PDF válido."});
+            }
+        }
     }
-    else
-    {
-        $(this).val('');
-        alert('Selecciona un archivo PDF válido.');
-    }
-
 });
 $('.pdfFile').on('change',function(){
     activarBotonSend();
@@ -199,12 +222,7 @@ function cleanFiles()
     });
     activarBotonSend();
 }
-function rules()
-{
-    // return {
-    //     file: {required: true,},
-    // };
-}
+function rules(){}
 // funcion que envia los archivos dentro del objeto formdata,
 // se envia todos los arhcivos
 function sendCotPro()
@@ -213,7 +231,7 @@ function sendCotPro()
     formData.append('idCrp', idCrp); 
     formData.append('soloPdf', soloPdf); 
     formData.append('pdfCll', $('#pdfCll')[0].files[0]);
-    formData.append('pdfDj', $('#pdfDj')[0].files[0]);
+    // formData.append('pdfDj', $('#pdfDj')[0].files[0]);
     formData.append('pdfCci', $('#pdfCci')[0].files[0]);
     formData.append('pdfA5', $('#pdfA5')[0].files[0]);
     formData.append('pdfAll', $('#pdfAll')[0].files[0]);

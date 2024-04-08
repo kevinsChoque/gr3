@@ -110,6 +110,7 @@ localStorage.setItem("sba",3);
                         '<td class="text-center">' + 
                             '<div class="btn-group btn-group-sm" role="group">'+
                                 '<button type="button" class="btn text-info" title="Editar registro" onclick="editar(\''+r.data[i].idUsu+'\');"><i class="fa fa-edit" ></i></button>'+
+                                '<button type="button" class="btn text-info" title="Ver historial" onclick="showHistorial(\''+r.data[i].idUsu+'\');"><i class="fas fa-history"></i></button>'+
                                 // '<button type="button" class="btn text-info" title="Ver archivo" onclick="showFile(\''+r.data[i].archivo+'\')"><i class="fa fa-file-pdf"></i></button>'+
                                 // '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar('+r.data[i].idUsu+');"><i class="fa fa-trash"></i></button>'+
                             '</div>'+
@@ -143,6 +144,11 @@ localStorage.setItem("sba",3);
     //     return formatDate(date);
     // }
     // ----------------
+    function showHistorial(id)
+    {
+        localStorage.setItem("idUsu",id);
+        window.location.href = "{{ url('historial/historial') }}";
+    }
     function eliminar(id)
     {
         Swal.fire({

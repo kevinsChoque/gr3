@@ -28,7 +28,7 @@ class EmailProveedor extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Email Proveedor',
+            subject: 'CREDENCIALES DEL PROVEEDOR',
         );
     }
 

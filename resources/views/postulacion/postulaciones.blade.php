@@ -84,9 +84,9 @@
                                     <b class="d-block">666</b>
                                 </p>
                             </div>
-                            <div class="col-lg-12">
+                            <!-- <div class="col-lg-12">
                       		 	<strong><i class="fas fa-file mr-1"></i> Archivos de postulacion</strong>
-                      		</div>
+                      		</div> -->
                       		<div class="col-lg-3">
                                 <p class="text-sm">Archivo:
                                     <b>666</b>
@@ -146,11 +146,15 @@
 	              	<strong><i class="fas fa-book mr-1"></i> Concepto</strong>
 	                <p class="text-muted concepto">--</p>
 	                <hr>
-	            	<strong><i class="fas fa-info mr-1"></i> Descripcion</strong>
+	            	<!-- <strong><i class="fas fa-info mr-1"></i> Descripcion</strong>
 	                <p class="text-muted descripcion">--</p>
-	                <hr>
+	                <hr> -->
 	                <strong><i class="far fa-calendar-alt mr-1"></i> Fechas</strong>
 	                <p class="text-muted fechas">--</p>
+                    <hr>
+                    <!-- <button class="btn btn-success w-100"><i class="fas fa-file-excel"></i> VER RESUMEN</button> -->
+                    <a href="{{url('export')}}" class="btn btn-success w-100 showSummary" target="_blank"><i class="fas fa-file-excel"></i> VER RESUMEN</a>
+                    <hr>
               	</div>
             </div>
         </div>
@@ -171,7 +175,26 @@ $(document).ready( function () {
 	// formatear la fecha en un string mas explicito
 	var fechaFormateada = `${fecha.getDate()} de ${obtenerNombreMes(fecha.getMonth() + 1)} de ${fecha.getFullYear()} ${obtenerFormato12Horas(fecha.getHours())}:${agregarCeroInicial(fecha.getMinutes())}:${agregarCeroInicial(fecha.getSeconds())} ${obtenerAMPM(fecha.getHours())}`;
 	console.log(fechaFormateada);
+
+    $('.showSummary').attr('href',$('.showSummary').attr('href')+'/'+localStorage.getItem("idCot"))
+
+
 } );
+function showDeepFile(idCrp)
+{
+    jQuery.ajax({
+        url: "{{ url('postulaciones/verFile') }}",
+        method: 'post', 
+        data: {idCrp:idCrp},
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function (r) {
+            abrirArchivoBase64EnNuevaPestana(r.file,"application/pdf");
+        },
+        error: function (xhr, status, error) {
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
+        }
+    });
+}
 // con esta funcion creamos el acordeon de cada postulador a la cotizacion
 // en el acordeon se mostrara los datos relevamntes y una vez desplegado
 // nos mostrara el detalle de la postulacion
@@ -203,9 +226,9 @@ function loadPostulaciones()
 					// verificamos la existencia del archivo de cotizacion del proveedores
 					// para crear el enlace a este archivo
 					dir = "{{ route('cotRecPro-archivo') }}"+'/'+r.data[i].idPro+'/'+r.data[i].idCrp+'/'+r.data[i].archivo;
-					enlace = r.data[i].archivo===null?
-						'<b>--</b>':
-						'<a href="'+dir+'" target="_blank"><i class="fa fa-file-pdf fa-lg"></i></a>';
+					enlace = r.data[i].archivoPdf===null?
+						'':'<span class="shadow bg-info text-center font-weight-bold float-right p-2"><a href="javascript:void(0);" onclick="showDeepFile(\''+r.data[i].idCrp+'\');"><i class="fa fa-file-pdf fa-lg"></i></a></span>';
+						// '<a href="'+dir+'" target="_blank" onclick="showDeepFile('+r.data[i].idCrp+');"><i class="fa fa-file-pdf fa-lg"></i></a>';
 					
 					// verificamos el tipo de persona para el nombre 
 					name = r.data[i].tipoPersona=="PERSONA NATURAL"?
@@ -228,7 +251,8 @@ function loadPostulaciones()
 								                  	'</div>'+
 												'</div>'+
 												'<div class="col-lg-3">'+
-													'<span class="shadow bg-info text-center font-weight-bold float-right p-2">'+enlace+'</span>'+
+													// '<span class="shadow bg-info text-center font-weight-bold float-right p-2">'+enlace+'</span>'+
+                                                    enlace+
 													'<span class="shadow bg-info text-center font-weight-bold float-right p-2 mx-2">Total S/. '+r.data[i].total+'</span>'+
 												'</div>'+
 											'</div>'+
@@ -257,14 +281,14 @@ function loadPostulaciones()
                                     '<b class="d-block">'+novDato(r.data[i].dedica=='1'?'SI':'NO')+'</b>'+
                                 '</p>'+
                             '</div>'+
-                            '<div class="col-lg-12">'+
-                      		 	'<strong><i class="fas fa-file-pdf mr-1"></i> Archivos de postulacion</strong>'+
-                      		'</div>'+
-                      		'<div class="col-lg-12">'+
-                                '<p class="text-sm">Archivo: '+
-                                    enlace + 
-                                '</p>'+
-                            '</div>'+
+                        //     '<div class="col-lg-12">'+
+                      		//  	'<strong><i class="fas fa-file-pdf mr-1"></i> Archivos de postulacion</strong>'+
+                      		// '</div>'+
+                      		// '<div class="col-lg-12">'+
+                        //         '<p class="text-sm">Archivo: '+
+                        //             enlace + 
+                        //         '</p>'+
+                        //     '</div>'+
                             '<div class="col-lg-12">'+
                       		 	'<strong><i class="fas fa-list mr-1"></i> Items</strong>'+
                       		'</div>'+
@@ -293,8 +317,8 @@ function loadPostulaciones()
                     '<a target="_blank" href="'+'{{ route('detalle-archivo') }}/'+r.data[i].arcDet+'"><i class="fa fa-file-pdf"></i></a>';
 				// creamos los items de cada postulacion
 				html += '<tr>'+
-                    '<td>'+novDato(r.data[i].nombre)+'</td>'+
-                  	'<td>'+novDato(r.data[i].umn)+'</td>'+
+                    '<td>'+novDato(r.data[i].nombreItem)+'</td>'+
+                  	'<td>'+novDato(r.data[i].umItem)+'</td>'+
                   	'<td>'+novDato(r.data[i].cantidad)+'</td>'+
                   	'<td>'+novDato(r.data[i].marca)+'</td>'+
                   	'<td>'+novDato(r.data[i].modelo)+'</td>'+
@@ -358,6 +382,7 @@ function loadCotizacion()
         dataType: 'json',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
+
             let cot = "<i class='fa fa-file-pdf'></i> COTIZACION<br>("+r.data.tipo+") <br>#"+r.data.numeroCotizacion;
             $('.cotizacion').html(novDato(cot));
             $('.items').html('Items: '+r.data.cantidad);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -183,4 +184,68 @@ class HomeAdminController extends Controller
 	    ];
 	    return response()->json($datos);
 	}
+	public function actCotFiltradas(Request $r)
+    {
+    	// dd($r->all());
+
+    	// $servicio='';
+     //    $array=[];
+     //    if($req->idServicio!='0')
+     //    {
+     //        $servicio=' where s.idServicio=? ';
+     //        array_push($array, $req->idServicio);
+     //    }
+        
+     //    $sql = "SELECT p.nombre,p.apellido,e.idEmpresa,e.razonSocial,e.direccion,e.fechaInscripcion,e.condicion,e.estado,count(uv.idUv) as cantUv FROM empresa e left join persona p on p.idPersona=e.idPersona left join servicioxempresa s on s.idEmpresa=e.idEmpresa left join tcv t on t.idEmpresa=e.idEmpresa left join unidadvehicular uv on uv.idUv=t.idUv ".$servicio." group by e.idEmpresa,e.razonSocial,e.direccion,e.fechaInscripcion,e.condicion,e.estado,p.nombre,p.apellido";
+     //    $registros=DB::select($sql,$array);
+     //    return datatables()->of($registros)->toJson();   
+    	// -------------------------------------------------------------
+    	// -------------------------------------------------------------
+    	// -------------------------------------------------------------
+    	// -------------------------------------------------------------
+    	$meta='';
+    	$tipo='';
+    	$estado='';
+    	if($r->meta!==null)
+        {
+            $meta=' where c.meta="'.$r->meta.'"';
+            // array_push($array, $req->idServicio);
+        }
+        else
+        {
+        	$meta=' where c.meta IS NOT NULL';
+        }
+        if($r->tipo!=0)
+        {
+            $tipo=' and c.tipo="'.$r->tipo.'"';
+        }
+        if($r->estado!=0)
+        {
+            $estado=' and c.estadoCotizacion="'.$r->estado.'"';
+        }
+        $sql = "SELECT c.*, CONCAT(u.nombre, ' ', u.apellidoPaterno, ' ', u.apellidoMaterno) AS nameUser FROM cotizacion c LEFT JOIN usuario u ON u.idUsu = c.idUsu".$meta.$tipo.$estado." ORDER BY c.fr DESC;";
+		// dd($sql);
+		$registros=DB::select($sql);
+		return response()->json(["data"=>$registros]);
+        $tUsu = Session::get('usuario');
+        // dependiendo al tipo de usuario se enviara el json de cotizaciones (administrador y cotizador)
+        if($tUsu->tipo=="administrador")
+        {
+            $registros = TCotizacion::select('cotizacion.*',
+                DB::raw("CONCAT(usuario.nombre, ' ', usuario.apellidoPaterno, ' ', usuario.apellidoMaterno) as nameUser"))
+                ->leftjoin('usuario', 'usuario.idUsu', '=', 'cotizacion.idUsu')
+                ->orderBy('cotizacion.fr', 'desc')
+                ->get();
+        }
+        else
+        {
+            $registros = TCotizacion::select('cotizacion.*')
+                ->leftjoin('usuario', 'usuario.idUsu', '=', 'cotizacion.idUsu')
+                ->where('cotizacion.idUsu', $tUsu->idUsu)
+                ->where('cotizacion.estado', '1')
+                ->orderBy('cotizacion.fr', 'desc')
+                ->get();
+        }
+        return response()->json(["data"=>$registros]);
+    }
 }

@@ -47,3 +47,20 @@ poner en run el hilo o tarea:
 - para finalizar el hilo se realiza control + el boton C
 Para poder correr el hilo es necesario contar con composer, de preferencia en
 su ultima version.
+*********************************************************
+    ***************** ESTADOS DE LA COTIZACION ******************
+*********************************************************
+- 1 EN PROCESO
+- 2 PUBLICADO
+- 3 FINALIZADO
+- 4 CORREGIR
+- 5 RECOTIZANDO
+-------------------------------------
+ES NECESARIO PARA TRABAJAR CON PhpOffice\PhpSpreadsheet
+en php.ini debe de estar habilitado esto 
+extension=gd
+extension=fileinfo
+-------------------------------------
+tener en cuenta la consultas extensas
+my.ini
+max_allowed_packet=1500M

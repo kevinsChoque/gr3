@@ -123,6 +123,7 @@ localStorage.setItem("sba",6);
                             '<div class="btn-group btn-group-sm" role="group">'+
                                 opciones+
                                 '<button type="button" class="btn text-info" title="Editar registro" onclick="editar(\''+r.data[i].idPro+'\');"><i class="fa fa-edit" ></i></button>'+
+                                '<button type="button" class="btn text-info" title="Ver historial" onclick="showHistorialPro(\''+r.data[i].idPro+'\');"><i class="fas fa-history"></i></button>'+
                                 '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar(\''+r.data[i].idPro+'\');"><i class="fa fa-trash"></i></button>'+
                             '</div>'+
                         '</td></tr>';
@@ -132,7 +133,11 @@ localStorage.setItem("sba",6);
                 $('.overlayRegistros').css('display','none');
             }
         });
-        
+    }
+    function showHistorialPro(id)
+    {
+        localStorage.setItem("idPro",id);
+        window.location.href = "{{ url('historial/historialPro') }}";
     }
     function personal(personal)
     {

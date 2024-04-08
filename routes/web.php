@@ -27,8 +27,18 @@ use App\Http\Controllers\PdfController;
 use App\Http\Controllers\CotLlenadaController;
 use App\Http\Controllers\FormatosController;
 use App\Http\Controllers\CotProLlenadaController;
+use App\Http\Controllers\HistorialController;
+use App\Http\Controllers\DbExternaController;
+use App\Http\Controllers\NumeroController;
+use App\Http\Controllers\ItemSigaController;
+
+use App\Http\Controllers\ExcelResumenController;
 // middleware
 use App\Http\Middleware\MDAdministrador;
+
+
+
+Route::get('bd/test',[DbExternaController::class, 'actTest']);
 Route::middleware([MDAdministrador::class])->group(function () {
 	Route::get('home/home',[HomeController::class, 'actionHome']);
 	// usuario
@@ -39,15 +49,21 @@ Route::middleware([MDAdministrador::class])->group(function () {
 	Route::post('usuario/editar',[UsuarioController::class, 'actEditar']);
 	Route::post('usuario/guardarCambios',[UsuarioController::class, 'actGuardarCambios']);
 	// proveedor
-	Route::get('proveedor', function () {return view('proveedor.proveedor');});
+	// Route::get('proveedor', function () {return view('proveedor.proveedor');});
+	Route::get('proveedor', [ProveedorController::class, 'actProveedor']);
 	Route::post('proveedor/guardar',[ProveedorController::class, 'actGuardar']);
 	Route::get('proveedor/listar',[ProveedorController::class, 'actListar']);
 	Route::post('proveedor/eliminar',[ProveedorController::class, 'actEliminar']);
 	Route::post('proveedor/editar',[ProveedorController::class, 'actEditar']);
 	Route::post('proveedor/guardarCambios',[ProveedorController::class, 'actGuardarCambios']);
 	// cotizacion
-	Route::get('cotizacion/registrar', function () {return view('cotizacion.registrar');});
-	Route::get('cotizacion/ver', function () {return view('cotizacion.ver');});
+	// Route::get('cotizacion/registrar', function () {return view('cotizacion.registrar');});
+	Route::get('cotizacion/registrar', [CotizacionController::class, 'actRegistrar']);
+
+
+	// Route::get('cotizacion/ver', function () {return view('cotizacion.ver');});
+	Route::get('cotizacion/ver', [CotizacionController::class, 'actVer']);
+
 	Route::get('cotizacion/editar', function () {return view('cotizacion.editar');});
 	Route::get('cotizacion/addItems', function () {return view('cotizacion.addItems');});
 	Route::post('cotizacion/guardar',[CotizacionController::class, 'actGurdar']);
@@ -58,8 +74,47 @@ Route::middleware([MDAdministrador::class])->group(function () {
 	Route::post('cotizacion/changeEstadoCotizacion',[CotizacionController::class, 'actChangeEstadoCotizacion']);
 	Route::post('cotizacion/showCotizacion',[CotizacionController::class, 'actShowCotizacion']);
 	Route::post('cotizacion/verCotizacion',[CotizacionController::class, 'actVerCotizacion']);
+
+
+
+
 	
+	// Route::get('cotizacion/readBase64',[CotizacionController::class, 'actRead']);
+	
+
+
+
+
+
+
+
+
+	Route::get('historial/historial', function () {return view('historial.historial');});
+	Route::post('historial/load',[HistorialController::class, 'actLoad']);
+	Route::get('historial/historialPro', function () {return view('historial.historialPro');});
+	Route::post('historial/loadPro',[HistorialController::class, 'actLoadPro']);
+
+
+	Route::post('postulaciones/verFile',[PostulacionesController::class, 'actVerFile']);
+
+
+
+	Route::get('numero', function () {return view('numero.numero');});
+	Route::get('numero/listar',[NumeroController::class, 'actListar']);
+	// Route::get('numero/actual',[NumeroController::class, 'actActual']);
+	Route::post('numero/registrar',[NumeroController::class, 'actRegistrar']);
+	Route::get('numero/numeroCotizacion',[NumeroController::class, 'actNumeroCotizacion']);
+
+
+
+
+	Route::post('itemSiga/search',[ItemSigaController::class, 'actSearch']);
+	Route::post('itemSiga/showItems',[ItemSigaController::class, 'actShowItems']);
+
 });
+Route::post('cotizacion/verFile',[CotizacionController::class, 'actVerFile']);
+	Route::post('cotizacion/verFileAnexo',[CotizacionController::class, 'actVerFileAnexo']);
+// ---------------------------------------------------
 Route::get('cotizacion/archivo/{nombreArchivo?}',[CotizacionController::class, 'verArchivo'])->name('ver-archivo');
 // portal
 Route::get('/',[PortalController::class, 'actionPortal']);
@@ -69,7 +124,10 @@ Route::get('loginProveedor/loginProveedor',[LoginProveedorController::class, 'ac
 Route::post('login/sigin',[LoginController::class, 'sigin']);
 Route::post('login/siginpro',[LoginController::class, 'siginpro']);
 Route::get('login/logout',[LoginController::class, 'logout']);
+Route::post('login/recuperar',[LoginController::class, 'actRecuperar']);
 Route::get('loginProveedor/logoutPro',[LoginController::class, 'logoutPro']);
+
+
 // proveedor
 // Route::get('proveedor', function () {return view('proveedor.proveedor');});
 // Route::post('proveedor/guardar',[ProveedorController::class, 'actGuardar']);
@@ -114,7 +172,8 @@ Route::post('suspension/guardar',[SuspensionController::class, 'actGuardar']);
 // recotizacion
 Route::post('recotizacion/guardar',[RecotizacionController::class, 'actGuardar']);
 // postulaciones
-Route::get('postulaciones/ver', function () {return view('postulacion.ver');});
+// Route::get('postulaciones/ver', function () {return view('postulacion.ver');});
+Route::get('postulaciones/ver',[PostulacionesController::class, 'actVer']);
 Route::get('postulacion/postulaciones', function () {return view('postulacion.postulaciones');});
 Route::get('postulaciones/listar',[PostulacionesController::class, 'actListar']);
 Route::post('postulaciones/showPostulantes',[PostulacionesController::class, 'actShowPostulantes']);
@@ -126,9 +185,12 @@ Route::post('portal/proveedor/guardar',[PortalProveedorController::class, 'actGu
 // home
 Route::get('panelAdm/home/home', function () {return view('panelAdm.home.home');});
 // cotizacion
-Route::get('panelAdm/paCotizacion/cotizacionesActivas', function () {return view('panelAdm.cotizacion.cotizacionesActivas');});
+// Route::get('panelAdm/paCotizacion/cotizacionesActivas', function () {return view('panelAdm.cotizacion.cotizacionesActivas');});
+Route::get('panelAdm/paCotizacion/cotizacionesActivas', [PaCotizacionController::class, 'actCotizacionesActivas']);
 Route::get('panelAdm/paCotizacion/cotizar', function () {return view('panelAdm.cotizacion.cotizar');});
-Route::get('panelAdm/paCotizacion/misCotizaciones', function () {return view('panelAdm.cotizacion.misCotizaciones');});
+// Route::get('panelAdm/paCotizacion/cotizar', [PaCotizacionController::class, 'actCotizar']);
+// Route::get('panelAdm/paCotizacion/misCotizaciones', function () {return view('panelAdm.cotizacion.misCotizaciones');});
+Route::get('panelAdm/paCotizacion/misCotizaciones', [PaCotizacionController::class, 'actMisCotizaciones']);
 Route::get('panelAdm/paCotizacion/listar',[PaCotizacionController::class, 'actListar']);
 Route::get('panelAdm/paCotizacion/listarPortal',[PaCotizacionController::class, 'actListarPortal']);
 Route::post('panelAdm/paCotizacion/search',[PaCotizacionController::class, 'actSearch']);
@@ -169,9 +231,20 @@ Route::get('panelAdm/formatos/saveAnexo5Del',[FormatosController::class, 'actSav
 Route::get('homeAdmin/datos',[HomeAdminController::class, 'actDatos']);
 Route::get('homeAdmin/montoCotSegunTipoMes',[HomeAdminController::class, 'actMontoCotSegunTipoMes']);
 Route::get('homeAdmin/cantCotEstadoMes',[HomeAdminController::class, 'actCantCotEstadoMes']);
-
+Route::post('homeAdmin/cotFiltradas',[HomeAdminController::class, 'actCotFiltradas']);
 // new cot llenada
 
 Route::post('panelAdm/cotProLlenada/generarCot',[CotProLlenadaController::class, 'actGenerarCot']);
 Route::post('panelAdm/cotProLlenada/show',[CotProLlenadaController::class, 'actShow']);
+
+
+
+Route::get('suspensionProveedor/{idSus?}',[SuspensionController::class, 'actVerFile']);
+
+
+
+
+
+Route::get('/export/{idCot}', [ExcelResumenController::class, 'export']);
+
 

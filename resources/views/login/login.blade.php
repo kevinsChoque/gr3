@@ -19,8 +19,6 @@
 	<!-- sweetalert2 -->
     <link rel="stylesheet" href="{{asset('adminlte3/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')}}">
     <script src="{{asset('adminlte3/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
-    <!-- helper -->
-    <!-- <script src="{{asset('js/helper.js')}}"></script> -->
 </head>
 <body class="hold-transition login-page">
 	<div class="overlayPagina">
@@ -70,6 +68,7 @@
 	    	</div>
 	  	</div>
 	</div>
+    
 <!-- jQuery -->
 <script src="{{asset('adminlte3/plugins/jquery/jquery.min.js')}}"></script>
 <!-- validate -->
@@ -92,6 +91,7 @@
         var formData = new FormData($("#fvlogin")[0]);
         $('.sig-in').prop('disabled',true); 
         $('.overlayPagina').css("display","flex");
+        // alert('entro aki');
         jQuery.ajax({
             url: "{{ url('login/sigin') }}",
             method: 'POST', 

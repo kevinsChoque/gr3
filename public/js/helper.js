@@ -1,3 +1,25 @@
+function abrirArchivoBase64EnNuevaPestana(base64String,tipoMIME) {
+    // Convertir la cadena Base64 en un Blob
+    var byteCharacters = atob(base64String);
+    var byteNumbers = new Array(byteCharacters.length);
+    for (var i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    var byteArray = new Uint8Array(byteNumbers);
+    var blob = new Blob([byteArray], { type: tipoMIME });
+    
+    // Crear una URL de objeto (Object URL) para el Blob
+    var url = URL.createObjectURL(blob);
+    
+    // Abrir la URL en una nueva pestaña
+    window.open(url, '_blank');
+}
+function formatoFecha(fecha)
+{
+    var fecha = new Date(fecha);
+    return `${fecha.getDate()+1} de ${obtenerNombreMes(fecha.getMonth() + 1)} del ${fecha.getFullYear()}`;
+    // return fechaFormat;
+}
 // Función para obtener el nombre del mes
 function obtenerNombreMes(numeroMes) {
     var meses = [
@@ -165,6 +187,31 @@ function initDatatable(idTabla)
         },
         
     } );
+    // $('#'+idTabla).DataTable( {
+    //     "autoWidth": false,
+    //     "responsive": true,
+    //     "ordering": false,
+    //     "lengthMenu": [[5, 10, 25, -1], [5, 10, 25, "Todos"]],   
+    //     "language": {
+    //         "info": "Mostrando la página _PAGE_ de _PAGES_. (Total: _MAX_)",
+    //         "search":"",
+    //         "infoFiltered": "(filtrando)",
+    //         "infoEmpty": "No hay registros disponibles",
+    //         "sEmptyTable": "No tiene registros guardados.",
+    //         "lengthMenu": "Mostrar registros _MENU_ .",
+    //         "paginate": {
+    //             "first": "Primero",
+    //             "last": "Ultimo",
+    //             "next": "Siguiente",
+    //             "previous": "Anterior"
+    //         }
+    //     },
+    //     "buttons": [
+    //         'excelHtml5', // Botón de exportar a Excel
+    //         'pdfHtml5' // Botón de exportar a PDF
+    //     ]
+    // });
+
     $('input[type=search]').parent().css('width','100%');
     $('input[type=search]').css('width','100%');            
     $('input[type=search]').css('margin','0');

@@ -8,7 +8,7 @@
     <div class="modal-dialog modal-xl modal-dialog-centered modal-custom-size" role="document">
         <div class="modal-content">
             <div class="modal-header py-1 border-transparent" style="background-color: rgba(0, 0, 0, 0.03);">
-                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-user-doctor"></i> Cotizacion</h5>
+                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-chart-bar"></i> Cotizacion</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -56,7 +56,8 @@
                             </div> 
                             <div class="col-lg-3">
                                 <p class="text-sm">Archivo:
-                                    <a href="{{ route('ver-archivo') }}" class="d-block fileCotizacion font-weight-bold" target="_blank">-</a>
+                                    <!-- <a href="{{ route('ver-archivo') }}" class="d-block fileCotizacion font-weight-bold" target="_blank">-</a> -->
+                                    <button class="showDeepFile d-block font-weight-bold text-primary" style="border: 0;"><i class="fa fa-file-pdf fa-lg"></i></button>
                                 </p>
                             </div> 
                             <div class="col-lg-3">
@@ -136,11 +137,13 @@ function showDataCotizacion(r)
     $('.estadoCotizacion').html(estateCotizacion);
     let path = "{{ route('ver-archivo') }}";
     let dir = $('.fileCotizacion').attr('href');
-    $('.fileCotizacion').html('<i class="fa fa-file-pdf fa-lg"></i>');
+
+    $('.fileCotizacion').html('<i class="fa fa-file-pdf fa-lg"></i>');//borrar
     $('.fileCotizacion').attr('href',path+'/'+r.cot.archivo);
-    let preVisualizador = "<embed src='{{asset('/cotizacion/archivo')}}/"+r.cot.archivo+"' id='pdfViewer' class='w-100 h-100'>";//este es el que ase embebida del documento con push
+    // let preVisualizador = "<embed src='{{asset('/cotizacion/archivo')}}/"+r.cot.archivo+"' id='pdfViewer' class='w-100 h-100'>";//este es el que ase embebida del documento con push
     $('#pdfViewer').attr('src',dir+'/'+r.cot.archivo);
     // var estees = "<embed src='http://localhost/grc/public/cotizacion/archivo/1699541524_Cotizaciones(1).pdf' id='pdfViewer' class='w-100 h-100'>";
+    let preVisualizador = '<embed src="data:application/pdf;base64,'+r.file+'" type="application/pdf" width="100%" height="100%">';
     $('.contentPdf').html(preVisualizador);
     // showPDFPreview(r.cot.archivo);
     var html = '';
@@ -157,4 +160,7 @@ function showDataCotizacion(r)
     }
     $('#listItems').html(html);
 }
+$('.showDeepFile').on('click',function(){
+    showFile(idM);
+})
 </script>

@@ -16,6 +16,8 @@ class TCotxitm extends Model
         'idCi', 
         'idCot', 
         'idItm', 
+        'nombre',
+        'um',
         'cantidad',
         'estado',
         'fr',

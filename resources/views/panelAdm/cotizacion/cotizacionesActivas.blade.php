@@ -166,6 +166,7 @@ function fillRegistros()
         method: 'get',
         success: function(r)
         {
+            var opcAne='';
             var html = '';
             for (var i = 0; i < r.data.length; i++) 
             {
@@ -173,6 +174,10 @@ function fillRegistros()
                 console.log("{{Session::get('proveedor')->idPro}}");
                 if(r.data[i].idPro!="{{Session::get('proveedor')->idPro}}")
                 {
+                    if(r.data[i].anexoPdf!==null)
+                    {
+                        opcAne = '<button type="button" class="btn text-info" onclick="showAnexos(\''+r.data[i].idCot+'\')" title="Ver anexos"><i class="fa fa-file fa-lg"></i></button>';
+                    }
                     html += '<tr>' +
                         '<td class="align-middle text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
                         '<td class="align-middle text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
@@ -181,8 +186,9 @@ function fillRegistros()
                         '<td class="text-center">' + formatoDate(r.data[i].fechaFinalizacion) + "<br>" + formatoHour(r.data[i].horaFinalizacion) + '</td>' +
                         '<td class="align-middle text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '</td>' +
                         '<td class="text-center">' + 
-                            '<a href="{{ route('ver-archivo') }}/'+r.data[i].archivo+'" target="_blank" class="btn text-info pr-0"><i class="far fa-file-pdf" ></i></a>'+
-                            '<button type="button" class="btn text-info" title="Editar registro" onclick="cotizar(\''+r.data[i].idCot+'\');"><i class="far fa-file-alt" ></i></button>'+
+                            '<a href="javascript:void(0)" class="btn text-info pr-0" onclick="showFile(\''+r.data[i].idCot+'\');"><i class="far fa-file-pdf fa-lg"></i></a>'+
+                            opcAne+
+                            '<button type="button" class="btn text-info" title="Realizar cotizacion" onclick="cotizar(\''+r.data[i].idCot+'\');"><i class="far fa-file-alt fa-lg"></i></button>'+
                         '</td>' +
                     '</tr>';
                 }
@@ -194,13 +200,50 @@ function fillRegistros()
         }
     });
 }
+function showFile(idCot)
+{
+    jQuery.ajax({
+        url: "{{ url('cotizacion/verFile') }}",
+        method: 'post', 
+        data: {idCot:idCot},
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function (r) {
+            // console.log(r);
+            abrirArchivoBase64EnNuevaPestana(r.file,"application/pdf");
+        },
+        error: function (xhr, status, error) {
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
+        }
+    });
+}
+function showAnexos(idCot)
+{
+    jQuery.ajax({
+        url: "{{ url('cotizacion/verFileAnexo') }}",
+        method: 'post', 
+        data: {idCot:idCot},
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function (r) {
+            // console.log(r);
+            abrirArchivoBase64EnNuevaPestana(r.file,"application/pdf");
+        },
+        error: function (xhr, status, error) {
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
+        }
+    });
+}
 // nos ayuda a crear los registros de la tabla de cotizaciones, acorde a los filtros que ingresamos
 // la variable q se pasa es todo el objeto de respuesta
 function changeRegistros(r)
 {
     var html = '';
+    var opcAne = '';
     for (var i = 0; i < r.data.length; i++) 
     {
+        if(r.data[i].anexoPdf!==null)
+        {
+            opcAne = '<button type="button" class="btn text-info" onclick="showAnexos(\''+r.data[i].idCot+'\')" title="Ver anexos"><i class="fa fa-file fa-lg"></i></button>';
+        }
         html += '<tr>' +
             '<td class="align-middle text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
             '<td class="align-middle text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
@@ -210,8 +253,9 @@ function changeRegistros(r)
             '<td class="align-middle text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '</td>' +
             '<td class="align-middle text-center">' + 
                 '<div class="btn-group btn-group-sm" role="group">'+
-                    '<a href="{{ route('ver-archivo') }}/'+r.data[i].archivo+'" target="_blank" class="btn text-info pr-0"><i class="far fa-file-pdf" ></i></a>'+
-                    '<button type="button" class="btn text-info" title="Editar registro" onclick="cotizar(\''+r.data[i].idCot+'\');"><i class="far fa-file-alt" ></i></button>'+
+                    '<a href="javascript:void(0)" class="btn text-info pr-0" onclick="showFile(\''+r.data[i].idCot+'\');"><i class="far fa-file-pdf fa-lg"></i></a>'+
+                            opcAne+
+                            '<button type="button" class="btn text-info" title="Realizar cotizacion" onclick="cotizar(\''+r.data[i].idCot+'\');"><i class="far fa-file-alt fa-lg"></i></button>'+
                 '</div>'+
             '</td>' +
         '</tr>';

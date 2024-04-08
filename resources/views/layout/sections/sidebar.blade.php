@@ -31,6 +31,11 @@
                         <i class="nav-icon fas fa-users"></i><p>Usuarios</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{url('numero')}}" class="nav-link sba3">
+                        <i class="nav-icon fas fa-hashtag"></i><p>Numero de cotizacion</p>
+                    </a>
+                </li>
                 @endif
                 <li class="nav-item">
                     <a href="{{url('proveedor')}}" class="nav-link sba6">
