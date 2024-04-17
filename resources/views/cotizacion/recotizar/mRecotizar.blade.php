@@ -5,82 +5,18 @@
     <div class="modal-dialog modal-xl modal-dialog-centered modal-custom-size" role="document">
         <div class="modal-content">
             <div class="modal-header py-1 border-transparent" style="background-color: rgba(0, 0, 0, 0.03);">
-                <h5 class="modal-title" id="exampleModalLongTitle"><i class="fa fa-calendar"></i> Recotizar</h5>
+                <h5 class="modal-title exampleModalLongTitle" id="exampleModalLongTitle"><i class="fa fa-calendar"></i> Recotizar</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-lg-6 pr-3" style="border-right: 4px solid #505048;">
-                        <div class="row">
-                            <div class="col-lg-12 my-2">
-                                <h4 class="text-center font-weight-bold">Datos de cotizacion</h4>
-                            </div>
-                            <div class="col-lg-3">
-                                <p class="text-sm">Numero de cotizacion:
-                                    <b class="d-block rnumeroCotizacion">-</b>
-                                </p>
-                            </div> 
-                            <div class="col-lg-3">
-                                <p class="text-sm">Tipo de cotizacion:
-                                    <b class="d-block rtipo">-</b>
-                                </p>
-                            </div>
-                            <div class="col-lg-3">
-                                <p class="text-sm">Archivo:
-                                    <!-- <a href="{{ route('ver-archivo') }}" class="d-block rfileCotizacion font-weight-bold" target="_blank" style="word-wrap: break-word;">-</a> -->
-                                    <span class="fa fa-file-pdf fa-lg showDeepFileRec text-primary d-block" style="cursor: pointer;"></span>
-                                </p>
-                            </div> 
-                            <div class="col-lg-3">
-                                <p class="text-sm">Numero de CCMN:
-                                    <b class="d-block rdocumento">-</b>
-                                </p>
-                            </div> 
-                            <div class="col-lg-4">
-                                <p class="text-sm">Fecha de la cotizacion:
-                                    <b class="d-block rfechaCotizacion2" style="display: none !important;">-</b>
-                                    <b class="d-block rfechaCotizacion">-</b>
-                                    <b class="d-block rhoraCotizacion">-</b>
-                                </p>
-                            </div> 
-                            <div class="col-lg-4">
-                                <p class="text-sm">Fecha de la finalizacion:
-                                    <b class="d-block rfechaFinalizacion2" style="display: none !important;">-</b>
-                                    <b class="d-block rfechaFinalizacion">-</b>
-                                    <b class="d-block rhoraFinalizacion">-</b>
-                                </p>
-                            </div> 
-                            
-                            <div class="col-lg-4">
-                                <p class="text-sm">Estado:
-                                    <b class="d-block"><span class="badge badge-light restadoCotizacion" style="font-size: 1rem;"></span></b>
-                                </p>
-                            </div> 
-                            <div class="col-lg-4">
-                                <p class="text-sm">Concepto:
-                                    <b class="d-block text-justify rconcepto">-</b>
-                                </p>
-                            </div> 
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-12 m-auto p-3 shadow contenedorRegistrosEditar">
-                                <table id="registrosItemsRec" class="w-100 table table-hover table-striped table-bordered">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th width="35%">Nombre</th>
-                                            <th width="15%">U.Medida</th>
-                                            <th width="20%">Cantidad</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="listItemsRec">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                    @include('cotizacion.shared.verCotizacion')
+                    <div class="col-lg-6 contentPdfPreview" style="display: none;">
+                        <h1>pdf</h1>
                     </div>
-                    <div class="col-lg-6 pl-3">
+                    <div class="col-lg-6 pl-3 contentFormRecotizar">
                         <form id="fvRecotizar">
                         <div class="row">
                             <div class="col-lg-12 my-2">
@@ -207,7 +143,9 @@
 
 <script>    
 var idM = '';
+var tablaDeRegItemsRec;
 $(document).ready( function () {
+    tablaDeRegItemsRec=$('.contenedorRegItemsRec').html();
     // validacion personalizada para verificar la extension del archivo
     $.validator.addMethod("extensionPdf", function(value, element) {
         return this.optional(element) || value.toLowerCase().endsWith(".pdf");
@@ -293,7 +231,7 @@ function cleanFormRecotizacion()
 }
 // nos muestra los datos de la cotizacion el cual ya esta finalizada,
 // como tambien nos muestra los items
-function showDataRecotizar(r)
+function showDataRecotizar(r,tipo)
 {
     idM = r.cot.idCot;
     let estateCotizacion = estadoCotizacion(r.cot.estadoCotizacion);
@@ -327,8 +265,29 @@ function showDataRecotizar(r)
     //     '</tr>';
     // }
     // $('#rlistItems').html(html);
+    if(tipo=='recotizar')
+    {
+        $('.exampleModalLongTitle').html('<i class="fa fa-calendar"></i> Recotizar');
+        $('.contentFormRecotizar').css('display','block');
+        $('.contentPdfPreview').css('display','none');
+    }
+    else
+    {
+        let preVisualizador = '<embed src="data:application/pdf;base64,'+r.file+'" type="application/pdf" width="100%" height="100%">';
+        $('.contentPdfPreview').html(preVisualizador);
+        $('.exampleModalLongTitle').html('<i class="fa fa-chart-bar"></i> Cotizacion');
+        $('.contentFormRecotizar').css('display','none');
+        $('.contentPdfPreview').css('display','block');
+    }
+
+
     $('#mRecotizar').modal('show');
     showItemsRec()
+}
+function construirTablaItemsRec()
+{
+    $('.contenedorRegItemsRec>div').remove();
+    $('.contenedorRegItemsRec').html(tablaDeRegItemsRec);
 }
 function showItemsRec()
 {
@@ -341,7 +300,7 @@ function showItemsRec()
             // console.log(r);
             if (r.estado)
             {
-                construirTablaEditar()
+                construirTablaItemsRec()
                 var html = '';
                 for (var i = 0; i < r.data.length; i++) 
                 {

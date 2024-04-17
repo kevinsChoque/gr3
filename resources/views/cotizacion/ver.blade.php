@@ -70,7 +70,7 @@
         </div>
     </div>
 </div>
-@include('cotizacion.mCotizacion')
+
 @include('cotizacion.recotizar.mRecotizar')
 @include('cotizacion.mEditar')
 @include('cotizacion.mAddItems')
@@ -239,8 +239,9 @@ function showCotizacion(id)
         method: 'post',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function(r){
-            console.log(r)
-            showDataCotizacion(r);
+            // showDataCotizacion(r);
+            showDataRecotizar(r,'showCotizacion');
+
         }
     });
 }
@@ -253,7 +254,7 @@ function showRecotizar(id)
         method: 'post',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function(r){
-            showDataRecotizar(r);
+            showDataRecotizar(r,'recotizar');
         }
     });
 }

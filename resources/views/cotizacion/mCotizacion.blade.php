@@ -94,12 +94,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 contentPdf">
+
+                    <div class="col-lg-6 contentPdf47604220">
                         <!-- <embed src="http://localhost/grc/public/cotizacion/archivo/1699541524_Cotizaciones(1).pdf" id="pdfViewer" class="w-100 h-100"> -->
                         <!-- <div id="pdfViewer" class="w-100 h-100" ></div> -->
                         <!-- <div id="pdfViewerContainer" style="width: 100%; height: 600px;">
                             <div id="pdfViewer" style="width: 100%; height: 100%;"></div>
-                        </div> -->
+                        </div> a s as -->
+                    </div>
+                    <div class="col-lg-12">
+                        <embed src="data:application/pdf;base64,TU_DATO_BASE64_AQUI" type="application/pdf" width="100%" height="600px" class="esteBase" />
                     </div>
                 </div>
                 
@@ -124,6 +128,9 @@ function addItemsM()
 }
 function showDataCotizacion(r)
 {
+    // console.log('r.file')
+    // console.log(r.file)
+    // console.log('r.file')
     idM = r.cot.idCot;
     let estateCotizacion = estadoCotizacion(r.cot.estadoCotizacion);
     $('.numeroCotizacion').html(r.cot.numeroCotizacion);
@@ -144,7 +151,9 @@ function showDataCotizacion(r)
     $('#pdfViewer').attr('src',dir+'/'+r.cot.archivo);
     // var estees = "<embed src='http://localhost/grc/public/cotizacion/archivo/1699541524_Cotizaciones(1).pdf' id='pdfViewer' class='w-100 h-100'>";
     let preVisualizador = '<embed src="data:application/pdf;base64,'+r.file+'" type="application/pdf" width="100%" height="100%">';
-    $('.contentPdf').html(preVisualizador);
+    $('.contentPdf47604220').html(preVisualizador);
+    $('.esteBase').attr('src','data:application/pdf;base64,'+r.file);
+
     // showPDFPreview(r.cot.archivo);
     var html = '';
     console.log('r.items');
