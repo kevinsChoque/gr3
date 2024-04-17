@@ -27,11 +27,6 @@
                                     <b class="d-block rtipo">-</b>
                                 </p>
                             </div>
-                            <!-- <div class="col-lg-3">
-                                <p class="text-sm">Unidad ejecutora:
-                                    <b class="d-block runidadEjecutora">-</b>
-                                </p>
-                            </div> --> 
                             <div class="col-lg-3">
                                 <p class="text-sm">Archivo:
                                     <!-- <a href="{{ route('ver-archivo') }}" class="d-block rfileCotizacion font-weight-bold" target="_blank" style="word-wrap: break-word;">-</a> -->
@@ -68,28 +63,8 @@
                                     <b class="d-block text-justify rconcepto">-</b>
                                 </p>
                             </div> 
-                            <!-- <div class="col-lg-4">
-                                <p class="text-sm">Descripcion:
-                                    <b class="d-block text-justify rdescripcion">-</b>
-                                </p>
-                            </div>  -->
                         </div>
                         <div class="row">
-                            <!-- <div class="col-lg-12">
-                                <table class="w-100 table table-hover table-striped table-bordered">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th width="35%">Nombre</th>
-                                            <th width="10%">Clasificador</th>
-                                            <th width="20%">Descripcion</th>
-                                            <th width="15%">U.Medida</th>
-                                            <th width="20%">Cantidad</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="rlistItems">
-                                    </tbody>
-                                </table>
-                            </div> -->
                             <div class="col-lg-12 m-auto p-3 shadow contenedorRegistrosEditar">
                                 <table id="registrosItemsRec" class="w-100 table table-hover table-striped table-bordered">
                                     <thead>
@@ -129,7 +104,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group col-lg-12">
+                            <!-- <div class="form-group col-lg-6">
                                 <label class="m-0">Nueva fecha de la Cotizacion: <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
@@ -137,14 +112,58 @@
                                     </div>
                                     <input type="date" class="form-control inpRec" id="newFechaCotizacion" name="newFechaCotizacion">
                                 </div>
+                            </div> -->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="m-0">Nueva fecha de la Cotizacion: <span class="text-danger">*</span></label>
+                                    <div class="input-group date" id="inewFechaCotizacion" data-target-input="nearest">
+                                        <div class="input-group-prepend" data-target="#inewFechaCotizacion" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar-alt"></i></div>
+                                        </div>
+                                        <input type="text" class="form-control datetimepicker-input inputDate" data-target="#inewFechaCotizacion" id="newFechaCotizacion" name="newFechaCotizacion">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="form-group col-lg-12">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="m-0">Hora de la finalizacion: <span class="text-danger">*</span></label>
+                                    <div class="input-group date" id="inewHoraCotizacion" data-target-input="nearest">
+                                        <div class="input-group-prepend" data-target="#inewHoraCotizacion" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                                        </div>
+                                        <input type="text" class="form-control datetimepicker-input inputDate" data-target="#inewHoraCotizacion" id="newHoraCotizacion" name="newHoraCotizacion" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="form-group col-lg-6">
                                 <label class="m-0">Nueva fecha de la finalizacion: <span class="text-danger">*</span></label>
                                 <div class="input-group">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text"><i class="fa fa-angle-right"></i></span>
                                     </div>
                                     <input type="date" class="form-control inpRec" id="newFechaFinalizacion" name="newFechaFinalizacion">
+                                </div>
+                            </div> -->
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="m-0">Nueva fecha de la finalizacion: <span class="text-danger">*</span></label>
+                                    <div class="input-group date" id="inewFechaFinalizacion" data-target-input="nearest">
+                                        <div class="input-group-prepend" data-target="#inewFechaFinalizacion" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar-alt"></i></div>
+                                        </div>
+                                        <input type="text" class="form-control datetimepicker-input inputDate" data-target="#inewFechaFinalizacion" id="newFechaFinalizacion" name="newFechaFinalizacion" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="m-0">Hora de la finalizacion: <span class="text-danger">*</span></label>
+                                    <div class="input-group date" id="inewHoraFinalizacion" data-target-input="nearest">
+                                        <div class="input-group-prepend" data-target="#inewHoraFinalizacion" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                                        </div>
+                                        <input type="text" class="form-control datetimepicker-input inputDate" data-target="#inewHoraFinalizacion" id="newHoraFinalizacion" name="newHoraFinalizacion" autocomplete="off">
+                                    </div>
                                 </div>
                             </div>
                             <!-- <div class="form-group col-lg-12">
@@ -157,8 +176,11 @@
                                 </div>
                             </div> -->
                             <div class="col-lg-12">
-                                <div class="alert alert-info py-1">
+                                <!-- <div class="alert alert-info py-1">
                                     <p class="m-0">El archivo de la <strong>RE-COTIZACION</strong> es opcional.</p>
+                                </div> -->
+                                <div class="callout callout-info">
+                                    <h6 class="m-0">El archivo de la <strong>RE-COTIZACION</strong> es opcional.</h6>
                                 </div>
                             </div>
                             <div class="col-lg-12 mb-3">
@@ -192,7 +214,25 @@ $(document).ready( function () {
     }, "Solo se permiten archivos PDF");
     // inicializamosel formulario con las reglas de validacion rulesRecotizacion
     initFv('fvRecotizar',rulesRecotizacion());
+    $('#inewFechaCotizacion').datetimepicker({format: 'YYYY-MM-DD',minDate: moment(),daysOfWeekDisabled: [0, 6], });
+    $('#inewHoraCotizacion').datetimepicker({format: 'LT'});
+    $('#inewFechaFinalizacion').datetimepicker({format: 'YYYY-MM-DD',minDate: moment()});
+    $('#inewHoraFinalizacion').datetimepicker({format: 'LT'});
+
 });
+// $('#inewFechaFinalizacion').on('dp.change', function(e) 
+// {
+    // alert('esta en el change');
+    // var fechaCotizacion = $('#inewFechaCotizacion').data("DateTimePicker").date();
+    // var fechaFinalizacion = $('#inewFechaFinalizacion').data("DateTimePicker").date();
+
+    // if (fechaCotizacion && fechaFinalizacion && fechaFinalizacion.isBefore(fechaCotizacion)) {
+    //     alert('La fecha de finalización debe ser posterior a la fecha de cotización.');
+    //     // Puedes revertir la selección a la fecha de cotización o tomar otra acción según tus necesidades.
+    //     $('#inewFechaFinalizacion').data("DateTimePicker").date(fechaCotizacion);
+    // }
+// });
+// $('#inewFechaFinalizacion').on('dp.change', function(e){ console.log(e.date); })
 $('.showDeepFileRec').on('click',function(){
     showFile(idM);
 })
@@ -203,7 +243,9 @@ function rulesRecotizacion()
         motivo: {required: true,},
         file: {extensionPdf: "pdf"},
         newFechaCotizacion: {required: true,},
-        newFechaFinalizacion: {required: true,}
+        newFechaFinalizacion: {required: true,},
+        newHoraCotizacion: {required: true,},
+        newHoraFinalizacion: {required: true,}
     };
 }
 
@@ -226,20 +268,20 @@ function guardarRecotizacion()
         contentType: false, 
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
-            console.log(r);
             if (r.estado) 
             {
                 cleanFormRecotizacion();
                 construirTabla();
                 fillRegistros();
-                $('.guardarRecotizacion').prop('disabled',false); 
                 $('#mRecotizar').modal('hide');
                 msjRee(r);
             } 
             else 
                 msjRee(r);
+            $('.guardarRecotizacion').prop('disabled',false); 
         },
         error: function (xhr, status, error) {
+            $('.guardarRecotizacion').prop('disabled',false); 
             msjError("Algo salio mal, porfavor contactese con el Administrador.");
         }
     });

@@ -17,6 +17,7 @@ use App\Models\TNumero;
 class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
+    protected $ALG = "AES-256-CBC";
     // historial start
 	protected $diccionario = [
         "/login/sigin" => "Ingreso al sistema",
@@ -151,9 +152,9 @@ class Controller extends BaseController
 	    $contenidoArchivo = $file->get();
 	    $base64 = base64_encode($contenidoArchivo);
 	    
-	    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(env('ALG')));
+	    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length($this->ALG));
 
-	    $encriptado = openssl_encrypt($base64, env('ALG'), env('KEY'), 0, $iv);
+	    $encriptado = openssl_encrypt($base64, $this->ALG, env('KEY'), 0, $iv);
 	    $cadenaCifrada = base64_encode($iv . $encriptado);
 
 	    return $cadenaCifrada;
@@ -170,7 +171,7 @@ class Controller extends BaseController
 	    $textoCifrado = substr($decodificado, $longitudIV);
 
 	    // Desencriptar el texto cifrado
-	    $base64Desencriptado = openssl_decrypt($textoCifrado, env('ALG'), env('KEY'), 0, $iv);
+	    $base64Desencriptado = openssl_decrypt($textoCifrado, $this->ALG, env('KEY'), 0, $iv);
 
 	    return $base64Desencriptado;
 	}

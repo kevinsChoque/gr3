@@ -242,6 +242,7 @@
             method: 'get',
             success: function(r)
             {
+                console.log(r)
                 var html = '';
                 let ban = true;
                 let colorNc = '';
@@ -252,11 +253,12 @@
                         // '<td class="text-center font-weight-bold align-middle">' + novDato(r.data[i].tipo) + '</td>' +
                         '<td class="align-middle">'+
                             '<p style="white-space: pre-line;margin-bottom: 0px;font-weight: 400;" class="text-uppercase">' + novDato(r.data[i].concepto) + '</p>'+
-                            '<label style="font-size: 12px;font-weight:normal;"><strong>Dependencia: </strong> Gobierno Regional de Apurímac </label>'+
-                            '<label style="font-size: 12px;font-weight:normal;" class="float-right"><strong>Fecha Publicación:</strong> 20/12/2023</label>'+
+                            '<label style="font-size: 12px;font-weight:normal;margin:0;"><strong>Dependencia: </strong> Gobierno Regional de Apurímac </label>'+
+                            '<label style="font-size: 12px;font-weight:normal;margin:0;" class="float-right"><strong> Fecha Publicación:</strong> '+dateCotSegunState(r.data[i])+'</label>'+
+                            '<label style="font-size: 12px;font-weight:normal;margin:0;" class="float-right"><strong>'+state(r.data[i].estadoCotizacion)+' </strong></label>'+
                         '</td>'+
                         '<td class="align-middle text-left">' + 
-                            '<span><i class="fa fa-calendar-alt"></i> '+novDato(r.data[i].fechaFinalizacion) +'<br><i class="fa fa-clock"></i> '+novDato(r.data[i].horaFinalizacion) + '<span><br>' +
+                            dateFinCotSegunState(r.data[i])+
                         '</td>' +
                         '<td class="text-center align-middle">' + 
                             '<a href="{{ route('ver-archivo') }}/'+r.data[i].archivo+'" target="_blank" class="btn btn-sm btn-primary mb-1 btn-flat w-100 mb-2"><i class="far fa-file-pdf"></i> Descargar</a><br>'+

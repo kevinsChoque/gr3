@@ -47,9 +47,9 @@ class PortalProveedorController extends Controller
         try 
         {
             DB::beginTransaction();
-            TProveedor::create($r->all());
+            $tp = TProveedor::create($r->all());
             // una vez guardado el registro se envia las credenciales del usuario al correo q ingreso
-            Mail::to('kevins.choque@gmail.com')->send(new EmailProveedor($datosProveedor));
+            Mail::to($tp->correo)->send(new EmailProveedor($datosProveedor));
             DB::commit();
             return response()->json(['estado' => true, 'message' => 'Su usuario y contraseñase se le envio a su correo '.$r->correo.'.']);
         } 
@@ -58,5 +58,23 @@ class PortalProveedorController extends Controller
             DB::rollBack();
             return response()->json(['estado' => false, 'message' => 'Ocurrio un error porfavor contactese con el Administrador.']);
         }
+    }
+    public function actGuardar_b(Request $r)
+    {
+        $datosProveedor = ['usuario' => '$r->ruc', 'password' => '$password', 'nombre' => '$nombre'];
+        Mail::to($r->correo)->send(new EmailProveedor($datosProveedor));
+        try {
+            // Intenta enviar el correo electrónico
+            Mail::to($r->correo)->send(new EmailProveedor($datosProveedor));
+            // Si no hay excepciones, el correo electrónico se envió correctamente
+
+            return response()->json(['estado' => false, 'message' => 'Su usuario y contraseña se le enviaron a su correo ' . $r->correo . '.']);
+        } 
+        catch (\Exception $e) 
+        {
+            // Si ocurre una excepción, maneja el error
+            return response()->json(['estado' => false, 'message' => 'Ocurrió un error al enviar el correo electrónico: ' . $e->getMessage()]);
+        }
+
     }
 }

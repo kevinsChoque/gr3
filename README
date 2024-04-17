@@ -64,3 +64,5 @@ extension=fileinfo
 tener en cuenta la consultas extensas
 my.ini
 max_allowed_packet=1500M
+
+ojo el servidor(maquina) debe de estar con la hora de 24 configurado y no de 12

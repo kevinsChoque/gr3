@@ -205,9 +205,9 @@ class PaCotRecProController extends Controller
 
                     $contenido_pdf = File::get($tempFilePath);
                     $base64_pdf = base64_encode($contenido_pdf);
-                    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(env('ALG')));
+                    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length("AES-256-CBC"));
 
-                    $encriptado = openssl_encrypt($base64_pdf, env('ALG'), env('KEY'), 0, $iv);
+                    $encriptado = openssl_encrypt($base64_pdf, "AES-256-CBC", env('KEY'), 0, $iv);
                     $cadenaCifrada = base64_encode($iv . $encriptado);
 
                     $r->merge(['archivoPdf' => $cadenaCifrada]);
@@ -302,9 +302,9 @@ class PaCotRecProController extends Controller
 
             $contenido_pdf = File::get($tempFilePath);
             $base64_pdf = base64_encode($contenido_pdf);
-            $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(env('ALG')));
+            $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length("AES-256-CBC"));
 
-            $encriptado = openssl_encrypt($base64_pdf, env('ALG'), env('KEY'), 0, $iv);
+            $encriptado = openssl_encrypt($base64_pdf, "AES-256-CBC", env('KEY'), 0, $iv);
             $cadenaCifrada = base64_encode($iv . $encriptado);
 
             // dd($base64_pdf);

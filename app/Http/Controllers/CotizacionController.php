@@ -23,6 +23,17 @@ class CotizacionController extends Controller
     // }
     public function actRegistrar(Request $r)
     {
+
+        // $ttt = TCotizacion::whereDate('fechaFinalizacion', '<', Carbon::now()->toDateString())
+        //     ->orWhere(function($query) {
+        //         $query->whereDate('fechaFinalizacion', Carbon::now()->toDateString())
+        //               ->whereTime('horaFinalizacion', '<', Carbon::now()->toTimeString());
+        //     })
+        //     ->get();
+        // $ttt = TCotizacion::whereDate('fechaFinalizacion','<',Carbon::now()->toDateString())
+        //     ->whereTime('horaFinalizacion', '<', Carbon::now()->toTimeString())
+        //     ->get();
+        // dd($ttt,Carbon::now()->toDateString(),Carbon::now()->toTimeString());
         return view('cotizacion.registrar',['numero' => TNumero::count()]);
     }
     public function actVerFile(Request $r)
@@ -65,7 +76,16 @@ class CotizacionController extends Controller
     }
     public function actGurdar(Request $r)
     {
-        // dd($r->all());
+        // dd(Carbon::createFromFormat('h:i A', $r->horaFinalizacion)->format('H:i A'),$r->horaFinalizacion);
+        // $tiempoCarbon = Carbon::createFromFormat('h:i A', $r->horaFinalizacion)->format('H:i A');
+        // dd($r->all(),$tiempoCarbon);
+        $fechaHoraVista = Carbon::parse($r->fechaFinalizacion . ' ' . $r->horaFinalizacion);
+        $fechaHoraActual = Carbon::now();
+        // dd($fechaHoraVista,$fechaHoraActual);
+        if (!$fechaHoraVista->gt($fechaHoraActual))
+        {
+            return response()->json(['estado' => false, 'message' => 'Ingrese una fecha y hora mayor.']);
+        }
         $numeroCotizacion =  $this->numeroCotizacion();
         $existeDocCot = TCotizacion::where('documento',$r->documento)->where('estado','1')->first();
         if($existeDocCot!=null)
@@ -87,6 +107,9 @@ class CotizacionController extends Controller
             $r->merge(['idUsu' => $tUsu->idUsu]);
             $r->merge(['fechaCotizacion' => Carbon::now()->toDateString()]);
             $r->merge(['horaCotizacion' => Carbon::now()->format('h:i A')]);
+            // $r->merge(['horaFinalizacion' => Carbon::createFromFormat('h:i A', $r->horaFinalizacion)->format('H:i A')]);
+            $r->merge(['horaFinalizacion' => $r->horaFinalizacion]);
+
             $r->merge(['concepto' => strtoupper($r->concepto)]);
 
             $r->merge(['estado' => 1]);
@@ -175,7 +198,13 @@ class CotizacionController extends Controller
         if($tUsu->tipo=="administrador")
         {
             $registros = TCotizacion::select('cotizacion.*',
+                'recotizacion.idRec',
+                'recotizacion.estadoRecotizacion',
+                'recotizacion.archivoPdf as recFile',
+                'recotizacion.fechaFinalizacion as ffrec',
+                'recotizacion.horaFinalizacion as hfrec',
                 DB::raw("CONCAT(usuario.nombre, ' ', usuario.apellidoPaterno, ' ', usuario.apellidoMaterno) as nameUser"))
+                ->leftjoin('recotizacion', 'recotizacion.idCot', '=', 'cotizacion.idCot')
                 ->leftjoin('usuario', 'usuario.idUsu', '=', 'cotizacion.idUsu')
                 ->orderBy('cotizacion.fr', 'desc')
                 ->get();
@@ -309,36 +338,60 @@ class CotizacionController extends Controller
     }
     public function actChangeEstadoCotizacion(Request $r)
     {
-        $existeItems = TCotxitm::where('idCot',$r->id)->where('estado','1')->get();
+
         
-        // se verifica que la cotizacion este activa
-        if(count($existeItems)!=0)
+        $tCot = TCotizacion::where('idCot',$r->id)->first();
+        // $fechaFinalizacion = Carbon::parse($tCot->fechaFinalizacion . ' ' . $tCot->horaFinalizacion);
+        // Concatenamos la fecha y hora, y luego formateamos la hora a un formato de 24 horas antes de parsearla con Carbon
+        // $fechaFinalizacion = Carbon::parse($tCot->fechaFinalizacion . ' ' . date('H:i', strtotime($tCot->horaFinalizacion)));
+        $fechaFinalizacion = Carbon::parse($tCot->fechaFinalizacion . ' ' . $tCot->horaFinalizacion);
+        $fechaActual = Carbon::now();
+// dd($fechaFinalizacion,$fechaActual);
+        // if ($fechaFinalizacion->gt($fechaActual))
+        // {
+        //     dd('puede publicar xxx '.$tCot->numeroCotizacion,$fechaFinalizacion,$fechaActual);
+        // }
+        // else
+        // {
+        //     dd('no puede publicar xxx '.$tCot->numeroCotizacion,$fechaFinalizacion,$fechaActual);
+        // }
+        // dd($fechaHoraVista,$fechaHoraActual);
+        if ($fechaFinalizacion->gt($fechaActual))
         {
-            $tCot = TCotizacion::where('idCot',$r->id)->first();
-            $tCot->estadoCotizacion = '2';
-            if($tCot->save())
+            $existeItems = TCotxitm::where('idCot',$r->id)->where('estado','1')->get();
+            // se verifica que la cotizacion este activa
+            if(count($existeItems)!=0)
             {
-                $r['hidCot'] = $tCot->idCot;
-                $r['hnumeroCotizacion'] = " <b>(".$tCot->numeroCotizacion.")</b> ".$this->estadoCotizacion($tCot);
-                $this->historial($r);
-                return response()->json(["estado"=>true, "message"=>"La Cotizacion fue publicada exitosamente."]);
+                
+                $tCot->estadoCotizacion = '2';
+                if($tCot->save())
+                {
+                    $r['hidCot'] = $tCot->idCot;
+                    $r['hnumeroCotizacion'] = " <b>(".$tCot->numeroCotizacion.")</b> ".$this->estadoCotizacion($tCot);
+                    $this->historial($r);
+                    return response()->json(["estado"=>true, "message"=>"La Cotizacion fue publicada exitosamente."]);
+                }
+                else
+                    return response()->json(["estado"=>false, "message"=>"No se pudo proceder con la publicacion.",]);
             }
             else
-                return response()->json(["estado"=>false, "message"=>"No se pudo proceder con la publicacion.",]);
+                return response()->json(["estado"=>false, "message"=>"No se puede publicar la cotizacion ya que no cuenta con items asignados.",]);
         }
         else
-            return response()->json(["estado"=>false, "message"=>"No se puede publicar la cotizacion ya que no cuenta con items asignados.",]);
+            return response()->json(["estado"=>false, "message"=>"La fecha de finalizacion de la cotizacion ya paso, modifique la fecha de finalizacion para poder PUBLICAR.",]);
     }
     public function actShowCotizacion(Request $r)
     {
+        // dd('aki entrccccca');
         $tCot = TCotizacion::find($r->id);
-        $items = TItem::select('item.*','cotxitm.*','unidadmedida.nombre as nombreUm')
+        $items = TItem::select('item.*','cotxitm.*')
             ->join('cotxitm', 'cotxitm.idItm', '=', 'item.idItm')
-            ->leftjoin('unidadmedida', 'unidadmedida.idUm', '=', 'cotxitm.idUm')
+            // ->leftjoin('unidadmedida', 'unidadmedida.idUm', '=', 'cotxitm.idUm')
             ->where('cotxitm.idCot',$r->id)
             ->where('cotxitm.estado','1')
             ->orderBy('cotxitm.idCi', 'asc')
             ->get();
+        // dd( $items );
         $file = $this->desencriptarDeepFile($tCot->archivoPdf);
         return response()->json(["estado"=>true, "cot"=>$tCot, "items"=>$items, "file"=>$file]);
     }

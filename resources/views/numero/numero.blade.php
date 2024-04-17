@@ -70,8 +70,8 @@
     </div>
 </div>
 <script>
-localStorage.setItem("sbd",1);
-localStorage.setItem("sba",4);
+localStorage.setItem("sbd",0);
+localStorage.setItem("sba",8);
 $(document).ready( function () {
     $('.overlayPagina').css("display","none");
     fillNumero();

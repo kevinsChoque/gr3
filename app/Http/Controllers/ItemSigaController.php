@@ -20,7 +20,7 @@ class ItemSigaController extends Controller
 		if($conn_sis)
 		{
 			
-			$script = "select NOMBRE_ITEM AS 'nombre',CANTIDAD as 'cantidad',um.NOMBRE AS 'um' from UNIDAD_MEDIDA um
+			$script = "select NRO_CONSOLID as 'pedido' ,NOMBRE_ITEM AS 'nombre',CANTIDAD as 'cantidad',um.NOMBRE AS 'um' from UNIDAD_MEDIDA um
 				inner join SIG_PAAC_ITEM pit on um.UNIDAD_MEDIDA = pit.UNIDAD_MEDIDA
 				inner join CATALOGO_BIEN_SERV_ORIGINAL cbs on pit.GRUPO_BIEN=cbs.GRUPO_BIEN and pit.CLASE_BIEN=cbs.CLASE_BIEN and pit.FAMILIA_BIEN = cbs.FAMILIA_BIEN and pit.ITEM_BIEN =cbs.ITEM_BIEN
 				where ANO_EJE= 2024 and NRO_CONSOLID=".$r->documento;  

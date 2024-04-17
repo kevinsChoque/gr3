@@ -406,3 +406,39 @@ function fechaCotizacionFormat(fechaCotizacion)
     fechaCorregida.setDate(fecha.getDate() + 1);
     return formatoDate(fechaCorregida);
 }
+function state(state)
+{return state=='5'?'<span class="badge badge-info">RECOTIZANDO</spna>':'';}
+function dateCotSegunState(reg)
+{return reg.estadoCotizacion=='5'? novDato(reg.frec)+' '+novDato(reg.hrec):novDato(reg.fechaCotizacion)+' '+novDato(reg.horaCotizacion);}
+function dateFinCotSegunState(reg)
+{
+    return reg.estadoCotizacion=='5'? 
+        '<span><i class="fa fa-calendar-alt"></i> '+novDato(reg.ffrec) +'<br><i class="fa fa-clock"></i> '+novDato(reg.hfrec) + '<span><br>':
+        '<span><i class="fa fa-calendar-alt"></i> '+novDato(reg.fechaFinalizacion) +'<br><i class="fa fa-clock"></i> '+novDato(reg.horaFinalizacion) + '<span><br>';
+}
+function  dateEndCotForStateInPanel(reg)
+{
+    return reg.estadoCotizacion=='5'? 
+        '<span class="badge badge-light"><i class="fa fa-calendar-alt"></i> '+reg.ffrec+'</span><br><span class="badge badge-light"><i class="fa fa-clock"></i> '+reg.hfrec+'</span>':
+        '<span class="badge badge-light"><i class="fa fa-calendar-alt"></i> '+reg.fechaFinalizacion+'</span><br><span class="badge badge-light"><i class="fa fa-clock"></i> '+reg.horaFinalizacion+'</span>';
+        // formatoDate(reg.fechaFinalizacion) + "<br>" + formatoHour(reg.horaFinalizacion);
+}
+function  dateEndCotForStateInFuncionario(reg)
+{
+    // if(reg.idRec===null)
+    // {
+    //     return '<span class="badge badge-light"><i class="fa fa-calendar-alt"></i> '+reg.fechaFinalizacion+'</span><br><span class="badge badge-light"><i class="fa fa-clock"></i> '+reg.horaFinalizacion+'</span>';
+    // }
+    // else
+    // {
+    //     return reg.estadoCotizacion=='5'? 
+    //     '<span class="badge badge-light"><i class="fa fa-calendar-alt"></i> '+reg.ffrec+'</span><br><span class="badge badge-light"><i class="fa fa-clock"></i> '+reg.hfrec+'</span>':
+    //     '<span class="badge badge-light"><i class="fa fa-calendar-alt"></i> '+reg.fechaFinalizacion+'</span><br><span class="badge badge-light"><i class="fa fa-clock"></i> '+reg.horaFinalizacion+'</span>';
+    // }
+    return reg.idRec!==null? 
+        '<span class="badge badge-light"><i class="fa fa-calendar-alt"></i> '+reg.ffrec+'</span><br><span class="badge badge-light"><i class="fa fa-clock"></i> '+reg.hfrec+'</span>':
+        '<span class="badge badge-light"><i class="fa fa-calendar-alt"></i> '+reg.fechaFinalizacion+'</span><br><span class="badge badge-light"><i class="fa fa-clock"></i> '+reg.horaFinalizacion+'</span>';
+        // formatoDate(reg.fechaFinalizacion) + "<br>" + formatoHour(reg.horaFinalizacion);
+}
+// ffrec
+// hfrec

@@ -19,7 +19,9 @@ class TRecotizacion extends Model
         'archivo', 
         'archivoPdf',
         'fechaCotizacion', 
+        'horaRecotizacion',
         'fechaFinalizacion',
+        'horaFinalizacion',
         'estadoRecotizacion',
         'fr',
     ];

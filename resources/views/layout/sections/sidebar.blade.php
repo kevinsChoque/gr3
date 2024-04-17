@@ -32,7 +32,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{url('numero')}}" class="nav-link sba3">
+                    <a href="{{url('numero')}}" class="nav-link sba8">
                         <i class="nav-icon fas fa-hashtag"></i><p>Numero de cotizacion</p>
                     </a>
                 </li>

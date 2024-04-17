@@ -38,7 +38,12 @@ class PaCotizacionController extends Controller
             ->where('cotizacion.estadoCotizacion','2')
             ->orWhere('cotizacion.estadoCotizacion','5')
             ->orderBy('fr','desc')->get();
-        $registros = TCotizacion::select('cotizacion.*','cotrecpro.idPro')
+        $registros = TCotizacion::select('cotizacion.*','cotrecpro.idPro',
+            'recotizacion.fechaCotizacion as frec',
+            'recotizacion.horaRecotizacion as hrec',
+            'recotizacion.fechaFinalizacion as ffrec',
+            'recotizacion.horaFinalizacion as hfrec')
+            ->leftjoin('recotizacion','recotizacion.idCot','=','cotizacion.idCot')
             ->leftjoin('cotrecpro','cotrecpro.idCot','=','cotizacion.idCot')
             ->leftjoin('proveedor','proveedor.idPro','=','cotrecpro.idPro')
             ->where('cotizacion.estadoCotizacion','2')
@@ -49,7 +54,12 @@ class PaCotizacionController extends Controller
     }
     public function actListarPortal()
     {
-        $registros = TCotizacion::select('cotizacion.*')
+        $registros = TCotizacion::select('cotizacion.*',
+            'recotizacion.fechaCotizacion as frec',
+            'recotizacion.horaRecotizacion as hrec',
+            'recotizacion.fechaFinalizacion as ffrec',
+            'recotizacion.horaFinalizacion as hfrec')
+            ->leftjoin('recotizacion','recotizacion.idCot','=','cotizacion.idCot')
             ->where('cotizacion.estadoCotizacion','2')
             ->orWhere('cotizacion.estadoCotizacion','5')
             ->orderBy('fr','desc')

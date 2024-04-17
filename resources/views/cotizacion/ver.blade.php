@@ -95,13 +95,16 @@ function fillRegistros()
         method: 'get',
         success: function(r)
         {
+            console.log(r);
             var html = '';
             let opciones = '';
             let opcRec = '';
             let segunEstado;
             let opcAne = '';
+            let recFile = '';
             for (var i = 0; i < r.data.length; i++) 
             {
+
                 // solo se muestra estas opciones para lascotizaciones q estan EN PROCESO
                 if(r.data[i].estadoCotizacion=='1')
                 {
@@ -111,19 +114,24 @@ function fillRegistros()
                         '<button type="button" class="btn text-danger" title="Eliminar registro" onclick="eliminar(\''+r.data[i].idCot+'\');"><i class="fa fa-trash"></i></button>';
                 }
                 // solo se muestra esta opcion cuando la cotizacion FINALIZO
-                if(r.data[i].estadoCotizacion == '3')
+                if(r.data[i].estadoCotizacion == '3' && r.data[i].idRec===null)
                 {
                     opcRec = '<button type="button" class="btn text-info" onclick="showRecotizar(\''+r.data[i].idCot+'\')" title="Recotizar"><i class="fa fa-calendar-alt"></i></button>';
                 }
-                console.log(r.data[i].anexoPdf!==null);
+                // console.log(r.data[i].recFile);
 
                 if(r.data[i].anexoPdf!==null)
                 {
                     opcAne = '<button type="button" class="btn text-info" onclick="showAnexos(\''+r.data[i].idCot+'\')" title="Ver anexos"><i class="fa fa-file"></i></button>';
                 }
+                if(r.data[i].recFile!==null)
+                {
+                    recFile = '<button type="button" class="btn text-info" onclick="showFileRec(\''+r.data[i].idRec+'\')" title="Ver archivo de Recotizacion"><i class="fa fa-file"></i></button>';
+                }
                 let deleteColor = r.data[i].estado==0?'background: rgba(157,23,22,.5)':'';
                 opciones = r.data[i].estado==0?'':opciones;
                 segunEstado = r.data[i].estado==0?estadoCotizacion(r.data[i].estadoCotizacion):segunEstadoCotizacion(r.data[i]);
+                segunEstado = verifyStateRec(r.data[i],segunEstado);
                 // SE CARGA LAS COTIZACIONES
                 html += '<tr style="'+deleteColor+'">' +
                     @if(session()->get('usuario')->tipo=="administrador")
@@ -132,26 +140,39 @@ function fillRegistros()
                     '<td class="align-middle text-center font-weight-bold">' + r.data[i].numeroCotizacion + '</td>' +
                     '<td class="align-middle text-left"><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
                     '<td class="align-middle text-center">' + badgeTipoCot(r.data[i].tipo) +'</td>' +
-                    '<td class="align-middle text-left">' + fechaCotizacionFormat(r.data[i].fechaFinalizacion) +'<br>'+ formatoHour(r.data[i].horaFinalizacion) + '</td>' +
+                    '<td class="align-middle text-left">' + dateEndCotForStateInFuncionario(r.data[i]) + '</td>' +
                     '<td class="align-middle text-center">' + segunEstado + '</td>' +
                     '<td class="align-middle text-center">' + 
                         '<div class="btn-group btn-group-sm" role="group">'+
                             '<button type="button" class="btn text-info" title="Ver cotizacion" onclick="showCotizacion(\''+r.data[i].idCot+'\')"><i class="fa fa-eye"></i></button>'+
-                            '<button type="button" class="btn text-info" title="Ver archivo" onclick="showFile(\''+r.data[i].idCot+'\')"><i class="fa fa-file-pdf"></i></button>'+
+                            '<button type="button" class="btn text-info" title="Ver archivo de cotizacion" onclick="showFile(\''+r.data[i].idCot+'\')"><i class="fa fa-file-pdf"></i></button>'+
                             opcAne +
                             opcRec +
+                            recFile +
                             opciones +
                         '</div>'+
                     '</td></tr>';
                 opciones='';
                 opcRec='';
                 opcAne='';
+                recFile='';
             }
             $('#data').html(html);
             initDatatable('registros');
             $('.overlayRegistros').css('display','none');
         }
     });
+}
+function verifyStateRec(reg,segunEstado)
+{
+    if(reg.idRec===null)
+        return segunEstado;
+    else
+    {
+        if(reg.estadoRecotizacion==0)
+            return '<span class="shadow badge badge-primary">Recotizacion <br> finalizada</span>';
+        return segunEstado
+    }
 }
 function segunEstadoCotizacion(cot)
 {
@@ -191,6 +212,22 @@ function showAnexos(idCot)
         }
     });
 }
+function showFileRec(idRec)
+{
+    jQuery.ajax({
+        url: "{{ url('recotizacion/verFile') }}",
+        method: 'post', 
+        data: {idRec:idRec},
+        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+        success: function (r) {
+            // console.log(r);
+            abrirArchivoBase64EnNuevaPestana(r.file,"application/pdf");
+        },
+        error: function (xhr, status, error) {
+            msjError("Algo salio mal, porfavor contactese con el Administrador.");
+        }
+    });
+}
 
 function showCotizacion(id)
 {
@@ -202,6 +239,7 @@ function showCotizacion(id)
         method: 'post',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function(r){
+            console.log(r)
             showDataCotizacion(r);
         }
     });

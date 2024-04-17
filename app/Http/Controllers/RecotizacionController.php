@@ -20,6 +20,12 @@ class RecotizacionController extends Controller
         $tCot = TCotizacion::where('idCot',$r->idCot)->where('estadoCotizacion','3')->first();
         if($tCot==null)
         {   return response()->json(['estado' => false, 'message' => 'La cotizacion no fue PUBLICADO.']);}
+
+        $fechaRecotizacion = Carbon::parse($r->newFechaCotizacion . ' ' . $r->newHoraCotizacion);
+        $fechaFinalizacion = Carbon::parse($r->newFechaFinalizacion . ' ' . $r->newHoraFinalizacion);
+        if (!$fechaFinalizacion->gt($fechaRecotizacion))
+        {return response()->json(['estado' => false, 'message' => 'La fecha de FINALIZACION debe ser mayor a la fecha de la RECOTIZACION.']);}
+    // dd('paso hasta aki');
         // se inicializa la transaccion
         DB::beginTransaction();
         // toda recotizacion contendra un archivo
@@ -28,6 +34,8 @@ class RecotizacionController extends Controller
         $r->merge(['idRec' => Str::uuid()]);
         $r->merge(['fechaCotizacion' => $r->newFechaCotizacion]);
         $r->merge(['fechaFinalizacion' => $r->newFechaFinalizacion]);
+        $r->merge(['horaRecotizacion' => $r->newHoraCotizacion]);
+        $r->merge(['horaFinalizacion' => $r->newHoraFinalizacion]);
         $r->merge(['estadoRecotizacion' => '1']);
         $r->merge(['archivoPdf' => $r->hasFile('file') ? $this->deepFile($r->file('file')) : null]);
         $r->merge(['fr' => Carbon::now()]);
@@ -57,5 +65,11 @@ class RecotizacionController extends Controller
         // }
         // DB::rollBack();
         // return response()->json(['estado' => false, 'message' => 'Ingrese un archivo.']);
+    }
+    public function actVerFile(Request $r)
+    {
+        $archivoPdf = TRecotizacion::find($r->idRec)->archivoPdf;
+        $file = $this->desencriptarDeepFile($archivoPdf);
+        return response()->json(['estado' => true, 'file' => $file ]);
     }
 }

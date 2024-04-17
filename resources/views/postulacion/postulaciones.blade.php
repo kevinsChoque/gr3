@@ -47,6 +47,12 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-lg-9 contentPost">
+            <!-- <div class="callout callout-warning">
+                <h5 class="m-0 font-weight-bold">La cotizacion no cuenta con postulaciones!</h5>
+            </div> -->
+            <div class="alert alert-warning alert-postulaciones" style="display: none;">
+                <h5 class="m-0 font-weight-bold">La cotizacion no cuenta con postulaciones!</h5>
+            </div>
 			<div class="card" style="display: none;">
               	<div class="card-header p-2"><h6 class="m-0">Postulacion de proveedores</h6></div>
               	<div class="card-body contentPost_old">
@@ -167,7 +173,8 @@ localStorage.setItem("sba",7);
 $(document).ready( function () {
     loadCotizacion();
     loadPostulaciones();
-    $('.overlayPagina').css("display","none");
+    // $('.overlayPagina').css("display","none");
+
 	// Valor de fecha en formato string
 	var fechaString = "2023-11-27 13:47:30";
 	// crear un objeto Date a partir del string
@@ -198,6 +205,7 @@ function showDeepFile(idCrp)
 // con esta funcion creamos el acordeon de cada postulador a la cotizacion
 // en el acordeon se mostrara los datos relevamntes y una vez desplegado
 // nos mostrara el detalle de la postulacion
+var ttt;
 function loadPostulaciones()
 {
 	jQuery.ajax({
@@ -207,7 +215,8 @@ function loadPostulaciones()
         dataType: 'json',
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function (r) {
-        	console.log(r);
+        	// console.log(r);
+            ttt=r;
         	let html='';
         	let idBan=0;
         	let name='';
@@ -215,6 +224,15 @@ function loadPostulaciones()
         	let enlace = '';
         	let fecha = '';
         	let fechaFormat = '';
+            let subtotal = 0;
+            if(r.data.length==0)
+            {
+                $('.alert-postulaciones').css('display','block');
+                $('.showSummary').css('display','none');
+                $('.overlayPagina').css("display","none");
+                return;
+            }
+            
         	for (var i = 0; i < r.data.length; i++) 
             {
 				if(r.data[i].idPro!=idBan)
@@ -302,6 +320,7 @@ function loadPostulaciones()
 					                      '<th class="align-middle">Marca</th>'+
 					                      '<th class="align-middle">Modelo</th>'+
 					                      '<th class="align-middle">Precio</th>'+
+                                          '<th class="align-middle">subtotal</th>'+
 					                      '<th class="align-middle">F.T</th>'+
 					                    '</tr>'+
 					                '</thead>'+
@@ -316,6 +335,7 @@ function loadPostulaciones()
                     '<i class="fa fa-cube"></i>':
                     '<a target="_blank" href="'+'{{ route('detalle-archivo') }}/'+r.data[i].arcDet+'"><i class="fa fa-file-pdf"></i></a>';
 				// creamos los items de cada postulacion
+                subtotal = (parseFloat(r.data[i].precio) * parseFloat(r.data[i].cantidad)).toFixed(2);
 				html += '<tr>'+
                     '<td>'+novDato(r.data[i].nombreItem)+'</td>'+
                   	'<td>'+novDato(r.data[i].umItem)+'</td>'+
@@ -323,6 +343,7 @@ function loadPostulaciones()
                   	'<td>'+novDato(r.data[i].marca)+'</td>'+
                   	'<td>'+novDato(r.data[i].modelo)+'</td>'+
                   	'<td>'+novDato(r.data[i].precio)+'</td>'+
+                    '<td>'+novDato(subtotal)+'</td>'+
                   	'<td>'+soloEnlaceFile+'</td>'+
                 '</tr>';
                 if(r.data[i+1]===undefined)
@@ -330,7 +351,7 @@ function loadPostulaciones()
                 	html +=			'</tbody>'+
                 					'<tfoot>'+
 										'<tr>'+
-											'<td colspan="5" class="text-right font-weight-bold">TOTAL:</td>'+
+											'<td colspan="6" class="text-right font-weight-bold">TOTAL:</td>'+
 											'<td colspan="1" class="shadow bg-info text-center font-weight-bold">S/. '+r.data[i].total+'</td>'+
 										'</tr>'+
 									'</tfoot>'+
@@ -350,7 +371,7 @@ function loadPostulaciones()
                 	html +=			'</tbody>'+
                 					'<tfoot>'+
 										'<tr>'+
-											'<td colspan="5" class="text-right font-weight-bold">TOTAL:</td>'+
+											'<td colspan="6" class="text-right font-weight-bold">TOTAL:</td>'+
 											'<td colspan="1" class="shadow bg-info text-center font-weight-bold">S/. '+r.data[i].total+'</td>'+
 										'</tr>'+
 									'</tfoot>'+
@@ -366,6 +387,7 @@ function loadPostulaciones()
                 }
             }
             $('.contentPost').append(html);
+            $('.overlayPagina').css("display","none");
         },
         error: function (xhr, status, error) {
             msjSimple('Algo salio mal, porfavor contactese con el Administrador.');

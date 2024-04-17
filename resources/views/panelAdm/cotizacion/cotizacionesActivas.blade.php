@@ -183,7 +183,7 @@ function fillRegistros()
                         '<td class="align-middle text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
                         '<td class="align-middle"><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
                         '<td class="align-middle"><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].descripcion) + '</p></td>' +
-                        '<td class="text-center">' + formatoDate(r.data[i].fechaFinalizacion) + "<br>" + formatoHour(r.data[i].horaFinalizacion) + '</td>' +
+                        '<td class="text-center">' + dateEndCotForStateInPanel(r.data[i]) + '</td>' +
                         '<td class="align-middle text-center">' + estadoCotizacion(r.data[i].estadoCotizacion) + '</td>' +
                         '<td class="text-center">' + 
                             '<a href="javascript:void(0)" class="btn text-info pr-0" onclick="showFile(\''+r.data[i].idCot+'\');"><i class="far fa-file-pdf fa-lg"></i></a>'+

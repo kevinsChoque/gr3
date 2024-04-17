@@ -172,17 +172,19 @@ class ExcelResumenController extends Controller
 		    for ($j = 0; $j < count($detallePostulacion); $j++)
 		    {
 		    	$precio = $this->encryp_mount($detallePostulacion[$j]->precio);
+				$subTotal = $precio*$cantidadItem[$detallePostulacion[$j]->idItm];
+
 		    	$celda = $columna . $ordenItem[$detallePostulacion[$j]->idItm];
-		    	$sheet->setCellValue($celda, $precio);
+		    	$sheet->setCellValue($celda, $subTotal);
 		    	$sheet->getStyle($celda)->applyFromArray($borderStyle);
 
 
-		    	$totalProveedor = $totalProveedor+$precio;
+		    	$totalProveedor = $totalProveedor+$subTotal;
 		    	
 		    	$colAde = chr(ord($columna) - 1);
-		    	$pu = $precio/$cantidadItem[$detallePostulacion[$j]->idItm];
+		    	// $pu = $precio/$cantidadItem[$detallePostulacion[$j]->idItm];
 		    	$celdaAde = $colAde . $ordenItem[$detallePostulacion[$j]->idItm];
-		    	$sheet->setCellValue($celdaAde, $pu);
+		    	$sheet->setCellValue($celdaAde, $precio);
 		    	$sheet->getStyle($celdaAde)->applyFromArray($borderStyle);
 
 		    	$colAtr = chr(ord($columna) + 1);

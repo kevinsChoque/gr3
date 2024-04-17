@@ -171,6 +171,7 @@ Route::get('unidadMedida/listar',[UnidadMedidaController::class, 'actListar']);
 Route::post('suspension/guardar',[SuspensionController::class, 'actGuardar']);
 // recotizacion
 Route::post('recotizacion/guardar',[RecotizacionController::class, 'actGuardar']);
+Route::post('recotizacion/verFile',[RecotizacionController::class, 'actVerFile']);
 // postulaciones
 // Route::get('postulaciones/ver', function () {return view('postulacion.ver');});
 Route::get('postulaciones/ver',[PostulacionesController::class, 'actVer']);

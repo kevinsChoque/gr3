@@ -147,6 +147,9 @@ function showDataCotizacion(r)
     $('.contentPdf').html(preVisualizador);
     // showPDFPreview(r.cot.archivo);
     var html = '';
+    console.log('r.items');
+    console.log(r.items);
+    console.log('r.items');
     for (var i = 0; i < r.items.length; i++) 
     {
         html += '<tr>' +
