@@ -104,9 +104,9 @@
                             <tr>
                                 <th class="text-center text-uppercase" data-priority="1">NRO</th>
                                 <th class="text-center text-uppercase" data-priority="1">tipo</th>
+                                <th class="text-center text-uppercase" data-priority="3" width="55%">concepto</th>
                                 <th class="text-center text-uppercase" data-priority="1">FECHA</th>
                                 <th class="text-center text-uppercase" data-priority="2">nro de cotizacion</th>
-                                <th class="text-center text-uppercase" data-priority="3">concepto</th>
                                 <th class="text-center text-uppercase" data-priority="4">monto</th>
                                 <th class="text-center text-uppercase" data-priority="4">Estado</th>
                                 <th class="text-center text-uppercase" data-priority="1">Opc.</th>
@@ -167,12 +167,14 @@ function searchMisCot()
                     opciones = '<button type="button" class="btn btn-sm btn-primary" onclick="showArchivos('+r.data[i].idCrp+');"><i class="fa fa-download" ></i></button>'+
                         '<button type="button" class="btn btn-sm btn-success ml-1" onclick="mSend('+r.data[i].idCrp+');"><i class="fa fa-paper-plane"></i> Enviar</button>';
                 }
+                if(r.data[i].estadoCotizacion=='3' && r.data[i].estadoCrp=='0')
+                {   opciones = '<span class="badge badge-warning shadow"> Cotizacion finalizada</span>';}
                 html += '<tr>' +
                     '<td class="text-center font-weight-bold">' + (i+1) + '</td>' +
                     '<td class="text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
+                    '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
                     '<td class="text-center font-weight-bold">' + formatoDateHours(r.data[i].frCrp) + '</td>' +
                     '<td class="text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
-                    '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
                     '<td class="text-center font-weight-bold">' + novDato('S/. '+r.data[i].total) + '</td>' +
                     '<td class="text-center">' + estadoEnviado(r.data[i].estadoCrp) + '</td>' +
                     '<td class="text-center">' + 
@@ -197,6 +199,9 @@ function fillRegistros()
         headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
         success: function(r)
         {
+            console.log('r')
+            console.log(r)
+            console.log('r')
             var html = '';
             var opciones = '';
             for (var i = 0; i < r.data.length; i++) 
@@ -208,12 +213,14 @@ function fillRegistros()
                     opciones = '<button type="button" class="btn btn-sm btn-primary" onclick="showArchivos(\''+r.data[i].idCrp+'\');"><i class="fa fa-download" ></i></button>'+
                         '<button type="button" class="btn btn-sm btn-success ml-1" onclick="mSend(\''+r.data[i].idCrp+'\');"><i class="fa fa-paper-plane"></i> Enviar</button>';
                 }
+                if(r.data[i].estadoCotizacion=='3' && r.data[i].estadoCrp=='0')
+                {   opciones = '<span class="badge badge-warning shadow"> Cotizacion finalizada</span>';}
                 html += '<tr>' +
                     '<td class="text-center font-weight-bold">' + (i+1) + '</td>' +
                     '<td class="text-center font-weight-bold">' + novDato(r.data[i].tipo) + '</td>' +
+                    '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
                     '<td class="text-center font-weight-bold">' + formatoDateHours(r.data[i].frCrp) + '</td>' +
                     '<td class="text-center">' + novDato(r.data[i].numeroCotizacion) + '</td>' +
-                    '<td class=""><p class="m-0 ocultarTextIzqNameUser">' + novDato(r.data[i].concepto) + '</p></td>' +
                     '<td class="text-center font-weight-bold">' + novDato('S/. '+r.data[i].total) + '</td>' +
                     '<td class="text-center">' + estadoEnviado(r.data[i].estadoCrp) + '</td>' +
                     '<td class="text-center">' + 

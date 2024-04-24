@@ -130,7 +130,7 @@
             </div>
             <div class="modal-footer py-1 border-transparent">
                 <button type="button" class="btn btn-sm btn-light" data-dismiss="modal"><i class="fa fa-times"></i> Cerrar</button>
-                <button type="button" class="btn btn-success float-right sendCotPro ml-2" style="display: none;"><i class="fa fa-paper-plane"></i> Enviar</button>
+                <button type="button" class="btn btn-success float-right sendCotPro ml-2"><i class="fa fa-paper-plane"></i> Enviar</button>
             </div>
         </div>
     </div>
@@ -176,12 +176,12 @@ $('.pdfFile').on('change',function(){
     }
 });
 $('.pdfFile').on('change',function(){
-    activarBotonSend();
+    // activarBotonSend();
 });
 
 $('.opcSeleccionado').on('click',function(){
     soloPdf = $(this).attr('data-selected')=='segundo'?'true':'false';
-    activarBotonSend();
+    // activarBotonSend();
 });
 // funcion que verifica si se cargaron todos los archivos dependiendo si carga uno por uno
 // o carga en un solo archivo, de esta manera habilitar el boton de envio
@@ -220,43 +220,81 @@ function cleanFiles()
         $(this).parent().find('i').addClass('fa fa-download fa-lg');
         $(this).parent().find('.boxFile').css('border','4px dashed #000');
     });
-    activarBotonSend();
+    // activarBotonSend();
 }
 function rules(){}
 // funcion que envia los archivos dentro del objeto formdata,
 // se envia todos los arhcivos
 function sendCotPro()
 {
-    var formData = new FormData($("#fvsend")[0]);
-    formData.append('idCrp', idCrp); 
-    formData.append('soloPdf', soloPdf); 
-    formData.append('pdfCll', $('#pdfCll')[0].files[0]);
-    // formData.append('pdfDj', $('#pdfDj')[0].files[0]);
-    formData.append('pdfCci', $('#pdfCci')[0].files[0]);
-    formData.append('pdfA5', $('#pdfA5')[0].files[0]);
-    formData.append('pdfAll', $('#pdfAll')[0].files[0]);
-    
-    jQuery.ajax({
-        url: "{{ url('panelAdm/paCotRecPro/subirArchivo') }}",
-        method: 'POST', 
-        data: formData,
-        dataType: 'json',
-        processData: false, 
-        contentType: false, 
-        headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
-        success: function (r) {
-            if (r.estado) 
-            {
-                construirTabla();
-                fillRegistros();
-                $('#mSend').modal('hide');
-            } 
-            msjRee(r);
-        },
-        error: function (xhr, status, error) {
-            msjSimple(false,'Algo salio mal, porfavor contactese con el Administrador.');
+    let banSend=true;
+    let msjFiles = [];
+    if(soloPdf=='true')
+    {
+        if($('#pdfAll').val()==='')
+        {
+            banSend=false;
+            msjFiles.push('Cargar el archivo de la COTIZACION.');
+            console.log('carga el pdf q tiene todo');
         }
-    });
+    }
+    else
+    {
+        if($('#pdfCll').val()==='')
+        {
+            banSend=false;
+            msjFiles.push('Cargar el archivo de la COTIZACION LLENADA');
+            console.log('carga el cll');
+        }
+        if($('#pdfCci').val()==='')
+        {
+            banSend=false;
+            msjFiles.push('Cargar el archivo de la cuenta CCI');
+            console.log('carga el cci');
+        }
+        if($('#pdfA5').val()==='')
+        {
+            banSend=false;
+            msjFiles.push('Cargar el archivo de ANEXO 5');
+            console.log('carga el a5');
+        }
+    }
+    if(banSend)
+    {
+        console.log('enviar archivo');
+        var formData = new FormData($("#fvsend")[0]);
+        formData.append('idCrp', idCrp); 
+        formData.append('soloPdf', soloPdf); 
+        formData.append('pdfCll', $('#pdfCll')[0].files[0]);
+        // formData.append('pdfDj', $('#pdfDj')[0].files[0]);
+        formData.append('pdfCci', $('#pdfCci')[0].files[0]);
+        formData.append('pdfA5', $('#pdfA5')[0].files[0]);
+        formData.append('pdfAll', $('#pdfAll')[0].files[0]);
+        
+        jQuery.ajax({
+            url: "{{ url('panelAdm/paCotRecPro/subirArchivo') }}",
+            method: 'POST', 
+            data: formData,
+            dataType: 'json',
+            processData: false, 
+            contentType: false, 
+            headers: {'X-CSRF-TOKEN': "{{ csrf_token() }}"},
+            success: function (r) {
+                if (r.estado) 
+                {
+                    construirTabla();
+                    fillRegistros();
+                    $('#mSend').modal('hide');
+                } 
+                msjRee(r);
+            },
+            error: function (xhr, status, error) {
+                msjSimple(false,'Algo salio mal, porfavor contactese con el Administrador.');
+            }
+        });
+    }
+    else
+        msgRee({"estado":false,"message":msjFiles.join(', ')});
 }
 function limpiarFormSend()
 {

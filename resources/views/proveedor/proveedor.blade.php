@@ -42,7 +42,7 @@
                                         @if(session()->get('usuario')->tipo=="administrador")
                                         <th class="text-center" data-priority="1" width="10%">Personal</th>
                                         @endif
-                                        <th class="text-center" data-priority="1">Tipo</th>
+                                        <!-- <th class="text-center" data-priority="1">Tipo</th> -->
                                         <th class="text-center" data-priority="3">Proveedor</th>
                                         <th class="text-center" data-priority="4">Contacto proveedor</th>
                                         <th class="text-center" data-priority="4">Estado proveedor</th>
@@ -59,7 +59,7 @@
                                         @if(session()->get('usuario')->tipo=="administrador")
                                         <th class="text-center" data-priority="1" width="10%">Personal</th>
                                         @endif
-                                        <th class="text-center" data-priority="1">Tipo</th>
+                                        <!-- <th class="text-center" data-priority="1">Tipo</th> -->
                                         <th class="text-center" data-priority="3">Proveedor</th>
                                         <th class="text-center" data-priority="4">Contacto proveedor</th>
                                         <th class="text-center" data-priority="4">Estado proveedor</th>
@@ -112,7 +112,7 @@ localStorage.setItem("sba",6);
                         @if(session()->get('usuario')->tipo=="administrador")
                         '<td class="align-middle text-left text-uppercase font-weight-bold">' + personal(novDato(r.data[i].nameUser)) + '</td>' +
                         @endif
-                        '<td class="align-middle text-center font-weight-bold">' + novDato(r.data[i].tipoPersona) + '</td>' +
+                        // '<td class="align-middle text-center font-weight-bold">' + novDato(r.data[i].tipoPersona) + '</td>' +
                         '<td class="align-middle">' + namePro(r.data[i]) + '</td>' +
                         '<td class="align-middle">' + direccionPro(r.data[i]) + '</td>' +
                         '<td class="align-middle">' + novDato(sunatPro) + '</td>' +
@@ -149,10 +149,10 @@ localStorage.setItem("sba",6);
     }
     function namePro(pro)
     {
-        nameProveedor = 'Razon Social: '+pro.razonSocial+'<br>RUC: '+pro.numeroDocumento;
+        nameProveedor = '<b>Tipo: '+pro.tipoPersona+'</b><br>Razon Social: '+pro.razonSocial+'<br>RUC: '+pro.numeroDocumento;
         if(pro.tipoPersona=='PERSONA NATURAL')
         {
-            nameProveedor = 'Nombre: '+novDato(pro.nombre) + ' ' + novDato(pro.apellidoPaterno) + ' ' + novDato(pro.apellidoMaterno)+'<br>RUC: '+pro.numeroDocumento;
+            nameProveedor = '<b>Tipo: '+pro.tipoPersona+'</b><br>Nombre: '+novDato(pro.nombre) + ' ' + novDato(pro.apellidoPaterno) + ' ' + novDato(pro.apellidoMaterno)+'<br>RUC: '+pro.numeroDocumento;
         }
         return nameProveedor;
     }

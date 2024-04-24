@@ -82,7 +82,7 @@
                                 <p class="m-0 text-center font-weight-bold">SI NO TIENE UNA CUENTA PRESIONE <a href="{{url('portal/proveedor/registrar')}}">AQUI</a>.</p>
                             </div>
                             <div class="col-lg-12 text-center">
-                                <button type="button" class="btn btn-link font-weight-bold mRecuperar" data-toggle="modal" data-target="#exampleModal">¿Has olvidado la contraseña?</button>
+                                <button type="button" class="btn btn-link font-weight-bold mRecuperar" data-toggle="modal" data-target="#modalRecuperar">¿Has olvidado la contraseña?</button>
                             </div>
                             </form>
                         </div>
@@ -95,11 +95,11 @@
 	</div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalRecuperar" tabindex="-1" role="dialog" aria-labelledby="modalRecuperarLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Recuperar cuenta</h5>
+                <h5 class="modal-title" id="modalRecuperarLabel">Recuperar cuenta</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -143,7 +143,7 @@
         $('.overlayPagina').css("display","none");
     } );
     $('.mRecuperar').on('click',function(){
-        $('#exampleModal').modal('show')
+        $('#modalRecuperar').modal('show')
     });
     $('.recuperar').on('click',function(){
         recuperar();
@@ -253,10 +253,12 @@
                 console.log(r)
                 msgRee(r); 
                 $('.overlayPagina').css("display","none");
+                $('#modalRecuperar').modal('hide')
             },
             error: function (xhr, status, error) {
                 $('.overlayPagina').css("display","none");
                 msgSimple(false,'Ocurrio un problema, porfavor contactese con el administrador');
+                $('#modalRecuperar').modal('hide')
             }
         });
     }

@@ -123,10 +123,8 @@ class PaCotRecProController extends Controller
             ->where('cotrecpro.idPro', $tPro->idPro)
             ->orderBy('cotrecpro.idCrp', 'desc')
             ->get();
-        // dd($registros);
         // echo($registros[0]->total);
         // $registros[0]->total="cambiado";
-        // dd($registros[0]->total);
 
         $totalRegistros = count($registros);
         for ($i = 0; $i < $totalRegistros; $i++) 
@@ -139,7 +137,6 @@ class PaCotRecProController extends Controller
     }
     public function actSearch(Request $r)
     {
-        // dd($r->all());
         // se realiza la busqueda deacuerdo a los datos que envia de mis cotizaciones
         // estos son las cotizaciones a las cual realizo la postulacion el proveedor
         // q realizo el inicio de sesion
@@ -153,16 +150,23 @@ class PaCotRecProController extends Controller
         $p = Session::get('proveedor');
         $sql = "SELECT c.*, p.fr AS frCrp, p.estadoCrp, p.idCrp, p.total FROM cotrecpro p LEFT JOIN cotizacion c ON c.idCot = p.idCot WHERE p.idPro = '".$p->idPro."' ".$anio.$mes.$tipo." ORDER BY p.idCrp DESC";
         $registros=DB::select($sql);
+        $totalRegistros = count($registros);
+        for ($i = 0; $i < $totalRegistros; $i++) 
+            $registros[$i]->total = $this->encryp_mount($registros[$i]->total);
         return response()->json(["data"=>$registros]);
     }
     public function actSubirArchivo(Request $r)
     {
+        // dd('validar su envio');
         // se inicializa la transaccion
     	DB::beginTransaction();
         // verificar si existe especificaciones tednicas
         $fichasTecnicas = TDetalleprocot::where('idCrp',$r->idCrp)->whereNotNull('archivo')->get();
-        $tCrp = TCotrecpro::find($r->idCrp);
         $p = Session::get('proveedor');
+        $tCrp = TCotrecpro::find($r->idCrp);
+        $cot = TCotizacion::find($tCrp->idCot);
+        if(!($cot->estadoCotizacion=='2' || $cot->estadoCotizacion=='5'))
+            return response()->json(['estado' => false, 'message' => 'La cotizacion '.$cot->numeroCotizacion.' ya finalizo.']);
         $pdf = new Fpdi();
         // dd(storage_path(),count($fichasTecnicas),$fichasTecnicas);
 

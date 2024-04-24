@@ -107,7 +107,7 @@ class LoginController extends Controller
         {
             try 
             {
-                Mail::to('kevins.choque@gmail.com')->send(new EmailRecuperacion($datosProveedor));
+                Mail::to($tPro->correo)->send(new EmailRecuperacion($datosProveedor));
                 DB::commit();
                 return response()->json(['estado' => true, 'message' => 'Su contraseñase se le envio a su correo '.$r->correo.'.']);
             } 

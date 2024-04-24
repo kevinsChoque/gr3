@@ -1,3 +1,4 @@
+
 function abrirArchivoBase64EnNuevaPestana(base64String,tipoMIME) {
     // Convertir la cadena Base64 en un Blob
     var byteCharacters = atob(base64String);

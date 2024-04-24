@@ -101,6 +101,11 @@ $(document).ready( function () {
     $.validator.addMethod("extensionPdf", function(value, element) {
         return this.optional(element) || value.toLowerCase().endsWith(".pdf");
     }, "Solo se permiten archivos PDF");
+    $.validator.addMethod("greaterThan", function(value, element, params) {
+        var startDate = new Date(value);
+        var endDate = new Date($(params).val());
+        return startDate > endDate;
+    }, "La fecha debe ser mayor que la fecha de inicio.");
     initFv('fvsuspension',rulesSuspension());
 });
 function addSuspension(id)
@@ -141,8 +146,8 @@ function rulesSuspension()
     return {
         motivo: {required: true,},
         file: {required: true,extensionPdf: "pdf"},
-        fechaInicio: {required: true,},
-        fechaFinalizacion: {required: true,}
+        fechaInicio: {required: true},
+        fechaFinalizacion: {required: true,greaterThan: "#fechaInicio"}
     };
 }
 function guardarSuspension()

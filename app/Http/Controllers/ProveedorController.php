@@ -9,11 +9,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\TProveedor;
+use App\Models\TSuspension;
 
 class ProveedorController extends Controller
 {
     public function actProveedor(Request $r)
     {
+        
+        // dd($suspensionesVencidas);
         $this->historial($r);
         return view('proveedor.proveedor');
     }

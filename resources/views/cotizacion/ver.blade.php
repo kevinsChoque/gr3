@@ -73,7 +73,7 @@
 
 @include('cotizacion.recotizar.mRecotizar')
 @include('cotizacion.mEditar')
-@include('cotizacion.mAddItems')
+
 <script>
 localStorage.setItem("sbd",1);
 localStorage.setItem("sba",5);

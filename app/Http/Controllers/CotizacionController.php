@@ -211,7 +211,14 @@ class CotizacionController extends Controller
         }
         else
         {
-            $registros = TCotizacion::select('cotizacion.*')
+            $registros = TCotizacion::select('cotizacion.*',
+                'recotizacion.idRec',
+                'recotizacion.estadoRecotizacion',
+                'recotizacion.archivoPdf as recFile',
+                'recotizacion.fechaFinalizacion as ffrec',
+                'recotizacion.horaFinalizacion as hfrec',
+                )
+                ->leftjoin('recotizacion', 'recotizacion.idCot', '=', 'cotizacion.idCot')
                 ->leftjoin('usuario', 'usuario.idUsu', '=', 'cotizacion.idUsu')
                 ->where('cotizacion.idUsu', $tUsu->idUsu)
                 ->where('cotizacion.estado', '1')

@@ -372,6 +372,6 @@ class ExcelResumenController extends Controller
 	    $tempFilePath = tempnam(sys_get_temp_dir(), 'excel');
 	    $writer = new Xlsx($spreadsheet);
 	    $writer->save($tempFilePath);
-	    return response()->download($tempFilePath, 'filled_template.xlsx')->deleteFileAfterSend();
+	    return response()->download($tempFilePath, 'CUADRO DE RESUMEN DE LA COTIZACION-'.$cotizacion->numeroCotizacion.'.xlsx')->deleteFileAfterSend();
     }
 }

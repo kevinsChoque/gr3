@@ -194,6 +194,19 @@
     	loadData();
         $('.overlayPagina').css("display","none");
         $('.overlayRegistros').css("display","none");
+        // ---------------------------------
+        var precios = document.querySelectorAll('.precio');
+    precios.forEach(function(precio) {
+        precio.addEventListener('input', function() {
+            var valor = this.value;
+            if (/[^0-9]/.test(valor)) {
+                this.setCustomValidity('Por favor, introduce solo números.');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+    });
+        // ---------------------------------
     });
     $('.guardarCotPro').on('click',function(){
     	guardarCotPro();
@@ -601,6 +614,20 @@
 		            var valor = $(this).val();
 		            console.log(valor);
 		        });
+	            $('.precio').on('input', function() {
+				    var valor = this.value;
+				    // quitar caracteres que no sean num o puntos decimales
+				    valor = valor.replace(/[^\d.]/g, '');
+				    // solo un punto decimal
+				    valor = valor.replace(/(\..*)\./g, '$1');
+				    // limitar a dos decimales
+				    var partes = valor.split('.');
+				    if (partes.length > 1) {
+				        partes[1] = partes[1].slice(0, 2);
+				        valor = partes.join('.');
+				    }
+				    this.value = valor;
+				});
 	        },
 	        error: function (xhr, status, error) {
 	            msgError("Algo salio mal, porfavor contactese con el Administrador.");
@@ -621,7 +648,7 @@
 	function calcSubTotal(ele,id)
 	{
         if(tipoCotizacion=='Bienes')
-		    $('.st'+id).val($(ele).val()*parseFloat($('.cant'+id).html()));
+		    $('.st'+id).val((parseFloat($(ele).val())*parseFloat($('.cant'+id).html())).toFixed(2));
         else
             $('.st'+id).val($(ele).val());
 		calcTotal();

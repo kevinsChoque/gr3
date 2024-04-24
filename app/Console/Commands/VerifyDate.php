@@ -3,9 +3,11 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 use App\Models\TCotizacion;
 use App\Models\TRecotizacion;
-use Illuminate\Support\Carbon;
+use App\Models\TSuspension;
+use App\Models\TProveedor;
 
 class VerifyDate extends Command
 {
@@ -52,6 +54,10 @@ class VerifyDate extends Command
             })
             ->get();
 
+        $suspensionesVencidas = TSuspension::whereDate('fechaFinalizacion', '<', Carbon::now()->toDateString())
+            ->where('estadoSuspension','1')
+            ->get();
+
         foreach ($cotizacionesVencidas as $cotizacion) 
         {
             $cotizacion->estadoCotizacion = '3';
@@ -65,6 +71,16 @@ class VerifyDate extends Command
                 $cot = TCotizacion::find($recotizacion->idCot);
                 $cot->estadoCotizacion = '3';
                 $cot->save();
+            }
+        } 
+        foreach ($suspensionesVencidas as $suspension) 
+        {
+            $suspension->estadoSuspension = '0';
+            if($suspension->save())
+            {
+                $pro = TProveedor::find($suspension->idPro);
+                $pro->estadoProveedor = '1';
+                $pro->save();
             }
         } 
     }
